@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Pencil } from "lucide-react";
 
 function AllStudentPage() {
   const [studentData, setStudentData] = useState([]);
@@ -96,7 +97,7 @@ function AllStudentPage() {
           // </div>
           <Card
             key={data.id}
-            className="rounded-2xl shadow-md hover:shadow-lg transition"
+            className="w-90 h-80 p-6 rounded-2xl shadow-md hover:shadow-lg transition"
           >
             <CardHeader>
               <img
@@ -116,7 +117,11 @@ function AllStudentPage() {
                 {`${data.first_name} ${data.middle_name} ${data.last_name}`}
               </CardTitle>
               <CardDescription>Mob: {data.contact_number}</CardDescription>
-              <CardAction>Edit</CardAction>
+              <CardAction>
+                <Button variant="ghost" size="sm" className="top-2 right-2">
+                  <Pencil className="w-4 h-4" />
+                </Button>
+              </CardAction>
             </CardHeader>
             <CardContent>
               <p>{data.admission_no}</p>
