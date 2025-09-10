@@ -2,6 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Link } from "react-router";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Pencil } from "lucide-react";
 import axios from "axios";
 
 function GetStudentPage() {
@@ -45,60 +55,110 @@ function GetStudentPage() {
         value={inputValue}
         onChange={updateInputtext}
       />
-      {studentData ? (
-        <div className="p-[1rem]" key={studentData.id}>
-          {
-            <img
-              className="justify-center"
-              src={
-                studentData.photo_url
-                  ? studentData.photo_url
-                  : studentData.gender === "F"
-                  ? "/f_icon.png"
-                  : "/m_icon.png"
-              }
-              alt={
-                studentData.first_name +
-                " " +
-                studentData.middle_name +
-                " " +
-                studentData.last_name +
-                " " +
-                "Photo"
-              }
-              height={100}
-              width={100}
-            />
-          }
-          <h3>
-            {studentData.first_name +
-              " " +
-              studentData.middle_name +
-              " " +
-              studentData.last_name}
-          </h3>
-          <p className="read-the-docs">
-            Admission No: {studentData.admission_no}
-          </p>
-          <p className="read-the-docs">
-            Gender: {studentData.gender === "M" ? "Male" : "Female"}
-          </p>
-          <p className="read-the-docs">
-            Date of Birth:{" "}
-            {new Date(studentData.d_o_b).toISOString().split("T")[0]}
-          </p>
-          <p className="read-the-docs">
-            Date of Admission:{" "}
-            {
-              new Date(studentData.date_of_admission)
-                .toISOString()
-                .split("T")[0]
-            }
-          </p>
-        </div>
-      ) : (
-        dataPlaceHolderText
-      )}
+      <div className="p-6">
+        {studentData ? (
+          // <div className="p-[1rem]" key={studentData.id}>
+          //   {
+          //     <img
+          //       className="justify-center"
+          //       src={
+          //         studentData.photo_url
+          //           ? studentData.photo_url
+          //           : studentData.gender === "F"
+          //           ? "/f_icon.png"
+          //           : "/m_icon.png"
+          //       }
+          //       alt={
+          //         studentData.first_name +
+          //         " " +
+          //         studentData.middle_name +
+          //         " " +
+          //         studentData.last_name +
+          //         " " +
+          //         "Photo"
+          //       }
+          //       height={100}
+          //       width={100}
+          //     />
+          //   }
+          //   <h3>
+          //     {studentData.first_name +
+          //       " " +
+          //       studentData.middle_name +
+          //       " " +
+          //       studentData.last_name}
+          //   </h3>
+          //   <p className="read-the-docs">
+          //     Admission No: {studentData.admission_no}
+          //   </p>
+          //   <p className="read-the-docs">
+          //     Gender: {studentData.gender === "M" ? "Male" : "Female"}
+          //   </p>
+          //   <p className="read-the-docs">
+          //     Date of Birth:{" "}
+          //     {new Date(studentData.d_o_b).toISOString().split("T")[0]}
+          //   </p>
+          //   <p className="read-the-docs">
+          //     Date of Admission:{" "}
+          //     {
+          //       new Date(studentData.date_of_admission)
+          //         .toISOString()
+          //         .split("T")[0]
+          //     }
+          //   </p>
+          // </div>
+          <Card
+            key={studentData.id}
+            className="w-90 h-80 p-6 rounded-2xl shadow-md hover:shadow-lg transition"
+          >
+            <CardHeader>
+              <img
+                className="justify-center"
+                src={
+                  studentData.photo_url
+                    ? studentData.photo_url
+                    : studentData.gender === "F"
+                    ? "/f_icon.png"
+                    : "/m_icon.png"
+                }
+                alt={`${studentData.first_name} ${studentData.last_name} Photo`}
+                height={100}
+                width={100}
+              />
+              <CardTitle>
+                {`${studentData.first_name} ${studentData.middle_name} ${studentData.last_name}`}
+              </CardTitle>
+              <CardDescription>
+                Mob: {studentData.contact_number}
+              </CardDescription>
+              <CardAction>
+                <Button variant="ghost" size="sm" className="top-2 right-2">
+                  <Pencil className="w-4 h-4" />
+                </Button>
+              </CardAction>
+            </CardHeader>
+            <CardContent>
+              <p>{studentData.admission_no}</p>
+              <p className="read-the-docs">
+                {studentData.gender === "M" ? "Male" : "Female"}
+              </p>
+              <p className="read-the-docs">
+                DOB: {new Date(studentData.d_o_b).toISOString().split("T")[0]}
+              </p>
+              <p className="read-the-docs">
+                DOA:{" "}
+                {
+                  new Date(studentData.date_of_admission)
+                    .toISOString()
+                    .split("T")[0]
+                }
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          dataPlaceHolderText
+        )}
+      </div>
       <Button type="submit" onClick={searchStudent}>
         Search
       </Button>
