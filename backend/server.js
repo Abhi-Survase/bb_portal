@@ -21,7 +21,7 @@ app.get("/favicon.ico", (req, res) => {
 
 app.get("/all_active_students", async (req, res) => {
   try {
-    const q = "SELECT * FROM school_metadata.students WHERE is_active = 'true'";
+    const q = "SELECT * FROM school_metadata.students WHERE is_active = 'true' ORDER BY date_of_admission desc";
     const [output] = await student_metadata_db.query(q);
     res.status(200).json(output);
     console.log(new Date(), " INFO ", "fetchAllStudentData | Response =>> " + JSON.stringify(output))
