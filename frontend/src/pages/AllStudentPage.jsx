@@ -53,7 +53,16 @@ function AllStudentPage() {
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
   return (
     <div>
-      <h2 className="text-2xl mb-6 text-center">Active Students</h2>
+      <div className="relative flex items-center my-6">
+        <h2 className="absolute left-1/2 -translate-x-1/2 text-2xl">
+          Active Students
+        </h2>
+        <div className="ml-auto mr-6">
+          <Button variant="outline" asChild>
+            <Link to="/">Go Back</Link>
+          </Button>
+        </div>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-6">
         {studentData.map((data) => (
           // <div className="p-[1rem]" key={data.id}>
@@ -95,10 +104,7 @@ function AllStudentPage() {
           //     {new Date(data.date_of_admission).toISOString().split("T")[0]}
           //   </p>
           // </div>
-          <Card
-            key={data.id}
-            className="w-90 h-80 p-6 rounded-2xl shadow-md hover:shadow-lg transition"
-          >
+          <Card key={data.id} className="w-90 h-80 p-6 transition">
             <CardHeader>
               <img
                 className="justify-center"
@@ -140,9 +146,6 @@ function AllStudentPage() {
         ))}
       </div>
       {/* <Button onClick={() => fetchStudentData()}>Display Student List</Button> */}
-      <Button variant="link" className="flex justify-center mt-6" asChild>
-        <Link to="/">Go Back</Link>
-      </Button>
     </div>
   );
 }

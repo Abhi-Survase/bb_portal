@@ -5,19 +5,21 @@ import { Link } from "react-router";
 
 function App() {
   return (
-    <div className="h-screen flex flex-col justify-center items-center text-center">
+    <div className="bg-(--background) h-screen flex flex-col justify-center items-center text-center">
       <div>
         <img src={bookLogo} className="logo react" alt="SMP logo" />
       </div>
-      <h1>School Management App</h1>
+      <h1 className="text-(--foreground) scroll-m-20 text-center border-b m-8 text-4xl font-bold tracking-tight text-balance">
+        The Blossom Book Portal
+      </h1>
       <div className="card mt-6 grid gap-4">
-        <Button variant="outline">
+        <Button variant="secondary">
           <Link to="students">Show Student List</Link>
         </Button>
-        <Button variant="outline">
+        <Button variant="secondary">
           <Link to="students/findStudent">Find Student</Link>
         </Button>
-        <Button variant="outline">
+        <Button variant="secondary">
           <Link to="addStudent">Add Student Admission</Link>
         </Button>
       </div>
