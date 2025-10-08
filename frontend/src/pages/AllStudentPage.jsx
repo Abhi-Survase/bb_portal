@@ -52,9 +52,9 @@ function AllStudentPage() {
   if (loading) return <p>Loading users...</p>;
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
   return (
-    <div>
+    <div className="bg-(--background)">
       <div className="relative flex items-center my-6">
-        <h2 className="absolute left-1/2 -translate-x-1/2 text-2xl">
+        <h2 className="absolute left-1/2 -translate-x-1/2 text-(--foreground) scroll-m-20 text-3xl font-bold tracking-tight text-balance">
           Active Students
         </h2>
         <div className="ml-auto mr-6">
@@ -146,6 +146,11 @@ function AllStudentPage() {
         ))}
       </div>
       {/* <Button onClick={() => fetchStudentData()}>Display Student List</Button> */}
+      <div className="flex justify-center m-6">
+        <Button variant="outline" asChild>
+          <Link to="/">Go Back</Link>
+        </Button>
+      </div>
     </div>
   );
 }
