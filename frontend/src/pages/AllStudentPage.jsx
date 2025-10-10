@@ -51,14 +51,16 @@ function AllStudentPage() {
   // }
   if (loading) return <p>Loading users...</p>;
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+
+  function handleEditButtonClick() {}
   return (
     <div className="bg-(--background)">
       <div className="relative flex items-center my-6">
-        <h2 className="absolute left-1/2 -translate-x-1/2 text-(--foreground) scroll-m-20 text-3xl font-bold tracking-tight text-balance">
+        <h2 className="absolute left-1/2 -translate-x-1/2 scroll-m-20 text-3xl font-bold tracking-tight text-balance">
           Active Students
         </h2>
         <div className="ml-auto mr-6">
-          <Button variant="outline" asChild>
+          <Button variant="link" asChild>
             <Link to="/">Go Back</Link>
           </Button>
         </div>
@@ -124,7 +126,12 @@ function AllStudentPage() {
               </CardTitle>
               <CardDescription>Mob: {data.contact_number}</CardDescription>
               <CardAction>
-                <Button variant="ghost" size="sm" className="top-2 right-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="top-2 right-2"
+                  onClick={handleEditButtonClick}
+                >
                   <Pencil className="w-4 h-4" />
                 </Button>
               </CardAction>
@@ -147,7 +154,7 @@ function AllStudentPage() {
       </div>
       {/* <Button onClick={() => fetchStudentData()}>Display Student List</Button> */}
       <div className="flex justify-center m-6">
-        <Button variant="outline" asChild>
+        <Button variant="link" asChild>
           <Link to="/">Go Back</Link>
         </Button>
       </div>

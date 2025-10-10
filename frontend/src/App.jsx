@@ -20,7 +20,10 @@ function App() {
           <Link to="students/findStudent">Find Student</Link>
         </Button>
         <Button variant="secondary">
-          <Link to="addStudent">Add Student Admission</Link>
+          <Link to="students/addStudent">Add Student Admission</Link>
+        </Button>
+        <Button variant="secondary">
+          <Link to="students/updateStudent">Update Student Info</Link>
         </Button>
       </div>
     </div>

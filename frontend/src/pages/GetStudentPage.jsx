@@ -13,16 +13,38 @@ import {
 } from "@/components/ui/card";
 import { Pencil } from "lucide-react";
 import axios from "axios";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const formSchema = z.object({
+  admission_no: z.string().regex(/^\d{6,}$/, {
+    message: "Value should be a NUMBER and at least 6 digits.",
+  }),
+});
 
 function GetStudentPage() {
-  const [inputValue, setInputValue] = useState("");
   const [studentData, setStudentData] = useState("");
 
-  function updateInputtext(e) {
-    setInputValue(e.target.value);
-  }
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      admission_no: "",
+    },
+  });
 
-  async function searchStudent() {
+  async function onSubmitHandler(value) {
+    // console.log(value);
+    const inputValue = value.admission_no;
     const apiUrl = `http://localhost:8810/get_student_byAdmissionNo/${inputValue}`;
     try {
       // console.log(apiUrl);
@@ -30,7 +52,6 @@ function GetStudentPage() {
       if (response.data.length === 0) {
         alert(`No student found with this admission number: ${inputValue}`);
       } else {
-        // const result = await response.json();
         setStudentData(response.data[0]);
         // console.log(response.data[0]);
       }
@@ -40,128 +61,107 @@ function GetStudentPage() {
           ? alert("Enter valid Admission Number!")
           : alert("Something went wrong");
       }
-      // console.log(error);
+      console.log(error);
     }
   }
   const dataPlaceHolderText = "Hit Search!";
   let placeHolderText = "Enter Admission Number";
   return (
-    <div className="h-screen flex flex-col gap-1 justify-center items-center">
-      <h2>Search for Student</h2>
-      <Input
-        className="max-w-3xs"
-        type="text"
-        placeholder={placeHolderText}
-        value={inputValue}
-        onChange={updateInputtext}
-      />
-      <div className="p-6">
-        {studentData ? (
-          // <div className="p-[1rem]" key={studentData.id}>
-          //   {
-          //     <img
-          //       className="justify-center"
-          //       src={
-          //         studentData.photo_url
-          //           ? studentData.photo_url
-          //           : studentData.gender === "F"
-          //           ? "/f_icon.png"
-          //           : "/m_icon.png"
-          //       }
-          //       alt={
-          //         studentData.first_name +
-          //         " " +
-          //         studentData.middle_name +
-          //         " " +
-          //         studentData.last_name +
-          //         " " +
-          //         "Photo"
-          //       }
-          //       height={100}
-          //       width={100}
-          //     />
-          //   }
-          //   <h3>
-          //     {studentData.first_name +
-          //       " " +
-          //       studentData.middle_name +
-          //       " " +
-          //       studentData.last_name}
-          //   </h3>
-          //   <p className="read-the-docs">
-          //     Admission No: {studentData.admission_no}
-          //   </p>
-          //   <p className="read-the-docs">
-          //     Gender: {studentData.gender === "M" ? "Male" : "Female"}
-          //   </p>
-          //   <p className="read-the-docs">
-          //     Date of Birth:{" "}
-          //     {new Date(studentData.d_o_b).toISOString().split("T")[0]}
-          //   </p>
-          //   <p className="read-the-docs">
-          //     Date of Admission:{" "}
-          //     {
-          //       new Date(studentData.date_of_admission)
-          //         .toISOString()
-          //         .split("T")[0]
-          //     }
-          //   </p>
-          // </div>
-          <Card
-            key={studentData.id}
-            className="w-90 h-80 p-6 rounded-2xl shadow-md hover:shadow-lg transition"
-          >
-            <CardHeader>
-              <img
-                className="justify-center"
-                src={
-                  studentData.photo_url
-                    ? studentData.photo_url
-                    : studentData.gender === "F"
-                    ? "/f_icon.png"
-                    : "/m_icon.png"
-                }
-                alt={`${studentData.first_name} ${studentData.last_name} Photo`}
-                height={100}
-                width={100}
-              />
-              <CardTitle>
-                {`${studentData.first_name} ${studentData.middle_name} ${studentData.last_name}`}
-              </CardTitle>
-              <CardDescription>
-                Mob: {studentData.contact_number}
-              </CardDescription>
-              <CardAction>
-                <Button variant="ghost" size="sm" className="top-2 right-2">
-                  <Pencil className="w-4 h-4" />
-                </Button>
-              </CardAction>
-            </CardHeader>
-            <CardContent>
-              <p>{studentData.admission_no}</p>
-              <p className="read-the-docs">
-                {studentData.gender === "M" ? "Male" : "Female"}
-              </p>
-              <p className="read-the-docs">
-                DOB: {new Date(studentData.d_o_b).toISOString().split("T")[0]}
-              </p>
-              <p className="read-the-docs">
-                DOA:{" "}
-                {
-                  new Date(studentData.date_of_admission)
-                    .toISOString()
-                    .split("T")[0]
-                }
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          dataPlaceHolderText
-        )}
-      </div>
-      <Button type="submit" onClick={searchStudent}>
-        Search
-      </Button>
+    <div className="h-screen flex flex-col gap-6 justify-center items-center">
+      <h2 className="scroll-m-20 text-3xl font-bold tracking-tight text-balance">
+        Search for Student
+      </h2>
+      <Form {...form}>
+        <form
+          className="w-2/3 space-y-3"
+          onSubmit={form.handleSubmit(onSubmitHandler)}
+        >
+          <FormField
+            control={form.control}
+            name="admission_no"
+            render={({ field }) => (
+              <FormItem className="flex flex-col gap-1 justify-center items-center ">
+                <FormLabel className="text-xl">
+                  Search with Admission Number
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter Admission Number"
+                    className="max-w-3xs mb-3"
+                    type="text"
+                    {...field}
+                  />
+                </FormControl>
+                {studentData ? (
+                  <Card
+                    key={studentData.id}
+                    className="w-90 h-80 p-6 rounded-2xl shadow-md hover:shadow-lg transition"
+                  >
+                    <CardHeader>
+                      <img
+                        className="justify-center"
+                        src={
+                          studentData.photo_url
+                            ? studentData.photo_url
+                            : studentData.gender === "F"
+                            ? "/f_icon.png"
+                            : "/m_icon.png"
+                        }
+                        alt={`${studentData.first_name} ${studentData.last_name} Photo`}
+                        height={100}
+                        width={100}
+                      />
+                      <CardTitle>
+                        {`${studentData.first_name} ${studentData.middle_name} ${studentData.last_name}`}
+                      </CardTitle>
+                      <CardDescription>
+                        Mob: {studentData.contact_number}
+                      </CardDescription>
+                      <CardAction>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="top-2 right-2"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                      </CardAction>
+                    </CardHeader>
+                    <CardContent>
+                      <p>{studentData.admission_no}</p>
+                      <p className="read-the-docs">
+                        {studentData.gender === "M" ? "Male" : "Female"}
+                      </p>
+                      <p className="read-the-docs">
+                        DOB:{" "}
+                        {
+                          new Date(studentData.d_o_b)
+                            .toISOString()
+                            .split("T")[0]
+                        }
+                      </p>
+                      <p className="read-the-docs">
+                        DOA:{" "}
+                        {
+                          new Date(studentData.date_of_admission)
+                            .toISOString()
+                            .split("T")[0]
+                        }
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <FormDescription>Hit Submit!</FormDescription>
+                )}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex justify-center">
+            <Button type="submit">Submit</Button>
+          </div>
+        </form>
+      </Form>
       <Button variant="link" asChild>
         <Link to="/">Go Back</Link>
       </Button>

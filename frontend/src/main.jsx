@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import AllStudentPage from "./pages/AllStudentPage.jsx";
 import AddStudentPage from "./pages/AddStudentPage.jsx";
 import GetStudentPage from "./pages/GetStudentPage.jsx";
+import UpdateStudentPage from "./pages/UpdateStudentPage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -15,8 +16,9 @@ createRoot(document.getElementById("root")).render(
         <Route path="students">
           <Route index element={<AllStudentPage />} />
           <Route path="findStudent" element={<GetStudentPage />} />
+          <Route path="addStudent" element={<AddStudentPage />} />
+          <Route path="updateStudent" element={<UpdateStudentPage />} />
         </Route>
-        <Route path="addStudent" element={<AddStudentPage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
