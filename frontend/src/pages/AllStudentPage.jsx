@@ -34,21 +34,6 @@ function AllStudentPage() {
     };
     fetchAllStudentData();
   }, []);
-  // async function fetchStudentData() {
-  //   // const apiUrl = "https://jsonplaceholder.typicode.com/users";
-  //   try {
-  //     const apiUrl = "http://localhost:8810/all_active_students";
-  //     setLoading(true);
-  //     const response = await axios.get(apiUrl);
-  //     setStudentData(response.data);
-  //     // console.log(response.data);
-  //   } catch (err) {
-  //     console.error(err.message);
-  //     setError(err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
   if (loading) return <p>Loading users...</p>;
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
 
@@ -60,52 +45,13 @@ function AllStudentPage() {
           Active Students
         </h2>
         <div className="ml-auto mr-6">
-          <Button variant="link" asChild>
+          <Button variant="outline" asChild>
             <Link to="/">Go Back</Link>
           </Button>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-6">
         {studentData.map((data) => (
-          // <div className="p-[1rem]" key={data.id}>
-          //   {
-          //     <img
-          //       className="justify-center"
-          //       src={
-          //         data.photo_url
-          //           ? data.photo_url
-          //           : data.gender === "F"
-          //           ? "/f_icon.png"
-          //           : "/m_icon.png"
-          //       }
-          //       alt={
-          //         data.first_name +
-          //         " " +
-          //         data.middle_name +
-          //         " " +
-          //         data.last_name +
-          //         " " +
-          //         "Photo"
-          //       }
-          //       height={100}
-          //       width={100}
-          //     />
-          //   }
-          //   <h3>
-          //     {data.first_name + " " + data.middle_name + " " + data.last_name}
-          //   </h3>
-          //   <p>{data.admission_no}</p>
-          //   <p className="read-the-docs">
-          //     Gender: {data.gender === "M" ? "Male" : "Female"}
-          //   </p>
-          //   <p className="read-the-docs">
-          //     Date of Birth: {new Date(data.d_o_b).toISOString().split("T")[0]}
-          //   </p>
-          //   <p className="read-the-docs">
-          //     Date of Admission:{" "}
-          //     {new Date(data.date_of_admission).toISOString().split("T")[0]}
-          //   </p>
-          // </div>
           <Card key={data.id} className="w-90 h-80 p-6 transition">
             <CardHeader>
               <img
@@ -154,7 +100,7 @@ function AllStudentPage() {
       </div>
       {/* <Button onClick={() => fetchStudentData()}>Display Student List</Button> */}
       <div className="flex justify-center m-6">
-        <Button variant="link" asChild>
+        <Button variant="outline" asChild>
           <Link to="/">Go Back</Link>
         </Button>
       </div>
