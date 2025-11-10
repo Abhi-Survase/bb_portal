@@ -162,7 +162,7 @@ function GetStudentPage() {
           </div>
         </form>
       </Form>
-      <Button variant="link" asChild>
+      <Button variant="outline" asChild>
         <Link to="/">Go Back</Link>
       </Button>
     </div>
