@@ -147,13 +147,13 @@ function AddStudentPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto my-8 px-4">
-      <Button variant="ghost" asChild className="mb-4">
+    <div className="max-w-4xl mx-auto px-4">
+      {/* <Button variant="ghost" asChild className="mb-4">
         <Link to="/">
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Back to Dashboard
         </Link>
-      </Button>
+      </Button> */}
       <Toaster />
       <div className="space-y-6">
         <h2 className="text-3xl font-bold tracking-tight">

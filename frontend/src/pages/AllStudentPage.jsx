@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Pencil } from "lucide-react";
+import { Pencil, Search } from "lucide-react";
 
 function AllStudentPage() {
   const [studentData, setStudentData] = useState([]);
@@ -40,19 +40,26 @@ function AllStudentPage() {
   function handleEditButtonClick() {}
   return (
     <div className="bg-(--background)">
-      <div className="relative flex items-center my-6">
+      <div className="relative flex items-center ">
         <h2 className="absolute left-1/2 -translate-x-1/2 scroll-m-20 text-3xl font-bold tracking-tight text-balance">
           Active Students
         </h2>
         <div className="ml-auto mr-6">
           <Button variant="outline" asChild>
-            <Link to="/">Go Back</Link>
+            <Link
+              to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
+                import.meta.env.VITE_FIND_STUDENT_URL
+              }`}
+            >
+              <Search />
+              Search
+            </Link>
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 p-5">
         {studentData.map((data) => (
-          <Card key={data.id} className="w-90 h-80 p-6 transition">
+          <Card key={data.id} className="w-85 h-75 p-4 transition">
             <CardHeader>
               <img
                 className="justify-center"
@@ -99,11 +106,6 @@ function AllStudentPage() {
         ))}
       </div>
       {/* <Button onClick={() => fetchStudentData()}>Display Student List</Button> */}
-      <div className="flex justify-center m-6">
-        <Button variant="outline" asChild>
-          <Link to="/">Go Back</Link>
-        </Button>
-      </div>
     </div>
   );
 }
