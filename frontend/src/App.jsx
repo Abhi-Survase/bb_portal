@@ -2,31 +2,34 @@ import bookLogo from "/smp_icon.svg";
 import { Button } from "@/components/ui/button";
 import "./App.css";
 import { Link } from "react-router";
+import { BookOpen, Search, Plus, Edit, List } from "lucide-react";
+import { Navigate, BrowserRouter, Routes, Route } from "react-router";
+import AllStudentPage from "./pages/AllStudentPage.jsx";
+import AddStudentPage from "./pages/AddStudentPage.jsx";
+import GetStudentPage from "./pages/GetStudentPage.jsx";
+import UpdateStudentPage from "./pages/UpdateStudentPage.jsx";
+import Dashboard_new from "./pages/Dashboard_dummy.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 
 function App() {
   return (
-    <div className="bg-(--background) h-screen flex flex-col justify-center items-center text-center">
-      <div>
-        <img src={bookLogo} className="logo react" alt="SMP logo" />
-      </div>
-      <h1 className="text-(--foreground) scroll-m-20 text-center border-b m-8 text-4xl font-bold tracking-tight text-balance">
-        The Blossom Book Portal
-      </h1>
-      <div className="card mt-6 grid gap-4">
-        <Button variant="secondary">
-          <Link to="students">Show Student List</Link>
-        </Button>
-        <Button variant="secondary">
-          <Link to="students/findStudent">Find Student</Link>
-        </Button>
-        <Button variant="secondary">
-          <Link to="students/addStudent">Add Student Admission</Link>
-        </Button>
-        <Button variant="secondary">
-          <Link to="students/updateStudent">Update Student Info</Link>
-        </Button>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/">
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard_new" element={<Dashboard_new />} />
+        </Route>
+        <Route path="students">
+          <Route index element={<AllStudentPage />} />
+          <Route path="findStudent" element={<GetStudentPage />} />
+        </Route>
+        <Route path="admission">
+          <Route path="addStudent" element={<AddStudentPage />} />
+          <Route path="updateStudent" element={<UpdateStudentPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
