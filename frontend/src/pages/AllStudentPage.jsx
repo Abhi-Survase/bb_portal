@@ -11,7 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Pencil, Search } from "lucide-react";
+import {
+  Pencil,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  ChevronFirst,
+  ChevronLast,
+} from "lucide-react";
 
 function AllStudentPage() {
   const [studentData, setStudentData] = useState([]);
@@ -27,22 +34,28 @@ function AllStudentPage() {
   });
 
   function handlePageChange(newPage) {
-    // console.log(newPage);
+    console.log(newPage);
     setPaginationData((prevData) => ({ ...prevData, current_page: newPage }));
   }
 
   useEffect(() => {
     const fetchAllStudentData = async () => {
       try {
-        const apiUrl = `http://localhost:8810/all_active_students?page=${paginationData.current_page}&limit=${paginationData.limit}`;
+        const apiUrl = `http://localhost:8810/all_active_students`;
         setLoading(true);
-        const response = await axios.get(apiUrl);
-        setStudentData(response.data.data);
+        // console.log(paginationData);
+        const response = await axios.get(apiUrl, {
+          params: {
+            page: paginationData.current_page,
+            limit: paginationData.limit,
+          },
+        });
         setTotalStudentCountANDPages({
           total_student_count: response.data.pagination.totalCount,
           total_pages: response.data.pagination.totalPages,
         });
-        // console.log(response.data[0]);
+        setStudentData(response.data.data);
+        console.log(response.data);
       } catch (error) {
         console.log(error);
         setError(error.message);
@@ -51,7 +64,7 @@ function AllStudentPage() {
       }
     };
     fetchAllStudentData();
-  }, [paginationData.current_page]);
+  }, [paginationData]);
   if (loading) return <p>Loading users...</p>;
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
 
@@ -127,18 +140,32 @@ function AllStudentPage() {
         ))}
       </div>
       <Button
-        disabled={paginationData.current_page == 1}
+        disabled={paginationData.current_page <= 1}
+        onClick={() => handlePageChange(1)}
+      >
+        <ChevronFirst />
+      </Button>
+      <Button
+        disabled={paginationData.current_page <= 1}
         onClick={() => handlePageChange(paginationData.current_page - 1)}
       >
-        Prev Page
+        <ChevronLeft />
       </Button>
       <Button
         disabled={
-          paginationData.current_page == totalStudentCountANDPages.total_pages
+          paginationData.current_page >= totalStudentCountANDPages.total_pages
         }
         onClick={() => handlePageChange(paginationData.current_page + 1)}
       >
-        Next Page
+        <ChevronRight />
+      </Button>
+      <Button
+        disabled={
+          paginationData.current_page >= totalStudentCountANDPages.total_pages
+        }
+        onClick={() => handlePageChange(totalStudentCountANDPages.total_pages)}
+      >
+        <ChevronLast />
       </Button>
     </div>
   );
