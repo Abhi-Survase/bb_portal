@@ -1,4 +1,4 @@
-import express, { json } from "express";
+import express from "express";
 import cors from "cors";
 import { student_metadata_db } from "./config/db.js";
 
@@ -21,16 +21,20 @@ app.get("/favicon.ico", (req, res) => {
 
 app.get("/all_active_students", async (req, res) => {
   const page = Math.max(parseInt(req.query.page) || 1, 1);
-  const limit = Math.min(Math.max(parseInt(req.query.limit) || 8, 1), 100);
+  const limit = Math.min(
+    Math.max(parseInt(req.query.limit) || 8, 1),
+    import.meta.env.VITE_MAX_FETCH_LIMIT
+  );
   const offset = (page - 1) * limit;
   // console.log(page, limit, offset);
   try {
-    const dataQuery = `SELECT * FROM school_metadata.students WHERE is_active = 'true' ORDER BY date_of_admission desc, id asc LIMIT ${limit} OFFSET ${offset}`;
+    const dataQuery =
+      "SELECT * FROM school_metadata.students WHERE is_active = 'true' ORDER BY date_of_admission desc, id asc LIMIT ? OFFSET ?";
     const countQuery =
       "SELECT count(*) as total_count FROM school_metadata.students WHERE is_active = 'true'";
     const [countResult, dataResult] = await Promise.all([
       student_metadata_db.query(countQuery),
-      student_metadata_db.query(dataQuery),
+      student_metadata_db.query(dataQuery, [limit, offset]),
     ]);
     const total_studentCount = countResult[0][0].total_count;
     const total_pages = Math.ceil(total_studentCount / limit);
