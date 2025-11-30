@@ -14,11 +14,16 @@ import {
 import {
   Pencil,
   Search,
-  ChevronLeft,
-  ChevronRight,
-  ChevronFirst,
-  ChevronLast,
+  ArrowLeft,
+  ArrowRight,
+  ArrowLeftToLine,
+  ArrowRightToLine,
 } from "lucide-react";
+import {
+  ButtonGroup,
+  ButtonGroupSeparator,
+} from "@/components/ui/button-group";
+import { Input } from "@/components/ui/input";
 
 function AllStudentPage() {
   const [studentData, setStudentData] = useState([]);
@@ -139,34 +144,79 @@ function AllStudentPage() {
           </Card>
         ))}
       </div>
-      <Button
-        disabled={paginationData.current_page <= 1}
-        onClick={() => handlePageChange(1)}
-      >
-        <ChevronFirst />
-      </Button>
-      <Button
-        disabled={paginationData.current_page <= 1}
-        onClick={() => handlePageChange(paginationData.current_page - 1)}
-      >
-        <ChevronLeft />
-      </Button>
-      <Button
-        disabled={
-          paginationData.current_page >= totalStudentCountANDPages.total_pages
-        }
-        onClick={() => handlePageChange(paginationData.current_page + 1)}
-      >
-        <ChevronRight />
-      </Button>
-      <Button
-        disabled={
-          paginationData.current_page >= totalStudentCountANDPages.total_pages
-        }
-        onClick={() => handlePageChange(totalStudentCountANDPages.total_pages)}
-      >
-        <ChevronLast />
-      </Button>
+      <ButtonGroup className="p-6">
+        <ButtonGroup>
+          <Button
+            disabled={paginationData.current_page <= 1}
+            onClick={() => handlePageChange(1)}
+            variant="outline"
+            size="icon"
+            aria-label="First"
+          >
+            <ArrowLeftToLine />
+          </Button>
+          <Button
+            disabled={paginationData.current_page <= 1}
+            onClick={() => handlePageChange(paginationData.current_page - 1)}
+            variant="outline"
+            size="icon"
+            aria-label="Previous"
+          >
+            <ArrowLeft />
+          </Button>
+        </ButtonGroup>
+        <ButtonGroup>
+          {Array.from(
+            { length: totalStudentCountANDPages.total_pages },
+            (_, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                size="icon"
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            )
+          )}
+        </ButtonGroup>
+        <ButtonGroup>
+          <Input
+            className="!w-9 !max-w-max text-center placeholder:text-center"
+            aria-label="Enter Page Number"
+            type="text"
+            placeholder={`${paginationData.current_page}`}
+          />
+        </ButtonGroup>
+        <ButtonGroup>
+          <Button
+            disabled={
+              paginationData.current_page >=
+              totalStudentCountANDPages.total_pages
+            }
+            onClick={() => handlePageChange(paginationData.current_page + 1)}
+            variant="outline"
+            size="icon"
+            aria-label="Next"
+          >
+            <ArrowRight />
+          </Button>
+          <Button
+            disabled={
+              paginationData.current_page >=
+              totalStudentCountANDPages.total_pages
+            }
+            onClick={() =>
+              handlePageChange(totalStudentCountANDPages.total_pages)
+            }
+            variant="outline"
+            size="icon"
+            aria-label="Last"
+          >
+            <ArrowRightToLine />
+          </Button>
+        </ButtonGroup>
+      </ButtonGroup>
     </div>
   );
 }

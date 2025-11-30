@@ -23,7 +23,7 @@ app.get("/all_active_students", async (req, res) => {
   const page = Math.max(parseInt(req.query.page) || 1, 1);
   const limit = Math.min(
     Math.max(parseInt(req.query.limit) || 8, 1),
-    import.meta.env.VITE_MAX_FETCH_LIMIT
+    process.env.VITE_MAX_FETCH_LIMIT
   );
   const offset = (page - 1) * limit;
   // console.log(page, limit, offset);
