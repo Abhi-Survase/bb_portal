@@ -37,16 +37,14 @@ function App() {
               element={<GetStudentPage />}
             />
           </Route>
-          <Route path={import.meta.env.VITE_ADMISSION_URL}>
-            <Route
-              path={import.meta.env.VITE_ADD_STUDENT_URL}
-              element={<AddStudentPage />}
-            />
-            <Route
-              path={import.meta.env.VITE_UPDATE_STUDENT_URL}
-              element={<UpdateStudentPage />}
-            />
-          </Route>
+          <Route
+            path={import.meta.env.VITE_ADD_STUDENT_URL}
+            element={<AddStudentPage />}
+          />
+          <Route
+            path={import.meta.env.VITE_UPDATE_STUDENT_URL}
+            element={<UpdateStudentPage />}
+          />
         </Route>
         <Route path="dashboard_new" element={<Dashboard_new />} />
       </Routes>

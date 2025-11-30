@@ -17,14 +17,32 @@ function AllStudentPage() {
   const [studentData, setStudentData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [paginationData, setPaginationData] = useState({
+    current_page: 1,
+    limit: 8,
+  });
+  const [totalStudentCountANDPages, setTotalStudentCountANDPages] = useState({
+    total_student_count: 0,
+    total_pages: 1,
+  });
+
+  function handlePageChange(newPage) {
+    // console.log(newPage);
+    setPaginationData((prevData) => ({ ...prevData, current_page: newPage }));
+  }
 
   useEffect(() => {
     const fetchAllStudentData = async () => {
       try {
-        const apiUrl = "http://localhost:8810/all_active_students";
+        const apiUrl = `http://localhost:8810/all_active_students?page=${paginationData.current_page}&limit=${paginationData.limit}`;
         setLoading(true);
         const response = await axios.get(apiUrl);
-        setStudentData(response.data);
+        setStudentData(response.data.data);
+        setTotalStudentCountANDPages({
+          total_student_count: response.data.pagination.totalCount,
+          total_pages: response.data.pagination.totalPages,
+        });
+        // console.log(response.data[0]);
       } catch (error) {
         console.log(error);
         setError(error.message);
@@ -33,15 +51,18 @@ function AllStudentPage() {
       }
     };
     fetchAllStudentData();
-  }, []);
+  }, [paginationData.current_page]);
   if (loading) return <p>Loading users...</p>;
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
 
-  function handleEditButtonClick() {}
+  function handleEditButtonClick() {
+    console.log("Edit clicked!");
+  }
+
   return (
     <div className="bg-(--background)">
-      <div className="relative flex items-center ">
-        <h2 className="absolute left-1/2 -translate-x-1/2 scroll-m-20 text-3xl font-bold tracking-tight text-balance">
+      <div className="relative flex items-center pb-2">
+        <h2 className="absolute left-1/2 -translate-x-1/2 scroll-m-20 text-3xl font-bold tracking-tight text-balance no-wrap">
           Active Students
         </h2>
         <div className="ml-auto mr-6">
@@ -57,9 +78,9 @@ function AllStudentPage() {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 p-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
         {studentData.map((data) => (
-          <Card key={data.id} className="w-85 h-75 p-4 transition">
+          <Card key={data.id} className="px-2 py-2 transition">
             <CardHeader>
               <img
                 className="justify-center"
@@ -98,14 +119,27 @@ function AllStudentPage() {
                 DOB: {new Date(data.d_o_b).toISOString().split("T")[0]}
               </p>
               <p className="read-the-docs">
-                DOA:{" "}
+                DOA:
                 {new Date(data.date_of_admission).toISOString().split("T")[0]}
               </p>
             </CardContent>
           </Card>
         ))}
       </div>
-      {/* <Button onClick={() => fetchStudentData()}>Display Student List</Button> */}
+      <Button
+        disabled={paginationData.current_page == 1}
+        onClick={() => handlePageChange(paginationData.current_page - 1)}
+      >
+        Prev Page
+      </Button>
+      <Button
+        disabled={
+          paginationData.current_page == totalStudentCountANDPages.total_pages
+        }
+        onClick={() => handlePageChange(paginationData.current_page + 1)}
+      >
+        Next Page
+      </Button>
     </div>
   );
 }

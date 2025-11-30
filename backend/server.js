@@ -20,13 +20,45 @@ app.get("/favicon.ico", (req, res) => {
 });
 
 app.get("/all_active_students", async (req, res) => {
+  const page = Math.max(parseInt(req.query.page) || 1, 1);
+  const limit = Math.min(Math.max(parseInt(req.query.limit) || 8, 1), 100);
+  const offset = (page - 1) * limit;
+  // console.log(page, limit, offset);
   try {
-    const q = "SELECT * FROM school_metadata.students WHERE is_active = 'true' ORDER BY date_of_admission desc";
-    const [output] = await student_metadata_db.query(q);
-    res.status(200).json(output);
-    console.log(new Date(), " INFO ", "fetchAllStudentData | Response =>> " + JSON.stringify(output))
+    const dataQuery = `SELECT * FROM school_metadata.students WHERE is_active = 'true' ORDER BY date_of_admission desc, id asc LIMIT ${limit} OFFSET ${offset}`;
+    const countQuery =
+      "SELECT count(*) as total_count FROM school_metadata.students WHERE is_active = 'true'";
+    const [countResult, dataResult] = await Promise.all([
+      student_metadata_db.query(countQuery),
+      student_metadata_db.query(dataQuery),
+    ]);
+    const total_studentCount = countResult[0][0].total_count;
+    const total_pages = Math.ceil(total_studentCount / limit);
+    // console.log(countResult[0][0].total_count, dataResult[0]);
+    res.status(200).json({
+      data: dataResult[0],
+      pagination: {
+        totalCount: total_studentCount,
+        totalPages: total_pages,
+        currentPage: page,
+        limit: limit,
+      },
+    });
+    console.log(
+      new Date(),
+      " INFO ",
+      "fetchAllStudentData | ",
+      `Currentpage: ${page}, limit: ${limit}, offset: ${offset}, totalCount: ${total_studentCount}, totalPages: ${total_pages}`,
+      " | Response =>> " + JSON.stringify(dataResult[0])
+    );
   } catch (err) {
-    console.log(new Date(), " ERROR ", "fetchAllStudentData | Exception =>> " + err)
+    console.log(
+      new Date(),
+      " ERROR ",
+      "fetchAllStudentData | ",
+      `page: ${page}, limit: ${limit}, offset: ${offset}`,
+      " | Exception =>> " + err
+    );
     res.status(500).json({
       error: err.message,
       code: err.errno,
@@ -37,7 +69,12 @@ app.get("/all_active_students", async (req, res) => {
 app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
   try {
     const student_admissionNo = req.params.admission_no;
-    console.log(new Date(), " INFO ", "getStudentByAdmissionId | Request =>> ", "student_admissionNo: " + student_admissionNo)
+    console.log(
+      new Date(),
+      " INFO ",
+      "getStudentByAdmissionId | Request =>> ",
+      "student_admissionNo: " + student_admissionNo
+    );
     // const q = `SELECT * FROM school_metadata.students WHERE admission_no = ${student_admissionNo}`; //admission_no = ?`;
     const q = `SELECT * FROM school_metadata.students WHERE admission_no = ?`;
     // const [output] = await student_metadata_db.query(q); //query(q, [student_admissionNo]);
@@ -45,9 +82,18 @@ app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
 
     res.status(200).json(output);
     {
-      (JSON.stringify(output) === "[]")
-        ? console.log(new Date(), " ERROR ", "getStudentByAdmissionId | Empty Set returned! | Response =>> " + JSON.stringify(output))
-        : console.log(new Date(), " INFO ", "getStudentByAdmissionId | Response =>> " + JSON.stringify(output))
+      JSON.stringify(output) === "[]"
+        ? console.log(
+            new Date(),
+            " ERROR ",
+            "getStudentByAdmissionId | Empty Set returned! | Response =>> " +
+              JSON.stringify(output)
+          )
+        : console.log(
+            new Date(),
+            " INFO ",
+            "getStudentByAdmissionId | Response =>> " + JSON.stringify(output)
+          );
     }
   } catch (err) {
     let status = 500;
@@ -64,8 +110,16 @@ app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
       type: err.code,
       code: err.errno,
     });
-    console.log(new Date(), " ERROR ", "getStudentByAdmissionId | Exception =>> " + err)
-    console.log(new Date(), " ERROR ", "getStudentByAdmissionId | Exception =>> " + message)
+    console.log(
+      new Date(),
+      " ERROR ",
+      "getStudentByAdmissionId | Exception =>> " + err
+    );
+    console.log(
+      new Date(),
+      " ERROR ",
+      "getStudentByAdmissionId | Exception =>> " + message
+    );
   }
 });
 
@@ -89,16 +143,25 @@ app.post("/add_student", async (req, res) => {
       req.body.pincode,
       req.body.disability,
     ];
-    console.log(new Date(), " INFO ", "addStudent | Request =>> ", q + " {" + values + "}")
+    console.log(
+      new Date(),
+      " INFO ",
+      "addStudent | Request =>> ",
+      q + " {" + values + "}"
+    );
     await student_metadata_db.query(q, [values]);
 
-    console.log(new Date(), " INFO ", "addStudent | Student successfully added to Database!")
+    console.log(
+      new Date(),
+      " INFO ",
+      "addStudent | Student successfully added to Database!"
+    );
     return res.status(200).json("Student successfully added to Database!");
   } catch (err) {
     let message = err.message;
-    console.log(new Date(), " ERROR ", "addStudent | Exception =>> " + err)
+    console.log(new Date(), " ERROR ", "addStudent | Exception =>> " + err);
     if (err.code == "ER_DUP_ENTRY") {
-      message = "Student with this Admission Number already exists!"
+      message = "Student with this Admission Number already exists!";
       res.status(400).json({
         error: message,
         type: err.code,
