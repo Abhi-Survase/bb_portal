@@ -44,14 +44,14 @@ const sidebar_menu_items = [
   {
     title: "Add Admission",
     icon: UserPlus,
-    url: `/${import.meta.env.VITE_ADMISSION_URL}/${
+    url: `/${import.meta.env.VITE_ALL_STUDENT_URL}/${
       import.meta.env.VITE_ADD_STUDENT_URL
     }`,
   },
   {
     title: "Update Info",
     icon: Edit,
-    url: `/${import.meta.env.VITE_ADMISSION_URL}/${
+    url: `/${import.meta.env.VITE_ALL_STUDENT_URL}/${
       import.meta.env.VITE_UPDATE_STUDENT_URL
     }`,
   },

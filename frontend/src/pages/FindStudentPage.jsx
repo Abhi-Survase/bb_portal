@@ -25,6 +25,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   admission_no: z.string().regex(/^\d{6,}$/, {
@@ -50,7 +51,7 @@ function GetStudentPage() {
       // console.log(apiUrl);
       const response = await axios.get(apiUrl);
       if (response.data.length === 0) {
-        alert(`No student found with this admission number: ${inputValue}`);
+        toast.error(`No student with admission number: ${inputValue}`);
       } else {
         setStudentData(response.data[0]);
         // console.log(response.data[0]);
@@ -58,8 +59,8 @@ function GetStudentPage() {
     } catch (error) {
       {
         error.code === "ERR_BAD_REQUEST" || error.code === "ERR_BAD_RESPONSE"
-          ? alert("Enter valid Admission Number!")
-          : alert("Something went wrong");
+          ? toast.error("Enter valid Admission Number!")
+          : toast.error("Something went wrong");
       }
       console.log(error);
     }
