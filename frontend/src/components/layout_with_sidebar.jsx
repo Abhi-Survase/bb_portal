@@ -7,7 +7,6 @@ function Layout_with_sidebar() {
     <SidebarProvider>
       <AppSidebar />
       <main className="w-full">
-        <SidebarTrigger />
         <>
           <Outlet />
         </>
