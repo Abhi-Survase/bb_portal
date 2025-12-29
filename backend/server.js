@@ -12,7 +12,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  throw new Error("BROKEN AND NOT ALLOWED!");
+  throw new Error("Incorrect Endpoint! Check API Documentation.");
 });
 
 app.get("/favicon.ico", (req, res) => {
@@ -20,6 +20,7 @@ app.get("/favicon.ico", (req, res) => {
 });
 
 app.get("/all_active_students", async (req, res) => {
+  // console.log("takes following req params:","page","limit");
   const page = Math.max(parseInt(req.query.page) || 1, 1);
   const limit = Math.min(
     Math.max(parseInt(req.query.limit) || 8, 1),
@@ -124,6 +125,69 @@ app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
       " ERROR ",
       "getStudentByAdmissionId | Exception =>> " + message
     );
+  }
+});
+
+app.get("/getStudentDetails", async (req, res) => {
+  try {
+    const detailParams = [
+      "admission_no",
+      "date_of_admission",
+      "first_name",
+      "last_name",
+      "contact_number",
+    ];
+    console.log(
+      new Date(),
+      " INFO ",
+      "getStudentDetails | Request =>> " + JSON.stringify(req.query)
+    );
+    const searchDetailByParam = detailParams[req.query.searchParam];
+    const searchDetailKeyword = req.query.detailKeyword;
+    if (
+      searchDetailByParam == undefined ||
+      searchDetailByParam === "" ||
+      searchDetailByParam == null
+    ) {
+      console.log(
+        new Date(),
+        " ERROR ",
+        "getStudentDetails | searchDetailByParam=> " +
+          searchDetailByParam +
+          " | Exception =>> " +
+          "Invalid Search Parameter!"
+      );
+      return res.status(400).json("Invalid Search Parameter!");
+    } else if (
+      searchDetailKeyword == undefined ||
+      searchDetailKeyword === "" ||
+      searchDetailKeyword == null
+    ) {
+      console.log(
+        new Date(),
+        " ERROR ",
+        "getStudentDetails | searchDetailKeyword=> " +
+          searchDetailKeyword +
+          " | Exception =>> " +
+          "Empty Search Keyword Recieved!"
+      );
+      return res.status(400).json("Empty Search Keyword Recieved!");
+    }
+    const q = `SELECT * FROM school_metadata.students WHERE ${searchDetailByParam} like ?`;
+    const [output] = await student_metadata_db.query(q, [searchDetailKeyword]);
+    console.log(
+      new Date(),
+      " INFO ",
+      "getStudentDetails | Response =>> " + JSON.stringify(output)
+    );
+    return res.status(200).json(output);
+  } catch (err) {
+    console.log(
+      new Date(),
+      " ERROR ",
+      "getStudentDetails | Exception =>> " + err
+    );
+    return res.status(504).json(err.message);
   }
 });
 
