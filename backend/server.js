@@ -51,7 +51,7 @@ app.get("/all_active_students", async (req, res) => {
     });
     console.log(
       new Date(),
-      " INFO ",
+      "INFO",
       "fetchAllStudentData | ",
       `Currentpage: ${page}, limit: ${limit}, offset: ${offset}, totalCount: ${total_studentCount}, totalPages: ${total_pages}`,
       " | Response =>> " + JSON.stringify(dataResult[0])
@@ -76,7 +76,7 @@ app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
     const student_admissionNo = req.params.admission_no;
     console.log(
       new Date(),
-      " INFO ",
+      "INFO",
       "getStudentByAdmissionId | Request =>> ",
       "student_admissionNo: " + student_admissionNo
     );
@@ -96,7 +96,7 @@ app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
           )
         : console.log(
             new Date(),
-            " INFO ",
+            "INFO",
             "getStudentByAdmissionId | Response =>> " + JSON.stringify(output)
           );
     }
@@ -130,6 +130,8 @@ app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
 
 app.get("/getStudentDetails", async (req, res) => {
   try {
+    const { searchParam, detailKeyword } = req.query;
+    let finalDetailKeyword = detailKeyword;
     const detailParams = [
       "admission_no",
       "date_of_admission",
@@ -137,13 +139,15 @@ app.get("/getStudentDetails", async (req, res) => {
       "last_name",
       "contact_number",
     ];
+    const searchDetailByParam = detailParams[searchParam];
     console.log(
       new Date(),
-      " INFO ",
+      "INFO",
       "getStudentDetails | Request =>> " + JSON.stringify(req.query)
     );
-    const searchDetailByParam = detailParams[req.query.searchParam];
-    const searchDetailKeyword = req.query.detailKeyword;
+    if (searchParam == 2 || searchParam == 3) {
+      finalDetailKeyword = "%".concat(detailKeyword, "%");
+    }
     if (
       searchDetailByParam == undefined ||
       searchDetailByParam === "" ||
@@ -159,27 +163,37 @@ app.get("/getStudentDetails", async (req, res) => {
       );
       return res.status(400).json("Invalid Search Parameter!");
     } else if (
-      searchDetailKeyword == undefined ||
-      searchDetailKeyword === "" ||
-      searchDetailKeyword == null
+      detailKeyword == undefined ||
+      detailKeyword === "" ||
+      detailKeyword == null
     ) {
       console.log(
         new Date(),
         " ERROR ",
-        "getStudentDetails | searchDetailKeyword=> " +
-          searchDetailKeyword +
+        "getStudentDetails | detailKeyword=> " +
+          detailKeyword +
           " | Exception =>> " +
           "Empty Search Keyword Recieved!"
       );
       return res.status(400).json("Empty Search Keyword Recieved!");
     }
-    const q = `SELECT * FROM school_metadata.students WHERE ${searchDetailByParam} like ?`;
-    const [output] = await student_metadata_db.query(q, [searchDetailKeyword]);
+    const q = `SELECT * FROM school_metadata.students WHERE ${searchDetailByParam} like ? ORDER BY ${searchDetailByParam}`;
+    const [output] = await student_metadata_db.query(q, [finalDetailKeyword]);
     console.log(
       new Date(),
-      " INFO ",
+      "INFO",
       "getStudentDetails | Response =>> " + JSON.stringify(output)
     );
+    if (output.length == 0) {
+      console.log(
+        new Date(),
+        " ERROR ",
+        "getStudentDetails | Empty Set Received as Response =>> " +
+          JSON.stringify(output) +
+          " No Student Found"
+      );
+      return res.status(404).json("No Student Found!");
+    }
     return res.status(200).json(output);
   } catch (err) {
     console.log(
@@ -213,7 +227,7 @@ app.post("/add_student", async (req, res) => {
     ];
     console.log(
       new Date(),
-      " INFO ",
+      "INFO",
       "addStudent | Request =>> ",
       q + " {" + values + "}"
     );
@@ -221,10 +235,10 @@ app.post("/add_student", async (req, res) => {
 
     console.log(
       new Date(),
-      " INFO ",
+      "INFO",
       "addStudent | Student successfully added to Database!"
     );
-    return res.status(200).json("Student successfully added to Database!");
+    return res.status(201).json("Student successfully added to Database!");
   } catch (err) {
     let message = err.message;
     console.log(new Date(), " ERROR ", "addStudent | Exception =>> " + err);
@@ -242,6 +256,30 @@ app.post("/add_student", async (req, res) => {
         code: err.errno,
       });
     }
+  }
+});
+
+app.patch("/updateStudentDetails", async (req, res) => {
+  try {
+    const requestDetails = req.query;
+    console.log(
+      new Date(),
+      "INFO",
+      "updateStudentDetails | Request =>> " + requestDetails
+    );
+    console.log(
+      new Date(),
+      "INFO",
+      "updateStudentDetails | Response =>> " + JSON.stringify("Dummy!")
+    );
+    return res.status(501).json("Student record updated Successfully!");
+  } catch (err) {
+    console.log(
+      new Date(),
+      " ERROR ",
+      "updateStudentDetails | Exception =>> " + err
+    );
+    return res.status(501).json(err.message);
   }
 });
 
