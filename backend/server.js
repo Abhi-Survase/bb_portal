@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/favicon.ico", (req, res) => {
-  res.status(204).end;
+  return res.status(204).end;
 });
 
 app.get("/all_active_students", async (req, res) => {
@@ -40,7 +40,14 @@ app.get("/all_active_students", async (req, res) => {
     const total_studentCount = countResult[0][0].total_count;
     const total_pages = Math.ceil(total_studentCount / limit);
     // console.log(countResult[0][0].total_count, dataResult[0]);
-    res.status(200).json({
+    console.log(
+      new Date(),
+      "INFO",
+      "fetchAllStudentData | ",
+      `Currentpage: ${page}, limit: ${limit}, offset: ${offset}, totalCount: ${total_studentCount}, totalPages: ${total_pages}`,
+      " | Response =>> " + JSON.stringify(dataResult[0])
+    );
+    return res.status(200).json({
       data: dataResult[0],
       pagination: {
         totalCount: total_studentCount,
@@ -49,13 +56,6 @@ app.get("/all_active_students", async (req, res) => {
         limit: limit,
       },
     });
-    console.log(
-      new Date(),
-      "INFO",
-      "fetchAllStudentData | ",
-      `Currentpage: ${page}, limit: ${limit}, offset: ${offset}, totalCount: ${total_studentCount}, totalPages: ${total_pages}`,
-      " | Response =>> " + JSON.stringify(dataResult[0])
-    );
   } catch (err) {
     console.log(
       new Date(),
@@ -64,7 +64,7 @@ app.get("/all_active_students", async (req, res) => {
       `page: ${page}, limit: ${limit}, offset: ${offset}`,
       " | Exception =>> " + err
     );
-    res.status(500).json({
+    return res.status(500).json({
       error: err.message,
       code: err.errno,
     });
@@ -84,22 +84,21 @@ app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
     const q = `SELECT * FROM school_metadata.students WHERE admission_no = ?`;
     // const [output] = await student_metadata_db.query(q); //query(q, [student_admissionNo]);
     const [output] = await student_metadata_db.query(q, [student_admissionNo]);
-
-    res.status(200).json(output);
-    {
-      JSON.stringify(output) === "[]"
-        ? console.log(
-            new Date(),
-            " ERROR ",
-            "getStudentByAdmissionId | Empty Set returned! | Response =>> " +
-              JSON.stringify(output)
-          )
-        : console.log(
-            new Date(),
-            "INFO",
-            "getStudentByAdmissionId | Response =>> " + JSON.stringify(output)
-          );
+    if (output.length === 0) {
+      console.log(
+        new Date(),
+        " ERROR ",
+        "getStudentByAdmissionId | Empty Set returned! | Response =>> " +
+          JSON.stringify(output)
+      );
+      return res.status(404).json({ message: "No Student Found!" });
     }
+    console.log(
+      new Date(),
+      "INFO",
+      "getStudentByAdmissionId | Response =>> " + JSON.stringify(output)
+    );
+    return res.status(200).json(output);
   } catch (err) {
     let status = 500;
     let message = err.message;
@@ -108,110 +107,99 @@ app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
       message = "Enter valid Admission Number!";
     } else {
       status = 400;
-      message = "Wrong Input! Enter valid Admission Number!";
+      message = "Invalid Input!";
     }
-    res.status(status).json({
-      error: message,
-      type: err.code,
-      code: err.errno,
-    });
     console.log(
       new Date(),
       " ERROR ",
       "getStudentByAdmissionId | Exception =>> " + err
     );
-    console.log(
-      new Date(),
-      " ERROR ",
-      "getStudentByAdmissionId | Exception =>> " + message
-    );
+    return res.status(status).json({
+      error: message,
+      type: err.code,
+      code: err.errno,
+    });
   }
 });
 
 app.get("/getStudentDetails", async (req, res) => {
   try {
     const { searchParam, detailKeyword } = req.query;
-    let finalDetailKeyword = detailKeyword;
-    const detailParams = [
+    const SEARCH_FIELDS = [
       "admission_no",
       "date_of_admission",
       "first_name",
       "last_name",
       "contact_number",
     ];
-    const searchDetailByParam = detailParams[searchParam];
+    const fieldName = SEARCH_FIELDS[searchParam];
     console.log(
       new Date(),
       "INFO",
       "getStudentDetails | Request =>> " + JSON.stringify(req.query)
     );
-    if (
-      searchDetailByParam == undefined ||
-      searchDetailByParam === "" ||
-      searchDetailByParam == null
-    ) {
+    if (!fieldName) {
       console.log(
         new Date(),
         " ERROR ",
-        "getStudentDetails | searchDetailByParam=> " +
-          searchDetailByParam +
-          " | Exception =>> " +
-          "Invalid Search Parameter!"
+        "getStudentDetails | fieldName=>",
+        fieldName,
+        "| Exception =>>",
+        "Invalid Search Parameter!"
       );
-      return res.status(400).json("Invalid Search Parameter!");
-    } else if (
-      detailKeyword == undefined ||
-      detailKeyword === "" ||
-      detailKeyword === " " ||
-      detailKeyword == null
-    ) {
-      console.log(
-        new Date(),
-        " ERROR ",
-        "getStudentDetails | detailKeyword=> " +
-          detailKeyword +
-          " | Exception =>> " +
-          "Empty Search Keyword Recieved!"
-      );
-      return res.status(400).json("Empty Search Keyword Recieved!");
+      return res.status(400).json({ message: "Invalid Search Parameter!" });
     }
-    if (searchParam == 2 || searchParam == 3) {
-      if (detailKeyword.length <= 1) {
+    if (!detailKeyword || !detailKeyword.trim()) {
+      console.log(
+        new Date(),
+        " ERROR ",
+        "getStudentDetails | detailKeyword=>",
+        detailKeyword,
+        "| Exception =>>",
+        "Search Keyword is Required!"
+      );
+      return res.status(400).json({ message: "Search Keyword is Required!" });
+    }
+    let finalDetailKeyword = detailKeyword;
+    if (["2", "3"].includes(searchParam)) {
+      if (detailKeyword.length < 2) {
         console.log(
           new Date(),
           " ERROR ",
-          "getStudentDetails | detailKeyword=> " +
-            detailKeyword +
-            " | Exception =>> " +
-            "Name should have atleast 2 characters!!"
+          "getStudentDetails | detailKeyword=>",
+          detailKeyword,
+          "| Exception =>>",
+          "Name should have atleast 2 characters!!"
         );
-        return res.status(400).json("Name should have atleast 2 characters!");
+        return res
+          .status(400)
+          .json({ message: "Name should have atleast 2 characters!" });
       }
-      finalDetailKeyword = "%".concat(detailKeyword, "%");
+      finalDetailKeyword = `%${detailKeyword}%`;
     }
-    if (searchParam == 0 || searchParam == 4) {
+    if (["0", "4"].includes(searchParam)) {
       if (detailKeyword.length <= 4) {
         console.log(
           new Date(),
           " ERROR ",
-          "getStudentDetails | detailKeyword=> " +
-            detailKeyword +
-            " | Exception =>> " +
-            "Enter Atleast 5 digits!"
+          "getStudentDetails | detailKeyword=>",
+          detailKeyword,
+          "| Exception =>>",
+          "Enter Atleast 5 digits!"
         );
-        return res.status(400).json("Enter Atleast 5 digits!");
+        return res.status(400).json({ message: "Enter Atleast 5 digits!" });
       }
       // console.log(/^\d+$/.test(detailKeyword), detailKeyword);
       if (!/^\d+$/.test(detailKeyword)) {
         console.log(
           new Date(),
           " ERROR ",
-          "getStudentDetails | detailKeyword=> " +
-            detailKeyword +
-            " | Exception =>> " +
-            "Only Numbers Expected!"
+          "getStudentDetails | detailKeyword=>",
+          detailKeyword,
+          "| Exception =>>",
+          "Only Numbers Expected!"
         );
-        return res.status(400).json("Only Numbers Expected!");
+        return res.status(400).json({ message: "Only Numbers Expected!" });
       }
     }
     if (searchParam == 1) {
@@ -219,45 +207,51 @@ app.get("/getStudentDetails", async (req, res) => {
         console.log(
           new Date(),
           " ERROR ",
-          "getStudentDetails | detailKeyword=> " +
-            detailKeyword +
-            " | Exception =>> " +
-            "Only Numbers and Hypen Expected!"
+          "getStudentDetails | detailKeyword=>",
+          detailKeyword,
+          "| Exception =>>",
+          "Only Numbers and Hypen Expected!"
         );
-        return res.status(400).json("Only Numbers and Hypen Expected!");
+        return res
+          .status(400)
+          .json({ message: "Only Numbers and Hypen Expected!" });
       }
     }
     console.log(
       new Date(),
       "INFO",
-      "getStudentDetails | Request Details => " +
-        JSON.stringify({ searchDetailByParam, detailKeyword })
+      "getStudentDetails | Request Details =>",
+      JSON.stringify({ fieldName, detailKeyword })
     );
-    const q = `SELECT * FROM school_metadata.students WHERE ${searchDetailByParam} like ? ORDER BY ${searchDetailByParam}`;
+    const q = `SELECT * FROM school_metadata.students WHERE ${fieldName} like ? ORDER BY ${fieldName} ASC LIMIT 40`;
     const [output] = await student_metadata_db.query(q, [finalDetailKeyword]);
     console.log(
       new Date(),
       "INFO",
-      "getStudentDetails | Response =>> " + JSON.stringify(output)
+      "getStudentDetails | Response =>>",
+      JSON.stringify(output)
     );
-    if (output.length == 0) {
+    if (output.length === 0) {
       console.log(
         new Date(),
         " ERROR ",
-        "getStudentDetails | Empty Set Received as Response =>> " +
-          JSON.stringify(output) +
-          " No Student Found"
+        "getStudentDetails | Empty Set Received as Response =>>",
+        JSON.stringify(output),
+        "No Student Found"
       );
-      return res.status(404).json("No Student Found!");
+      return res.status(404).json({ message: "No Student Found!" });
     }
     return res.status(200).json(output);
   } catch (err) {
     console.log(
       new Date(),
       " ERROR ",
-      "getStudentDetails | Exception =>> " + err
+      "getStudentDetails | Exception =>>",
+      err
     );
-    return res.status(504).json(err.message);
+    return res
+      .status(500)
+      .json({ status: "Failed", message: "Internal Server Error" });
   }
 });
 
@@ -284,8 +278,9 @@ app.post("/add_student", async (req, res) => {
     console.log(
       new Date(),
       "INFO",
-      "addStudent | Request =>> ",
-      q + " {" + values + "}"
+      "addStudent | Request =>>",
+      q,
+      `{${values}}`
     );
     await student_metadata_db.query(q, [values]);
 
@@ -294,22 +289,21 @@ app.post("/add_student", async (req, res) => {
       "INFO",
       "addStudent | Student successfully added to Database!"
     );
-    return res.status(201).json("Student successfully added to Database!");
+    return res.status(201).json({
+      status: "Success",
+      message: "Student added to Database!",
+    });
   } catch (err) {
     let message = err.message;
-    console.log(new Date(), " ERROR ", "addStudent | Exception =>> " + err);
+    console.log(new Date(), " ERROR ", "addStudent | Exception =>>", err);
     if (err.code == "ER_DUP_ENTRY") {
-      message = "Student with this Admission Number already exists!";
+      message = "Admission Number already exists!";
       res.status(400).json({
         error: message,
-        type: err.code,
-        code: err.errno,
       });
     } else {
       res.status(400).json({
         error: err.message,
-        type: err.code,
-        code: err.errno,
       });
     }
   }
@@ -317,25 +311,29 @@ app.post("/add_student", async (req, res) => {
 
 app.patch("/updateStudentDetails", async (req, res) => {
   try {
-    const requestDetails = req.query;
+    const requestDetails = req.query ?? "No Request Details Received";
+    const output = "Dummy!";
     console.log(
       new Date(),
       "INFO",
-      "updateStudentDetails | Request =>> " + requestDetails
+      "updateStudentDetails | Request =>>",
+      requestDetails
     );
     console.log(
       new Date(),
       "INFO",
-      "updateStudentDetails | Response =>> " + JSON.stringify("Dummy!")
+      "updateStudentDetails | Response =>>",
+      JSON.stringify(output)
     );
-    return res.status(501).json("Student record updated Successfully!");
+    return res.status(201).json("Student record updated Successfully!");
   } catch (err) {
     console.log(
       new Date(),
       " ERROR ",
-      "updateStudentDetails | Exception =>> " + err
+      "updateStudentDetails | Exception =>>",
+      err
     );
-    return res.status(501).json(err.message);
+    return res.status(501).json({ message: "Internal Server Error" });
   }
 });
 
