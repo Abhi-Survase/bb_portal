@@ -88,15 +88,17 @@ app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
       console.log(
         new Date(),
         " ERROR ",
-        "getStudentByAdmissionId | Empty Set returned! | Response =>> " +
-          JSON.stringify(output)
+        "getStudentByAdmissionId | Empty Set returned! | Response =>>",
+        JSON.stringify(output),
+        "| No Student Found!"
       );
       return res.status(404).json({ message: "No Student Found!" });
     }
     console.log(
       new Date(),
       "INFO",
-      "getStudentByAdmissionId | Response =>> " + JSON.stringify(output)
+      "getStudentByAdmissionId | Response =>>",
+      JSON.stringify(output)
     );
     return res.status(200).json(output);
   } catch (err) {
@@ -104,7 +106,7 @@ app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
     let message = err.message;
     if (err.code == "ER_BAD_FIELD_ERROR") {
       status = 400;
-      message = "Enter valid Admission Number!";
+      message = "Enter Valid Admission Number!";
     } else {
       status = 400;
       message = "Invalid Input!";
@@ -112,7 +114,8 @@ app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
     console.log(
       new Date(),
       " ERROR ",
-      "getStudentByAdmissionId | Exception =>> " + err
+      "getStudentByAdmissionId | Exception =>>",
+      err
     );
     return res.status(status).json({
       error: message,
@@ -287,7 +290,9 @@ app.post("/add_student", async (req, res) => {
     console.log(
       new Date(),
       "INFO",
-      "addStudent | Student successfully added to Database!"
+      "addStudent | admission_no:",
+      req.body.admission_no,
+      "| Student successfully added to Database!"
     );
     return res.status(201).json({
       status: "Success",
@@ -295,9 +300,16 @@ app.post("/add_student", async (req, res) => {
     });
   } catch (err) {
     let message = err.message;
-    console.log(new Date(), " ERROR ", "addStudent | Exception =>>", err);
+    console.log(
+      new Date(),
+      " ERROR ",
+      "addStudent | admission_no:",
+      req.body.admission_no,
+      "| Exception =>>",
+      JSON.stringify(err)
+    );
     if (err.code == "ER_DUP_ENTRY") {
-      message = "Admission Number already exists!";
+      message = "Admission already exists!";
       res.status(400).json({
         error: message,
       });

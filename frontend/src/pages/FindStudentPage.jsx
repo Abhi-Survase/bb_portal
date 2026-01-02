@@ -29,7 +29,7 @@ import { toast } from "sonner";
 
 const formSchema = z.object({
   admission_no: z.string().regex(/^\d{6,}$/, {
-    message: "Value should be a NUMBER and at least 6 digits.",
+    message: "Enter a 6 Digit Number",
   }),
 });
 
@@ -51,22 +51,23 @@ function GetStudentPage() {
       // console.log(apiUrl);
       const response = await axios.get(apiUrl);
       if (response.data.length === 0) {
-        toast.error(`No student with admission number: ${inputValue}`);
+        toast.error(`No Student Found for: ${inputValue}`);
       } else {
         setStudentData(response.data[0]);
         // console.log(response.data[0]);
       }
     } catch (error) {
+      setStudentData("");
       {
         error.code === "ERR_BAD_REQUEST" || error.code === "ERR_BAD_RESPONSE"
-          ? toast.error("Enter valid Admission Number!")
-          : toast.error("Something went wrong");
+          ? toast.error("No Student Found!")
+          : toast.error("Something Went Wrong");
       }
       console.log(error);
     }
   }
-  const dataPlaceHolderText = "Hit Search!";
-  let placeHolderText = "Enter Admission Number";
+  // const dataPlaceHolderText = "Hit Search!";
+  // let placeHolderText = "Enter Admission Number";
   return (
     <div className="h-screen flex flex-col gap-6 justify-center items-center">
       <h2 className="scroll-m-20 text-3xl font-bold tracking-tight text-balance">

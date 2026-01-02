@@ -62,7 +62,7 @@ const formSchema = z.object({
   d_o_b: z.coerce.date({
     required_error: "A date of birth is required.",
   }),
-  contact_number: z.string().regex(/^\d{10,}$/, {
+  contact_number: z.string().regex(/^\d{10,10}$/, {
     message: "Contact Number must be 10 digits.",
   }),
   address: z.string().min(10, {
@@ -132,13 +132,19 @@ function AddStudentPage() {
       const apiUrl = "http://localhost:8810/add_student";
       const response = await axios.post(apiUrl, studentDataPayload);
       // alert("SUCCESS! " + response.data);
-      toast.success(response.data);
+      toast.success(response.data.message);
+      console.log(
+        new Date(),
+        "INFO",
+        "AddStudentPage | handleAddStudent | Response =>>",
+        response.data
+      );
       form.reset();
     } catch (error) {
       console.log(
         new Date(),
         " ERROR ",
-        "AddStudentPage | handleAddStudent | Exception =>> ",
+        "AddStudentPage | handleAddStudent | Exception =>>",
         error
       );
       // alert("ERROR! " + error.response.data.error);
