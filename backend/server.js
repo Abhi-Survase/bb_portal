@@ -177,6 +177,12 @@ app.get("/getStudentDetails", async (req, res) => {
       );
       return res.status(400).json("Empty Search Keyword Recieved!");
     }
+    console.log(
+      new Date(),
+      "INFO",
+      "getStudentDetails | Request Details => " +
+        JSON.stringify({ searchDetailByParam, detailKeyword })
+    );
     const q = `SELECT * FROM school_metadata.students WHERE ${searchDetailByParam} like ? ORDER BY ${searchDetailByParam}`;
     const [output] = await student_metadata_db.query(q, [finalDetailKeyword]);
     console.log(
