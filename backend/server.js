@@ -145,9 +145,6 @@ app.get("/getStudentDetails", async (req, res) => {
       "INFO",
       "getStudentDetails | Request =>> " + JSON.stringify(req.query)
     );
-    if (searchParam == 2 || searchParam == 3) {
-      finalDetailKeyword = "%".concat(detailKeyword, "%");
-    }
     if (
       searchDetailByParam == undefined ||
       searchDetailByParam === "" ||
@@ -165,6 +162,7 @@ app.get("/getStudentDetails", async (req, res) => {
     } else if (
       detailKeyword == undefined ||
       detailKeyword === "" ||
+      detailKeyword === " " ||
       detailKeyword == null
     ) {
       console.log(
@@ -176,6 +174,58 @@ app.get("/getStudentDetails", async (req, res) => {
           "Empty Search Keyword Recieved!"
       );
       return res.status(400).json("Empty Search Keyword Recieved!");
+    }
+    if (searchParam == 2 || searchParam == 3) {
+      if (detailKeyword.length <= 1) {
+        console.log(
+          new Date(),
+          " ERROR ",
+          "getStudentDetails | detailKeyword=> " +
+            detailKeyword +
+            " | Exception =>> " +
+            "Name should have atleast 2 characters!!"
+        );
+        return res.status(400).json("Name should have atleast 2 characters!");
+      }
+      finalDetailKeyword = "%".concat(detailKeyword, "%");
+    }
+    if (searchParam == 0 || searchParam == 4) {
+      if (detailKeyword.length <= 4) {
+        console.log(
+          new Date(),
+          " ERROR ",
+          "getStudentDetails | detailKeyword=> " +
+            detailKeyword +
+            " | Exception =>> " +
+            "Enter Atleast 5 digits!"
+        );
+        return res.status(400).json("Enter Atleast 5 digits!");
+      }
+      // console.log(/^\d+$/.test(detailKeyword), detailKeyword);
+      if (!/^\d+$/.test(detailKeyword)) {
+        console.log(
+          new Date(),
+          " ERROR ",
+          "getStudentDetails | detailKeyword=> " +
+            detailKeyword +
+            " | Exception =>> " +
+            "Only Numbers Expected!"
+        );
+        return res.status(400).json("Only Numbers Expected!");
+      }
+    }
+    if (searchParam == 1) {
+      if (!/^[0-9]+(-[0-9]+)*$/.test(detailKeyword)) {
+        console.log(
+          new Date(),
+          " ERROR ",
+          "getStudentDetails | detailKeyword=> " +
+            detailKeyword +
+            " | Exception =>> " +
+            "Only Numbers and Hypen Expected!"
+        );
+        return res.status(400).json("Only Numbers and Hypen Expected!");
+      }
     }
     console.log(
       new Date(),
