@@ -39,7 +39,10 @@ const sidebar_menu_items = [
   {
     title: "Student Directory",
     icon: Users,
-    url: import.meta.env.VITE_ALL_STUDENT_URL,
+    // url: import.meta.env.VITE_ALL_STUDENT_URL,
+    url: `${import.meta.env.VITE_ALL_STUDENT_URL}/${
+      import.meta.env.VITE_FIND_STUDENT_URL
+    }`,
   },
   {
     title: "Add Admission",

@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Pencil, ChevronLeft } from "lucide-react";
+import { Pencil, ChevronRight } from "lucide-react";
 import axios from "axios";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -167,9 +167,9 @@ function GetStudentPage() {
         </form>
       </Form>
       <Button variant="outline" asChild>
-        <Link to="/">
-          <ChevronLeft />
+        <Link to={`/${import.meta.env.VITE_ALL_STUDENT_URL}`}>
           All Students
+          <ChevronRight />
         </Link>
       </Button>
     </div>
