@@ -34,6 +34,7 @@ import {
   SidebarHeader,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Input } from "@/components/ui/input";
 
 function Dashboard() {
   return (
@@ -47,19 +48,21 @@ function Dashboard() {
         <div className="flex items-center gap-4">
           {/* Global Search Bar (Replaces 'Find Student' Page) */}
           <div className="relative hidden sm:block group">
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-slate-600"
-              size={16}
-            />
-            <input
-              type="text"
-              placeholder="Search students, IDs..."
-              className="pl-10 pr-4 py-2 w-64 bg-slate-100 border-transparent focus:bg-white border focus:border-rose-500 rounded-full text-sm focus:outline-none transition-all"
-            />
+            <Link
+              to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
+                import.meta.env.VITE_FIND_STUDENT_URL
+              }`}
+              className="!text-slate-600"
+            >
+              <Button variant="outline" className="!text-slate-600">
+                <Search size={16} />
+                Search Students
+              </Button>
+            </Link>
           </div>
 
           <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center text-rose-700 font-medium text-sm">
-            AD
+            BP
           </div>
         </div>
       </header>
