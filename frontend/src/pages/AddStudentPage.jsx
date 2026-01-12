@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/card";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 import axios from "axios";
 
@@ -153,18 +154,15 @@ function AddStudentPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4">
-      {/* <Button variant="ghost" asChild className="mb-4">
-        <Link to="/">
-          <ArrowLeftIcon className="mr-2 h-4 w-4" />
-          Back to Dashboard
-        </Link>
-      </Button> */}
-      <Toaster />
-      <div className="space-y-6">
-        <h2 className="text-3xl font-bold tracking-tight">
+    <div className="flex-1 flex flex-col px-4">
+      <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
+        <h1 className="text-xl font-semibold text-slate-800 flex items-center gap-4">
+          <SidebarTrigger />
           Add Student Admission
-        </h2>
+        </h1>
+      </header>
+      <Toaster />
+      <div className="space-y-6 py-4 max-w-6xl">
         <form
           id="form-add-student"
           onSubmit={form.handleSubmit(handleAddStudent)}

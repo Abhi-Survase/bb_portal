@@ -24,6 +24,7 @@ import {
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
 import { Input } from "@/components/ui/input";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 function AllStudentPage() {
   const [studentData, setStudentData] = useState([]);
@@ -74,15 +75,16 @@ function AllStudentPage() {
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
 
   function handleEditButtonClick() {
-    console.log("Edit clicked!");
+    console.log("Edit Button Clicked!");
   }
 
   return (
-    <div className="bg-(--background)">
-      <div className="relative flex items-center pb-2">
-        <h2 className="absolute left-1/2 -translate-x-1/2 scroll-m-20 text-3xl font-bold tracking-tight text-balance no-wrap">
-          Active Students
-        </h2>
+    <div className="flex-1 flex flex-col bg-(--background)">
+      <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
+        <h1 className="text-xl font-semibold text-slate-800 flex items-center gap-4 font-bold">
+          <SidebarTrigger />
+          All Active Students
+        </h1>
         <div className="ml-auto mr-6">
           <Button variant="outline" asChild>
             <Link
@@ -91,17 +93,18 @@ function AllStudentPage() {
               }`}
             >
               <Search />
-              Search
+              Search Student
             </Link>
           </Button>
         </div>
-      </div>
+      </header>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
         {studentData.map((data) => (
-          <Card key={data.id} className="px-2 py-2 transition">
-            <CardHeader>
+          <Card key={data.id} className="p-3 !gap-1 transition">
+            <CardHeader className="pb-1">
               <img
-                className="justify-center"
+                className="mx-start"
                 src={
                   data.photo_url
                     ? data.photo_url
@@ -110,41 +113,43 @@ function AllStudentPage() {
                     : "/m_icon.png"
                 }
                 alt={`${data.first_name} ${data.last_name} Photo`}
-                height={100}
-                width={100}
+                height={90}
+                width={90}
               />
-              <CardTitle>
-                {`${data.first_name} ${data.middle_name} ${data.last_name}`}
-              </CardTitle>
-              <CardDescription>Mob: {data.contact_number}</CardDescription>
               <CardAction>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="top-2 right-2"
+                  className="top-2 right-2 "
                   onClick={handleEditButtonClick}
                 >
                   <Pencil className="w-4 h-4" />
                 </Button>
               </CardAction>
+              <CardTitle className="text-base">
+                {`${data.first_name} ${data.middle_name} ${data.last_name}`}
+              </CardTitle>
+              <p className="text-base">{data.admission_no}</p>
             </CardHeader>
-            <CardContent>
-              <p>{data.admission_no}</p>
-              <p className="read-the-docs">
+            <CardContent className="pt-0">
+              <p className="read-the-docs text-sm">
                 {data.gender === "M" ? "Male" : "Female"}
               </p>
-              <p className="read-the-docs">
+              <p className="read-the-docs text-sm">
                 DOB: {new Date(data.d_o_b).toISOString().split("T")[0]}
               </p>
-              <p className="read-the-docs">
+              <p className="read-the-docs text-sm">
                 DOA:
                 {new Date(data.date_of_admission).toISOString().split("T")[0]}
+              </p>
+              <p className="read-the-docs text-sm">
+                Mob: {data.contact_number}
               </p>
             </CardContent>
           </Card>
         ))}
       </div>
-      <ButtonGroup className="p-6">
+      <ButtonGroup className="px-6 pb-1">
         <ButtonGroup>
           <Button
             disabled={paginationData.current_page <= 1}
