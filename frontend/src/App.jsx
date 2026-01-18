@@ -4,12 +4,16 @@ import "./App.css";
 import { Link } from "react-router";
 import { BookOpen, Search, Plus, Edit, List } from "lucide-react";
 import { Navigate, BrowserRouter, Routes, Route } from "react-router";
-import AllStudentPage from "./pages/AllStudentPage.jsx";
-import AddStudentPage from "./pages/AddStudentPage.jsx";
-import GetStudentPage from "./pages/FindStudentPage.jsx";
-import UpdateStudentPage from "./pages/UpdateStudentPage.jsx";
-import Dashboard_new from "./pages/Dashboard_dummy.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
+import {
+  AllStudentPage,
+  AddStudentPage,
+  GetStudentPage,
+  UpdateStudentPage,
+  Dashboard_new,
+  Dashboard,
+  ShowUsersPage,
+  AddUserPage,
+} from "./pages";
 import Layout_with_sidebar from "./components/layout_with_sidebar.jsx";
 
 function App() {
@@ -43,6 +47,13 @@ function App() {
             <Route
               path={import.meta.env.VITE_UPDATE_STUDENT_URL}
               element={<UpdateStudentPage />}
+            />
+          </Route>
+          <Route path={import.meta.env.VITE_USERS_URL}>
+            <Route index element={<ShowUsersPage />} />
+            <Route
+              path={import.meta.env.VITE_ADDUSER_URL}
+              element={<AddUserPage />}
             />
           </Route>
         </Route>

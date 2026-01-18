@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   Users,
   UserPlus,
+  List,
   Search,
   Bell,
   BookOpen,
@@ -38,9 +39,9 @@ const sidebar_menu_items = [
   },
   {
     title: "Student Directory",
-    icon: Users,
+    icon: List,
     // url: import.meta.env.VITE_ALL_STUDENT_URL,
-    url: `${import.meta.env.VITE_ALL_STUDENT_URL}/${
+    url: `/${import.meta.env.VITE_ALL_STUDENT_URL}/${
       import.meta.env.VITE_FIND_STUDENT_URL
     }`,
   },
@@ -52,16 +53,14 @@ const sidebar_menu_items = [
     }`,
   },
   {
-    title: "Update Info",
-    icon: Edit,
-    url: `/${import.meta.env.VITE_ALL_STUDENT_URL}/${
-      import.meta.env.VITE_UPDATE_STUDENT_URL
-    }`,
-  },
-  {
     title: "Teachers",
     icon: BriefcaseBusiness,
     url: import.meta.env.VITE_TEACHERS_URL,
+  },
+  {
+    title: "Users",
+    icon: Users,
+    url: import.meta.env.VITE_USERS_URL,
   },
 ];
 

@@ -124,7 +124,7 @@ function AddStudentPage() {
       ...filledStudentDetails,
       date_of_admission: format(
         filledStudentDetails.date_of_admission,
-        "yyyy-MM-dd HH:mm"
+        "yyyy-MM-dd HH:mm",
       ),
       d_o_b: format(filledStudentDetails.d_o_b, "yyyy-MM-dd"),
     };
@@ -138,7 +138,7 @@ function AddStudentPage() {
         new Date(),
         "INFO",
         "AddStudentPage | handleAddStudent | Response =>>",
-        response.data
+        response.data,
       );
       form.reset();
     } catch (error) {
@@ -146,7 +146,7 @@ function AddStudentPage() {
         new Date(),
         " ERROR ",
         "AddStudentPage | handleAddStudent | Exception =>>",
-        error
+        error,
       );
       // alert("ERROR! " + error.response.data.error);
       toast.error(error.response.data.error);
@@ -154,7 +154,7 @@ function AddStudentPage() {
   }
 
   return (
-    <div className="flex-1 flex flex-col px-4">
+    <div className="flex-1 flex flex-col">
       <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
         <h1 className="text-xl font-semibold text-slate-800 flex items-center gap-4">
           <SidebarTrigger />
@@ -162,7 +162,7 @@ function AddStudentPage() {
         </h1>
       </header>
       <Toaster />
-      <div className="space-y-6 py-4 max-w-6xl">
+      <div className="space-y-6 p-4 max-w-6xl">
         <form
           id="form-add-student"
           onSubmit={form.handleSubmit(handleAddStudent)}
@@ -220,7 +220,7 @@ function AddStudentPage() {
                               id="form-add-student-date_of_admission"
                               className={cn(
                                 "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
+                                !field.value && "text-muted-foreground",
                               )}
                             >
                               {field.value
@@ -315,7 +315,7 @@ function AddStudentPage() {
                             id="form-add-student-d_o_b"
                             className={cn(
                               "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             {field.value
