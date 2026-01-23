@@ -13,6 +13,8 @@ import {
   Dashboard,
   ShowUsersPage,
   AddUserPage,
+  ShowTeachersPage,
+  PageNotFound,
 } from "./pages";
 import Layout_with_sidebar from "./components/layout_with_sidebar.jsx";
 
@@ -56,6 +58,9 @@ function App() {
               element={<AddUserPage />}
             />
           </Route>
+          <Route path="teachers" element={<ShowTeachersPage />} />
+          <Route path="users" element={<ShowUsersPage />} />
+          <Route path="*" element={<PageNotFound />} />
         </Route>
         <Route path="dashboard_new" element={<Dashboard_new />} />
       </Routes>

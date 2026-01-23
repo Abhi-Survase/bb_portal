@@ -6,3 +6,5 @@ export { default as Dashboard_new } from "./Dashboard_dummy.jsx";
 export { default as Dashboard } from "./Dashboard.jsx";
 export { default as ShowUsersPage } from "./ShowUsersPage.jsx";
 export { default as AddUserPage } from "./AddUserPage.jsx";
+export { default as ShowTeachersPage } from "./ShowTeachersPage.jsx";
+export { default as PageNotFound } from "./PageNotFound.jsx";
