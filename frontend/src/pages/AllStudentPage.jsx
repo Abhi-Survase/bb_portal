@@ -80,8 +80,8 @@ function AllStudentPage() {
 
   return (
     <div className="flex-1 flex flex-col bg-(--background)">
-      <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
-        <h1 className="text-xl font-semibold text-slate-800 flex items-center gap-4 font-bold">
+      <header className="h-16 --background border-b flex items-center justify-between px-8 sticky top-0 z-10">
+        <h1 className="text-xl font-semibold --foreground flex items-center gap-4 font-bold">
           <SidebarTrigger />
           All Active Students
         </h1>
@@ -109,8 +109,8 @@ function AllStudentPage() {
                   data.photo_url
                     ? data.photo_url
                     : data.gender === "F"
-                    ? "/f_icon.png"
-                    : "/m_icon.png"
+                      ? "/f_icon.png"
+                      : "/m_icon.png"
                 }
                 alt={`${data.first_name} ${data.last_name} Photo`}
                 height={90}
@@ -182,7 +182,7 @@ function AllStudentPage() {
               >
                 {index + 1}
               </Button>
-            )
+            ),
           )}
         </ButtonGroup>
         <ButtonGroup>

@@ -71,8 +71,8 @@ function GetStudentPage() {
   // let placeHolderText = "Enter Admission Number";
   return (
     <div className="flex-1 flex flex-col">
-      <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
-        <h1 className="text-xl font-semibold text-slate-800 flex items-center gap-4">
+      <header className="h-16 --background border-b flex items-center justify-between px-8 sticky top-0 z-10">
+        <h1 className="text-xl font-semibold --foreground flex items-center gap-4">
           <SidebarTrigger />
           Search for Student
         </h1>
@@ -111,8 +111,8 @@ function GetStudentPage() {
                             studentData.photo_url
                               ? studentData.photo_url
                               : studentData.gender === "F"
-                              ? "/f_icon.png"
-                              : "/m_icon.png"
+                                ? "/f_icon.png"
+                                : "/m_icon.png"
                           }
                           alt={`${studentData.first_name} ${studentData.last_name} Photo`}
                           height={100}

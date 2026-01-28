@@ -11,8 +11,8 @@ function ShowUsersPage(fetchedUserData) {
   }
   return (
     <div className="flex-1 flex flex-col">
-      <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
-        <h1 className="text-xl font-semibold text-slate-800 flex items-center gap-4">
+      <header className="h-16 --background border-b flex items-center justify-between px-8 sticky top-0 z-10">
+        <h1 className="text-xl font-semibold --foreground flex items-center gap-4">
           <SidebarTrigger />
           User
         </h1>

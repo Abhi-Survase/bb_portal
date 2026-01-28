@@ -16,6 +16,7 @@ import {
   Calendar,
   List,
   Edit,
+  Moon,
 } from "lucide-react";
 import {
   Card,
@@ -46,6 +47,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { ModeToggle } from "@/components/mode-toggle.tsx";
 
 function Dashboard() {
   const invoices = [
@@ -94,8 +96,8 @@ function Dashboard() {
   ];
   return (
     <div className="@container/main flex-1 flex flex-col">
-      <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
-        <h1 className="text-xl font-semibold text-slate-800 flex items-center gap-4">
+      <header className="h-16 --background border-b flex items-center justify-between px-8 sticky top-0 z-10">
+        <h1 className="text-xl font-semibold --foreground flex items-center gap-4">
           <SidebarTrigger />
           Dashboard Overview
         </h1>
@@ -107,15 +109,14 @@ function Dashboard() {
               to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
                 import.meta.env.VITE_FIND_STUDENT_URL
               }`}
-              className="!text-slate-600"
             >
-              <Button variant="outline" className="!text-slate-600">
+              <Button variant="muted_outline">
                 <Search size={16} />
                 Search Students
               </Button>
             </Link>
           </div>
-
+          <ModeToggle />
           <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center text-rose-700 font-medium text-sm">
             BP
           </div>

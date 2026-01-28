@@ -157,8 +157,8 @@ function App() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
-          <h1 className="text-xl font-semibold text-slate-800">
+        <header className="h-16 --background border-b flex items-center justify-between px-8 sticky top-0 z-10">
+          <h1 className="text-xl font-semibold --foreground">
             Dashboard Overview
           </h1>
 
