@@ -71,6 +71,56 @@ app.get("/all_active_students", async (req, res) => {
   }
 });
 
+app.get("/ui_dashboard", async(req, res)=>{
+  try {
+    console.log(
+      new Date(),
+      "INFO",
+      "ui_dashboard | fetching data"
+    );
+    const latest5AdmissionsQuery = "SELECT admission_no, first_name, last_name, gender, contact_number, date_of_admission FROM school_metadata.students WHERE is_active = 'true' ORDER BY date_of_admission desc, id asc LIMIT 5";
+    const newAdmissionCountQuery =
+      "SELECT count(id) as new_admissions_count FROM school_metadata.students WHERE date_of_admission > SUBDATE(sysdate(), INTERVAL 2 MONTH) AND is_active = 'true'";
+    const totalStudentCountQuery =
+      "SELECT count(*) as total_count FROM school_metadata.students WHERE is_active = 'true'";
+    const [latest5AdmissionsResult, newAdmissionCountResult, totalStudentCountResult] = await Promise.all([
+      student_metadata_db.query(latest5AdmissionsQuery),
+      student_metadata_db.query(newAdmissionCountQuery),
+      student_metadata_db.query(totalStudentCountQuery),
+    ]);
+    console.log(
+      new Date(),
+      "INFO",
+      "ui_dashboard | Response | totalStudentCountResult =>",JSON.stringify(totalStudentCountResult[0])
+    );
+    console.log(
+      new Date(),
+      "INFO",
+      "ui_dashboard | Response | newAdmissionCountResult =>",JSON.stringify(newAdmissionCountResult[0])
+    );
+    console.log(
+      new Date(),
+      "INFO",
+      "ui_dashboard | Response | latest5AdmissionsResult =>",JSON.stringify(latest5AdmissionsResult[0])
+    );
+    return res.status(200).json({
+      data: {
+        latest5Admissions: latest5AdmissionsResult[0], newAdmissionCount: newAdmissionCountResult[0], totalStudentCount:totalStudentCountResult[0]
+      },
+    });
+  } catch (err) {
+    console.log(
+      new Date(),
+      " ERROR ",
+      "ui_dashboard | Exception =>> " + err
+    );
+    return res.status(500).json({
+      error: "Something Went Wrong",
+      code: err.errno,
+    });
+  }
+})
+
 app.get("/get_student_byAdmissionNo/:admission_no", async (req, res) => {
   try {
     const student_admissionNo = req.params.admission_no;
