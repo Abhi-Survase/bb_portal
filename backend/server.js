@@ -71,48 +71,85 @@ app.get("/all_active_students", async (req, res) => {
   }
 });
 
-app.get("/ui_dashboard", async(req, res)=>{
+app.get("/ui_dashboard/list", async (req, res) => {
   try {
     console.log(
       new Date(),
       "INFO",
-      "ui_dashboard | fetching data"
+      "ui_dashboard/list | fetching data"
     );
-    const latest5AdmissionsQuery = "SELECT admission_no, first_name, last_name, gender, contact_number, date_of_admission FROM school_metadata.students WHERE is_active = 'true' ORDER BY date_of_admission desc, id asc LIMIT 5";
+    const latestAdmissionsListQuery = "SELECT id, admission_no, first_name, last_name, gender, contact_number, date_of_admission FROM school_metadata.students WHERE is_active = 'true' ORDER BY date_of_admission desc, id asc LIMIT 5";
+    const latestAdmissionsListResult = await student_metadata_db.query(latestAdmissionsListQuery);
+    // console.log(
+    //   new Date(),
+    //   "INFO",
+    //   "ui_dashboard/list | Response | latestAdmissionsListResult =>", JSON.stringify(latestAdmissionsListResult[0])
+    // );
+    // return res.status(200).json({
+    //   data: {
+    //     latestAdmissionsList: latestAdmissionsListResult[0]
+    //   },
+    // })
+    setTimeout(() => {
+      console.log(
+        new Date(),
+        "INFO",
+        "ui_dashboard/list | DELAYED Response | latestAdmissionsListResult =>", JSON.stringify(latestAdmissionsListResult[0])
+      );
+      res.status(200).json({
+        data: {
+          latestAdmissionsList: latestAdmissionsListResult[0]
+        },
+      })
+    }, 2000);
+  } catch (err) {
+    console.log(
+      new Date(),
+      " ERROR ",
+      "ui_dashboard/list | Exception =>> " + err
+    );
+    return res.status(500).json({
+      error: "Something Went Wrong",
+      code: err.errno,
+    });
+  }
+})
+
+app.get("/ui_dashboard/summary", async (req, res) => {
+  try {
+    console.log(
+      new Date(),
+      "INFO",
+      "ui_dashboard/summary | fetching data"
+    );
     const newAdmissionCountQuery =
-      "SELECT count(id) as new_admissions_count FROM school_metadata.students WHERE date_of_admission > SUBDATE(sysdate(), INTERVAL 2 MONTH) AND is_active = 'true'";
+      "SELECT count(id) as new_admissions_count FROM school_metadata.students WHERE date_of_admission > SUBDATE(sysdate(), INTERVAL 1 MONTH) AND is_active = 'true'";
     const totalStudentCountQuery =
       "SELECT count(*) as total_count FROM school_metadata.students WHERE is_active = 'true'";
-    const [latest5AdmissionsResult, newAdmissionCountResult, totalStudentCountResult] = await Promise.all([
-      student_metadata_db.query(latest5AdmissionsQuery),
+    const [newAdmissionCountResult, totalStudentCountResult] = await Promise.all([
       student_metadata_db.query(newAdmissionCountQuery),
       student_metadata_db.query(totalStudentCountQuery),
     ]);
     console.log(
       new Date(),
       "INFO",
-      "ui_dashboard | Response | totalStudentCountResult =>",JSON.stringify(totalStudentCountResult[0])
+      "ui_dashboard/summary | Response | totalStudentCountResult =>", JSON.stringify(totalStudentCountResult[0])
     );
     console.log(
       new Date(),
       "INFO",
-      "ui_dashboard | Response | newAdmissionCountResult =>",JSON.stringify(newAdmissionCountResult[0])
-    );
-    console.log(
-      new Date(),
-      "INFO",
-      "ui_dashboard | Response | latest5AdmissionsResult =>",JSON.stringify(latest5AdmissionsResult[0])
+      "ui_dashboard/summary | Response | newAdmissionCountResult =>", JSON.stringify(newAdmissionCountResult[0])
     );
     return res.status(200).json({
       data: {
-        latest5Admissions: latest5AdmissionsResult[0], newAdmissionCount: newAdmissionCountResult[0], totalStudentCount:totalStudentCountResult[0]
+        newAdmissionCount: newAdmissionCountResult[0], totalStudentCount: totalStudentCountResult[0]
       },
     });
   } catch (err) {
     console.log(
       new Date(),
       " ERROR ",
-      "ui_dashboard | Exception =>> " + err
+      "ui_dashboard/summary | Exception =>> " + err
     );
     return res.status(500).json({
       error: "Something Went Wrong",

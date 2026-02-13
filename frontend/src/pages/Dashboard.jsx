@@ -56,31 +56,49 @@ function Dashboard() {
   const [latestStudents, fetchLatestStudents] = useState([
     { id: "pre", date_of_admission: `${new Date()}` },
   ]);
+  const [dashboardSummary, fetchDashbardSummary] = useState({ "newAdmissionCount": [{ "new_admissions_count": 0 }], "totalStudentCount": [{ "total_count": 0 }], })
+  // let lastAdmissionInterval = 'fetching';
   useEffect(() => {
-    const fetchAllStudentData = async () => {
+    const fetchLatestStudentsData = async () => {
       try {
-        const apiUrl = `http://localhost:8810/all_active_students`;
+        const apiUrl = `http://localhost:8810/ui_dashboard/list`;
         // console.log(paginationData);
-        const response = await axios.get(apiUrl, {
-          params: {
-            page: 0,
-            limit: 5,
-          },
-        });
-        fetchLatestStudents(response.data.data);
+        const response = await axios.get(apiUrl);
+        fetchLatestStudents(response.data.data.latestAdmissionsList);
+        // console.log(response.data.data.latestAdmissionsList)
+        // lastAdmissionInterval = `Last Admission was ${response.data.data.date_of_admission - new Date() / 1000 / 60 / 24} months ago`
         // console.log(response.data);
       } catch (error) {
         console.log(error);
         // setError(error.message);
       } finally {
         // setLoading(false);
-        console.log(new Date().getFullYear());
-        console.log(
-          `Last Admission was ${latestStudents[0].date_of_admission - new Date() / 1000 / 60 / 24} months ago`,
-        );
+        // console.log(new Date().getFulltimeYear());
+        // console.log(
+        //   lastAdmissionInterval
+        // );
       }
     };
-    fetchAllStudentData();
+
+    const dashboardSummaryData = async () => {
+      console.log(dashboardSummary.totalStudentCount[0].total_count);
+      try {
+        const apiUrl = 'http://localhost:8810/ui_dashboard/summary';
+        const response = await axios.get(apiUrl)
+        fetchDashbardSummary(response.data.data)
+        console.log(response.data.data.totalStudentCount[0].total_count);
+      } catch (error) {
+        console.log(error);
+        // setError(error.message);
+      } finally {
+        // console.log(dashboardSummary.totalStudentCount);
+        // console.log(dashboardSummary.newAdmissionCount);
+      }
+    }
+
+    fetchLatestStudentsData();
+    dashboardSummaryData()
+    console.log(dashboardSummary.totalStudentCount[0].total_count);
   }, []);
 
   return (
@@ -95,9 +113,8 @@ function Dashboard() {
           {/* Global Search Bar (Replaces 'Find Student' Page) */}
           <div className="relative hidden sm:block group">
             <Link
-              to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
-                import.meta.env.VITE_FIND_STUDENT_URL
-              }`}
+              to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${import.meta.env.VITE_FIND_STUDENT_URL
+                }`}
             >
               <Button variant="muted_outline">
                 <Search size={16} />
@@ -115,9 +132,10 @@ function Dashboard() {
         <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
           <Card className="@container/card">
             <CardHeader>
-              <CardDescription>Total Revenue</CardDescription>
+              <CardDescription>Total Students</CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                $1,250.00
+                {dashboardSummary.totalStudentCount[0].total_count}
+                {/* {console.log(dashboardSummary.totalStudentCount[0])} */}
               </CardTitle>
               <CardAction>
                 <Badge variant="outline">
@@ -137,9 +155,9 @@ function Dashboard() {
           </Card>
           <Card className="@container/card">
             <CardHeader>
-              <CardDescription>New Customers</CardDescription>
+              <CardDescription>New Admissions</CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                1,234
+                {dashboardSummary.newAdmissionCount[0].new_admissions_count}
               </CardTitle>
               <CardAction>
                 <Badge variant="outline">
@@ -214,7 +232,7 @@ function Dashboard() {
                   <span className="@[540px]/card:hidden">Last 3 months</span>
                 </CardDescription>
               </CardHeader>
-              <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+              <CardContent className="px-2 sm:px-6">
                 <Table className="w-full">
                   <TableCaption>A list of recent admissions.</TableCaption>
                   <TableHeader>
