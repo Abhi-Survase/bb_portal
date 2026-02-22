@@ -167,7 +167,7 @@ function Dashboard() {
               <CardAction>
                 <Badge
                   variant="secondary"
-                  className="bg-[var(--destructive)]/15 text-red-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
+                  className="bg-[var(--destructive)]/10 text-red-700 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
                 >
                   <TrendingDown />
                   -20%
