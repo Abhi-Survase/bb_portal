@@ -47,6 +47,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import axios from "axios";
@@ -54,13 +55,12 @@ import { differenceInDays, differenceInMonths } from "date-fns";
 
 function Dashboard() {
   const [latestStudents, fetchLatestStudents] = useState([
-    { id: "pre", date_of_admission: "9999-09-09" },
+    { id: "pre", date_of_admission: `${new Date()}` },
   ]);
   const [dashboardSummary, fetchDashbardSummary] = useState({
     newAdmissionCount: [{ new_admissions_count: 0 }],
     totalStudentCount: [{ total_count: 0 }],
   });
-  // let lastAdmissionInterval = 'fetching';
   useEffect(() => {
     const fetchLatestStudentsData = async () => {
       try {
@@ -136,47 +136,46 @@ function Dashboard() {
         <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
           <Card className="@container/card">
             <CardHeader>
-              <CardDescription>Total Students</CardDescription>
-              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              <CardDescription>
+                <Users className="h-8 w-8 text-(--chart-2) rounded-lg bg-[var(--chart-2)]/15 p-1.5" />
+              </CardDescription>
+              <CardTitle className="justify-center text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {dashboardSummary.totalStudentCount[0].total_count}
-                {/* {console.log(dashboardSummary.totalStudentCount[0])} */}
               </CardTitle>
               <CardAction>
-                <Badge variant="outline">
+                <Badge
+                  variant="secondary"
+                  className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
+                >
                   <TrendingUp />
                   +12.5%
                 </Badge>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="line-clamp-1 flex gap-2 font-medium">
-                Trending up this month <TrendingUp className="size-4" />
-              </div>
-              <div className="text-muted-foreground">
-                Visitors for the last 6 months
-              </div>
+              <p className="text-muted-foreground">Total Students</p>
             </CardFooter>
           </Card>
           <Card className="@container/card">
             <CardHeader>
-              <CardDescription>New Admissions</CardDescription>
+              <CardDescription>
+                <UserPlus className="h-8 w-8 text-(--chart-5) rounded-lg bg-(--secondary) p-1.5" />
+              </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {dashboardSummary.newAdmissionCount[0].new_admissions_count}
               </CardTitle>
               <CardAction>
-                <Badge variant="outline">
+                <Badge
+                  variant="secondary"
+                  className="bg-[var(--destructive)]/15 text-red-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
+                >
                   <TrendingDown />
                   -20%
                 </Badge>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="line-clamp-1 flex gap-2 font-medium">
-                Down 20% this period <TrendingDown className="size-4" />
-              </div>
-              <div className="text-muted-foreground">
-                Acquisition needs attention
-              </div>
+              <div className="text-muted-foreground">New Admissions</div>
             </CardFooter>
           </Card>
           <Card className="@container/card">
@@ -186,16 +185,16 @@ function Dashboard() {
                 45,678
               </CardTitle>
               <CardAction>
-                <Badge variant="outline">
+                <Badge
+                  variant="secondary"
+                  className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
+                >
                   <TrendingUp />
                   +12.5%
                 </Badge>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="line-clamp-1 flex gap-2 font-medium">
-                Strong user retention <TrendingUp className="size-4" />
-              </div>
               <div className="text-muted-foreground">
                 Engagement exceed targets
               </div>
@@ -208,16 +207,16 @@ function Dashboard() {
                 4.5%
               </CardTitle>
               <CardAction>
-                <Badge variant="outline">
+                <Badge
+                  variant="secondary"
+                  className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
+                >
                   <TrendingUp />
                   +4.5%
                 </Badge>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="line-clamp-1 flex gap-2 font-medium">
-                Steady performance increase <TrendingUp className="size-4" />
-              </div>
               <div className="text-muted-foreground">
                 Meets growth projections
               </div>
@@ -231,47 +230,63 @@ function Dashboard() {
                 <CardTitle>Recent Admissions</CardTitle>
                 <CardDescription>
                   <span className="hidden @[540px]/card:block">
-                    {`Last Admission was ${differenceInDays(new Date(), new Date(latestStudents[0].date_of_admission))} day/s ago`}
+                    {"Last Admission was "}
+                    {latestStudents[0].id === "pre" ? (
+                      <Skeleton className="h-4 w-5 inline-block align-middle" />
+                    ) : (
+                      differenceInDays(
+                        new Date(),
+                        new Date(latestStudents[0].date_of_admission),
+                      )
+                    )}
+                    {" day/s ago"}
                   </span>
-                  <span className="@[540px]/card:hidden">Last 3 months</span>
+
+                  {/* <span className="@[540px]/card:hidden">Last 3 months</span> */}
                 </CardDescription>
               </CardHeader>
               <CardContent className="px-2 sm:px-6">
-                <Table className="w-full">
-                  <TableCaption>A list of recent admissions.</TableCaption>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[100px]">Admission No</TableHead>
-                      <TableHead>First Name</TableHead>
-                      <TableHead>Last Name</TableHead>
-                      <TableHead>Gender</TableHead>
-                      <TableHead>Contact</TableHead>
-                      <TableHead className="text-right">
-                        Admission Date
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {latestStudents.map((student) => (
-                      <TableRow key={student.id}>
-                        <TableCell className="font-medium">
-                          {student.admission_no}
-                        </TableCell>
-                        <TableCell>{student.first_name}</TableCell>
-                        <TableCell>{student.last_name}</TableCell>
-                        <TableCell>{student.gender}</TableCell>
-                        <TableCell>{student.contact_number}</TableCell>
-                        <TableCell className="text-right">
-                          {
-                            new Date(student.date_of_admission)
-                              .toISOString()
-                              .split("T")[0]
-                          }
-                        </TableCell>
+                {latestStudents[0].id === "pre" ? (
+                  <Skeleton className="h-60 w-full" />
+                ) : (
+                  <Table className="w-full">
+                    <TableCaption>A list of recent admissions.</TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-[100px]">
+                          Admission No
+                        </TableHead>
+                        <TableHead>First Name</TableHead>
+                        <TableHead>Last Name</TableHead>
+                        <TableHead>Gender</TableHead>
+                        <TableHead>Contact</TableHead>
+                        <TableHead className="text-right">
+                          Admission Date
+                        </TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {latestStudents.map((student) => (
+                        <TableRow key={student.id}>
+                          <TableCell className="font-medium">
+                            {student.admission_no}
+                          </TableCell>
+                          <TableCell>{student.first_name}</TableCell>
+                          <TableCell>{student.last_name}</TableCell>
+                          <TableCell>{student.gender}</TableCell>
+                          <TableCell>{student.contact_number}</TableCell>
+                          <TableCell className="text-right">
+                            {
+                              new Date(student.date_of_admission)
+                                .toISOString()
+                                .split("T")[0]
+                            }
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
               </CardContent>
             </Card>
             <Card className="@container/card lg:col-span-1">
@@ -281,16 +296,16 @@ function Dashboard() {
                   4.5%
                 </CardTitle>
                 <CardAction>
-                  <Badge variant="outline">
+                  <Badge
+                    variant="secondary"
+                    className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
+                  >
                     <TrendingUp />
                     +4.5%
                   </Badge>
                 </CardAction>
               </CardHeader>
               <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                <div className="line-clamp-1 flex gap-2 font-medium">
-                  Steady performance increase <TrendingUp className="size-4" />
-                </div>
                 <div className="text-muted-foreground">
                   Meets growth projections
                 </div>
