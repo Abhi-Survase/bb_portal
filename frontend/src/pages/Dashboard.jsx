@@ -54,9 +54,12 @@ import { differenceInDays, differenceInMonths } from "date-fns";
 
 function Dashboard() {
   const [latestStudents, fetchLatestStudents] = useState([
-    { id: "pre", date_of_admission: `${new Date()}` },
+    { id: "pre", date_of_admission: "9999-09-09" },
   ]);
-  const [dashboardSummary, fetchDashbardSummary] = useState({ "newAdmissionCount": [{ "new_admissions_count": 0 }], "totalStudentCount": [{ "total_count": 0 }], })
+  const [dashboardSummary, fetchDashbardSummary] = useState({
+    newAdmissionCount: [{ new_admissions_count: 0 }],
+    totalStudentCount: [{ total_count: 0 }],
+  });
   // let lastAdmissionInterval = 'fetching';
   useEffect(() => {
     const fetchLatestStudentsData = async () => {
@@ -83,9 +86,9 @@ function Dashboard() {
     const dashboardSummaryData = async () => {
       console.log(dashboardSummary.totalStudentCount[0].total_count);
       try {
-        const apiUrl = 'http://localhost:8810/ui_dashboard/summary';
-        const response = await axios.get(apiUrl)
-        fetchDashbardSummary(response.data.data)
+        const apiUrl = "http://localhost:8810/ui_dashboard/summary";
+        const response = await axios.get(apiUrl);
+        fetchDashbardSummary(response.data.data);
         console.log(response.data.data.totalStudentCount[0].total_count);
       } catch (error) {
         console.log(error);
@@ -94,10 +97,10 @@ function Dashboard() {
         // console.log(dashboardSummary.totalStudentCount);
         // console.log(dashboardSummary.newAdmissionCount);
       }
-    }
+    };
 
     fetchLatestStudentsData();
-    dashboardSummaryData()
+    dashboardSummaryData();
     console.log(dashboardSummary.totalStudentCount[0].total_count);
   }, []);
 
@@ -113,8 +116,9 @@ function Dashboard() {
           {/* Global Search Bar (Replaces 'Find Student' Page) */}
           <div className="relative hidden sm:block group">
             <Link
-              to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${import.meta.env.VITE_FIND_STUDENT_URL
-                }`}
+              to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
+                import.meta.env.VITE_FIND_STUDENT_URL
+              }`}
             >
               <Button variant="muted_outline">
                 <Search size={16} />

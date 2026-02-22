@@ -68,7 +68,7 @@ export function AppSidebar() {
   return (
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center gap-3 px-3 py-2 group-data-[collapsible=icon]:justify-center">
+        <div className="flex items-center gap-3 pt-5 !pb-2 pl-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:pl-0">
           {/* Logo container */}
           <div className="flex aspect-square size-8 items-center justify-center rounded-xl bg-sidebar-primary/50 text-sidebar-primary-foreground">
             <img src={bookLogo} alt="Blossom Portal" className="h-6 w-6" />
@@ -88,13 +88,18 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="pl-3 group-data-[collapsible=icon]:pl-2 ">
               {sidebar_menu_items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                <SidebarMenuItem
+                  className="py-[0.2rem] w-full"
+                  key={item.title}
+                >
+                  <SidebarMenuButton asChild className="w-full">
                     <Link to={item.url}>
                       <item.icon />
-                      <span>{item.title}</span>
+                      <span>
+                        <p className="text-[0.9rem]">{item.title}</p>
+                      </span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -104,9 +109,9 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu>
+        <SidebarMenu className="pl-2">
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="gap-3">
+            <SidebarMenuButton asChild className="gap-3 px-4 py-6 w-full">
               <Link to="settings">
                 <Settings />
                 <span>Settings</span>
