@@ -1,5 +1,6 @@
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
+import logger from "./../utils/logger.js";
 
 dotenv.config();
 
@@ -17,13 +18,9 @@ export const student_metadata_db = mysql.createPool({
 (async () => {
   try {
     const connection = await student_metadata_db.getConnection();
-    console.log(new Date(), "INFO Connection Successful with DB");
+    logger.info("Connection Successful with DB");
     connection.release(); // release back to pool
   } catch (err) {
-    console.error(
-      new Date(),
-      "ERROR - Connection failed with DB:",
-      err.message
-    );
+    logger.error("Connection failed with DB -", err.message);
   }
 })();
