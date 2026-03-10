@@ -1,18 +1,18 @@
 import { Router } from "express";
 const router = Router();
-import { student_metadata_db } from "./../config/db.js";
-import logger from "./../utils/logger.js";
+import { student_metadata_db } from "../config/db.js";
+import logger from "../utils/logger.js";
 
-router.get("/list", async (req, res) => {
+router.get("/latest-student-list", async (req, res) => {
   try {
-    logger.info("ui_dashboard/list | fetching data");
+    logger.info("dashboard/latest-student-list | fetching data");
     const latestAdmissionsListQuery =
       "SELECT id, admission_no, first_name, last_name, gender, contact_number, date_of_admission FROM school_metadata.students WHERE is_active = 'true' ORDER BY date_of_admission desc, id asc LIMIT 5";
     const latestAdmissionsListResult = await student_metadata_db.query(
       latestAdmissionsListQuery,
     );
     logger.info(
-      "ui_dashboard/list | Response | latestAdmissionsListResult => " +
+      "dashboard/latest-student-list | Response | latestAdmissionsListResult => " +
         JSON.stringify(latestAdmissionsListResult[0]),
     );
     return res.status(200).json({
@@ -22,7 +22,7 @@ router.get("/list", async (req, res) => {
     });
     // setTimeout(() => {
     //   logger.info(
-    //     "ui_dashboard/list | DELAYED Response | latestAdmissionsListResult =>",
+    //     "dashboard/latest-student-list | DELAYED Response | latestAdmissionsListResult =>",
     //     JSON.stringify(latestAdmissionsListResult[0]),
     //   );
     //   res.status(200).json({
@@ -32,7 +32,7 @@ router.get("/list", async (req, res) => {
     //   });
     // }, 2000);
   } catch (err) {
-    logger.error("ui_dashboard/list | Exception =>> " + err);
+    logger.error("dashboard/latest-student-list | Exception =>> " + err);
     return res.status(500).json({
       error: "Something Went Wrong",
       code: err.errno,
@@ -40,9 +40,9 @@ router.get("/list", async (req, res) => {
   }
 });
 
-router.get("/summary", async (req, res) => {
+router.get("/student-summary", async (req, res) => {
   try {
-    logger.info("ui_dashboard/summary | fetching data");
+    logger.info("dashboard/summary | fetching data");
     const newAdmissionCountQuery =
       "SELECT count(id) as new_admissions_count FROM school_metadata.students WHERE date_of_admission > SUBDATE(sysdate(), INTERVAL 1 MONTH) AND is_active = 'true'";
     const totalStudentCountQuery =
@@ -53,11 +53,11 @@ router.get("/summary", async (req, res) => {
         student_metadata_db.query(totalStudentCountQuery),
       ]);
     logger.info(
-      "ui_dashboard/summary | Response | totalStudentCountResult =>" +
+      "dashboard/summary | Response | totalStudentCountResult =>" +
         JSON.stringify(totalStudentCountResult[0]),
     );
     logger.info(
-      "ui_dashboard/summary | Response | newAdmissionCountResult =>" +
+      "dashboard/summary | Response | newAdmissionCountResult =>" +
         JSON.stringify(newAdmissionCountResult[0]),
     );
     return res.status(200).json({
@@ -67,7 +67,7 @@ router.get("/summary", async (req, res) => {
       },
     });
   } catch (err) {
-    logger.error("ui_dashboard/summary | Exception =>> " + err);
+    logger.error("dashboard/summary | Exception =>> " + err);
     return res.status(500).json({
       error: "Something Went Wrong",
       code: err.errno,
