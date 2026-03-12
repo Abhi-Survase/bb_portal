@@ -47,10 +47,10 @@ function GetStudentPage() {
   async function onSubmitHandler(value) {
     // console.log(value);
     const inputValue = value.admission_no;
-    const apiUrl = `http://localhost:8810/get_student_byAdmissionNo/${inputValue}`;
+    const apiUrl = `${import.meta.env.VITE_FIND_STUDENT_API}/${inputValue}`;
     try {
-      // console.log(apiUrl);
       const response = await axios.get(apiUrl);
+      // console.log(response);
       if (response.data.length === 0) {
         toast.error(`No Student Found for: ${inputValue}`);
       } else {

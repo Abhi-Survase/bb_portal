@@ -47,7 +47,7 @@ function AllStudentPage() {
   useEffect(() => {
     const fetchAllStudentData = async () => {
       try {
-        const apiUrl = `http://localhost:8810/all_active_students`;
+        const apiUrl = import.meta.env.VITE_ALL_STUDENT_API;
         setLoading(true);
         // console.log(paginationData);
         const response = await axios.get(apiUrl, {

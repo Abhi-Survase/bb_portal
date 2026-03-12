@@ -51,7 +51,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import axios from "axios";
-import { differenceInDays, differenceInMonths } from "date-fns";
+import { differenceInDays } from "date-fns";
 
 function Dashboard() {
   const [latestStudents, fetchLatestStudents] = useState([
@@ -64,7 +64,7 @@ function Dashboard() {
   useEffect(() => {
     const fetchLatestStudentsData = async () => {
       try {
-        const apiUrl = `http://localhost:8810/ui_dashboard/list`;
+        const apiUrl = import.meta.env.VITE_DASHBOARD_LIST_API;
         // console.log(paginationData);
         const response = await axios.get(apiUrl);
         fetchLatestStudents(response.data.data.latestAdmissionsList);
@@ -86,7 +86,7 @@ function Dashboard() {
     const dashboardSummaryData = async () => {
       console.log(dashboardSummary.totalStudentCount[0].total_count);
       try {
-        const apiUrl = "http://localhost:8810/ui_dashboard/summary";
+        const apiUrl = import.meta.env.VITE_DASHBOARD_SUMMARY_API;
         const response = await axios.get(apiUrl);
         fetchDashbardSummary(response.data.data);
         console.log(response.data.data.totalStudentCount[0].total_count);
@@ -147,8 +147,7 @@ function Dashboard() {
                   variant="secondary"
                   className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
                 >
-                  <TrendingUp />
-                  +12.5%
+                  View Students
                 </Badge>
               </CardAction>
             </CardHeader>

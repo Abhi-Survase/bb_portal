@@ -1,8 +1,4 @@
-import bookLogo from "/smp_icon.svg";
-import { Button } from "@/components/ui/button";
 import "./App.css";
-import { Link } from "react-router";
-import { BookOpen, Search, Plus, Edit, List } from "lucide-react";
 import { Navigate, BrowserRouter, Routes, Route } from "react-router";
 import {
   AllStudentPage,
@@ -62,7 +58,7 @@ function App() {
           <Route path="users" element={<ShowUsersPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
-        <Route path="dashboard_new" element={<Dashboard_new />} />
+        {/* <Route path="dashboard_new" element={<Dashboard_new />} /> */}
       </Routes>
     </BrowserRouter>
   );

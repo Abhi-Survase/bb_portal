@@ -19,6 +19,7 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        badge_ghost: "hover:bg-emerald-50/80 dark:hover:bg-emerald-50/50",
         link: "text-primary underline-offset-4 hover:underline",
         muted_outline:
           "border bg-background text-(--muted-foreground) shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",

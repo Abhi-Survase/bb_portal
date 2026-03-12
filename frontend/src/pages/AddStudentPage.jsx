@@ -130,7 +130,7 @@ function AddStudentPage() {
     };
 
     try {
-      const apiUrl = "http://localhost:8810/add_student";
+      const apiUrl = import.meta.env.VITE_ADD_STUDENT_API;
       const response = await axios.post(apiUrl, studentDataPayload);
       // alert("SUCCESS! " + response.data);
       toast.success(response.data.message);
