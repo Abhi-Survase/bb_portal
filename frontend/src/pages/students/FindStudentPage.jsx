@@ -3,6 +3,25 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Link } from "react-router";
 import {
+  LayoutDashboard,
+  Users,
+  UserPlus,
+  Search,
+  TrendingDown,
+  Bell,
+  GraduationCap,
+  FileText,
+  Settings,
+  ChevronRight,
+  TrendingUp,
+  MoreHorizontal,
+  Pencil,
+  List,
+  Edit,
+  Moon,
+} from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle.tsx";
+import {
   Card,
   CardAction,
   CardContent,
@@ -11,7 +30,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Pencil, ChevronRight } from "lucide-react";
 import axios from "axios";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -76,6 +94,12 @@ function GetStudentPage() {
           <SidebarTrigger />
           Search for Student
         </h1>
+        <div className="flex items-center gap-4">
+          <ModeToggle />
+          <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center text-rose-700 font-medium text-sm">
+            BP
+          </div>
+        </div>
       </header>
       <div className="h-screen flex items-center justify-center">
         <Form {...form}>

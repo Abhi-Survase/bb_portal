@@ -1,5 +1,23 @@
 import * as React from "react";
 import { Link } from "react-router";
+import {
+  LayoutDashboard,
+  Users,
+  UserPlus,
+  Search,
+  TrendingDown,
+  Bell,
+  GraduationCap,
+  FileText,
+  Settings,
+  ChevronRight,
+  TrendingUp,
+  MoreHorizontal,
+  List,
+  Edit,
+  Moon,
+} from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -160,6 +178,25 @@ function AddStudentPage() {
           <SidebarTrigger />
           Add Student Admission
         </h1>
+        <div className="flex items-center gap-4">
+          {/* Global Search Bar (Replaces 'Find Student' Page) */}
+          <div className="relative hidden sm:block group">
+            <Link
+              to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
+                import.meta.env.VITE_FIND_STUDENT_URL
+              }`}
+            >
+              <Button variant="muted_outline">
+                <Search size={16} />
+                Search Students
+              </Button>
+            </Link>
+          </div>
+          <ModeToggle />
+          <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center text-rose-700 font-medium text-sm">
+            BP
+          </div>
+        </div>
       </header>
       <Toaster />
       <div className="space-y-6 p-4 max-w-6xl">

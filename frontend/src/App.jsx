@@ -58,7 +58,7 @@ function App() {
           <Route path="users" element={<ShowUsersPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
-        {/* <Route path="dashboard_new" element={<Dashboard_new />} /> */}
+        <Route path="dashboard_new" element={<Dashboard_new />} />
       </Routes>
     </BrowserRouter>
   );

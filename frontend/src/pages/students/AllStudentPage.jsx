@@ -18,7 +18,22 @@ import {
   ArrowRight,
   ArrowLeftToLine,
   ArrowRightToLine,
+  LayoutDashboard,
+  Users,
+  UserPlus,
+  TrendingDown,
+  Bell,
+  GraduationCap,
+  FileText,
+  Settings,
+  ChevronRight,
+  TrendingUp,
+  MoreHorizontal,
+  List,
+  Edit,
+  Moon,
 } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle.tsx";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
@@ -85,17 +100,24 @@ function AllStudentPage() {
           <SidebarTrigger />
           All Active Students
         </h1>
-        <div className="ml-auto mr-6">
-          <Button variant="outline" asChild>
+        <div className="flex items-center gap-4">
+          {/* Global Search Bar (Replaces 'Find Student' Page) */}
+          <div className="relative hidden sm:block group">
             <Link
               to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
                 import.meta.env.VITE_FIND_STUDENT_URL
               }`}
             >
-              <Search />
-              Search Student
+              <Button variant="muted_outline">
+                <Search size={16} />
+                Search Students
+              </Button>
             </Link>
-          </Button>
+          </div>
+          <ModeToggle />
+          <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center text-rose-700 font-medium text-sm">
+            BP
+          </div>
         </div>
       </header>
 

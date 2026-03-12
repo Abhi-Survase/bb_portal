@@ -4,13 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CalendarIcon, ArrowLeftIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
-import { toast } from "sonner";
+
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-function AddUserPage(fetchedUserData) {
-  function handleUpdatePageOpen() {
-    console.log(fetchedUserData);
-  }
+function AddUserPage() {
   return (
     <div className="flex-1 flex flex-col">
       <header className="h-16 --background border-b flex items-center justify-between px-8 sticky top-0 z-10">
