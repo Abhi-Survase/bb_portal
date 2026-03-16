@@ -10,7 +10,9 @@ import {
   ShowUsersPage,
   AddUserPage,
   ShowTeachersPage,
+  AddTeacherPage,
   PageNotFound,
+  SchoolCalendar,
 } from "./pages";
 import Layout_with_sidebar from "./components/layout_with_sidebar.jsx";
 
@@ -47,18 +49,26 @@ function App() {
               element={<UpdateStudentPage />}
             />
           </Route>
-          <Route path={import.meta.env.VITE_USERS_URL}>
-            <Route index element={<ShowUsersPage />} />
-            <Route
-              path={import.meta.env.VITE_ADDUSER_URL}
-              element={<AddUserPage />}
-            />
+          <Route path={import.meta.env.VITE_ADMIN_URL}>
+            <Route path="calendar" element={<SchoolCalendar />} />
+            <Route path={import.meta.env.VITE_TEACHERS_URL}>
+              <Route index element={<ShowTeachersPage />} />
+              <Route
+                path={import.meta.env.VITE_ADD_TEACHER_URL}
+                element={<AddTeacherPage />}
+              />
+            </Route>
+            <Route path={import.meta.env.VITE_USERS_URL}>
+              <Route index element={<ShowUsersPage />} />
+              <Route
+                path={import.meta.env.VITE_ADDUSER_URL}
+                element={<AddUserPage />}
+              />
+            </Route>
           </Route>
-          <Route path="teachers" element={<ShowTeachersPage />} />
-          <Route path="users" element={<ShowUsersPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
-        <Route path="dashboard_new" element={<Dashboard_new />} />
+        {/* <Route path="dashboard_new" element={<Dashboard_new />} />*/}
       </Routes>
     </BrowserRouter>
   );

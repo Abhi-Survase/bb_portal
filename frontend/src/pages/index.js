@@ -7,5 +7,6 @@ export { default as Dashboard } from "./dashboard/Dashboard.jsx";
 export { default as ShowUsersPage } from "./users/ShowUsersPage.jsx";
 export { default as AddUserPage } from "./users/AddUserPage.jsx";
 export { default as ShowTeachersPage } from "./teachers/ShowTeachersPage.jsx";
-export { default as AddTeachersPage } from "./teachers/AddTeacherPage.jsx";
+export { default as AddTeacherPage } from "./teachers/AddTeacherPage.jsx";
 export { default as PageNotFound } from "./PageNotFound.jsx";
+export { default as SchoolCalendar } from "./calendar/SchoolCalendar.jsx";

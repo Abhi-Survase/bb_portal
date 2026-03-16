@@ -14,6 +14,7 @@ import {
   MoreHorizontal,
   BriefcaseBusiness,
   Edit,
+  Calendar,
 } from "lucide-react";
 import bookLogo from "/smp_icon.svg";
 import {
@@ -55,12 +56,12 @@ const sidebar_menu_items = [
   {
     title: "Teachers",
     icon: BriefcaseBusiness,
-    url: import.meta.env.VITE_TEACHERS_URL,
+    url: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_TEACHERS_URL}`,
   },
   {
     title: "Users",
     icon: Users,
-    url: import.meta.env.VITE_USERS_URL,
+    url: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_USERS_URL}`,
   },
 ];
 
@@ -109,9 +110,15 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu className="pl-2">
+        <SidebarMenu className="pl-2 pb-1">
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="gap-3 px-4 py-6 w-full">
+            <SidebarMenuButton asChild className="gap-3 px-4 py-5 w-full">
+              <Link to="/school/calendar">
+                <Calendar />
+                <span>Calendar</span>
+              </Link>
+            </SidebarMenuButton>
+            <SidebarMenuButton asChild className="gap-3 px-4 py-5 w-full">
               <Link to="settings">
                 <Settings />
                 <span>Settings</span>

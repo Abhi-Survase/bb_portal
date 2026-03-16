@@ -52,6 +52,7 @@ import { Input } from "@/components/ui/input";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import axios from "axios";
 import { differenceInDays } from "date-fns";
+import ScheduleWidget from "@/components/calender-schedule/ScheduleWidget.jsx";
 
 function Dashboard() {
   const [latestStudents, fetchLatestStudents] = useState([
@@ -147,7 +148,7 @@ function Dashboard() {
                   variant="secondary"
                   className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
                 >
-                  View Students
+                  Add Student
                 </Badge>
               </CardAction>
             </CardHeader>
@@ -166,10 +167,9 @@ function Dashboard() {
               <CardAction>
                 <Badge
                   variant="secondary"
-                  className="bg-[var(--destructive)]/10 text-red-700 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
+                  className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
                 >
-                  <TrendingDown />
-                  -20%
+                  View Students
                 </Badge>
               </CardAction>
             </CardHeader>
@@ -179,46 +179,45 @@ function Dashboard() {
           </Card>
           <Card className="@container/card">
             <CardHeader>
-              <CardDescription>Active Accounts</CardDescription>
+              <CardDescription>Teachers</CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                45,678
+                5
               </CardTitle>
               <CardAction>
                 <Badge
                   variant="secondary"
                   className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
                 >
-                  <TrendingUp />
-                  +12.5%
+                  Add Teacher
                 </Badge>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
               <div className="text-muted-foreground">
-                Engagement exceed targets
+                <span>2 Maths </span>
+                <span>2 English </span>
+                <span>1 Dance </span>
+                <span>1 Music </span>
               </div>
             </CardFooter>
           </Card>
           <Card className="@container/card">
             <CardHeader>
-              <CardDescription>Growth Rate</CardDescription>
+              <CardDescription>Users</CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                4.5%
+                2
               </CardTitle>
               <CardAction>
                 <Badge
                   variant="secondary"
                   className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
                 >
-                  <TrendingUp />
-                  +4.5%
+                  Add Users
                 </Badge>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="text-muted-foreground">
-                Meets growth projections
-              </div>
+              <div className="text-muted-foreground">Application Users</div>
             </CardFooter>
           </Card>
         </div>
@@ -288,28 +287,9 @@ function Dashboard() {
                 )}
               </CardContent>
             </Card>
-            <Card className="@container/card lg:col-span-1">
-              <CardHeader>
-                <CardDescription>Growth Rate</CardDescription>
-                <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                  4.5%
-                </CardTitle>
-                <CardAction>
-                  <Badge
-                    variant="secondary"
-                    className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
-                  >
-                    <TrendingUp />
-                    +4.5%
-                  </Badge>
-                </CardAction>
-              </CardHeader>
-              <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                <div className="text-muted-foreground">
-                  Meets growth projections
-                </div>
-              </CardFooter>
-            </Card>
+            <div className="@container/card lg:col-span-1">
+              <ScheduleWidget />
+            </div>
           </div>
         </div>
       </div>
