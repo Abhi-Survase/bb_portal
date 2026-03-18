@@ -19,6 +19,11 @@ app.get("/favicon.ico", (req, res) => {
   return res.status(204).end;
 });
 
+app.use((req, res, next) => {
+  logger.info(`Request Received: ${req.method} ${req.url}`);
+  next();
+});
+
 app.use("/dashboard", dashboardRoutes);
 
 app.use("/student", studentRoutes);
