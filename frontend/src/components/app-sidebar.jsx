@@ -15,6 +15,7 @@ import {
   BriefcaseBusiness,
   Edit,
   Calendar,
+  IdCardLanyard,
 } from "lucide-react";
 import bookLogo from "/smp_icon.svg";
 import {
@@ -55,7 +56,7 @@ const sidebar_menu_items = [
   },
   {
     title: "Teachers",
-    icon: BriefcaseBusiness,
+    icon: IdCardLanyard,
     url: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_TEACHERS_URL}`,
   },
   {

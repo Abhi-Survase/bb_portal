@@ -24,3 +24,15 @@ export const student_metadata_db = mysql.createPool({
     logger.error("Connection failed with DB -", err.message);
   }
 })();
+
+student_metadata_db.on("connection", (connection) => {
+  connection.on("error", (err) => {
+    logger.error("DB Connection Error:", err);
+  });
+  connection.on("close", () => {
+    logger.info("DB Connection Closed");
+  });
+  connection.on("acquire", () => {
+    logger.info("DB Connection Acquired");
+  });
+});

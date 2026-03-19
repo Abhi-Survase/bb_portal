@@ -18,6 +18,7 @@ import {
   List,
   Edit,
   Moon,
+  IdCardLanyard,
 } from "lucide-react";
 import {
   Card,
@@ -59,8 +60,10 @@ function Dashboard() {
     { id: "pre", date_of_admission: `${new Date()}` },
   ]);
   const [dashboardSummary, fetchDashbardSummary] = useState({
-    newAdmissionCount: [{ new_admissions_count: 0 }],
-    totalStudentCount: [{ total_count: 0 }],
+    newAdmissionCount: [{ new_admissions_count: -1 }],
+    totalStudentCount: [{ total_count: -1 }],
+    teacherCount: [{ teacher_count: -1 }],
+    usersCount: [{ users_count: -1 }],
   });
   useEffect(() => {
     const fetchLatestStudentsData = async () => {
@@ -141,14 +144,18 @@ function Dashboard() {
                 <Users className="h-8 w-8 text-(--chart-2) rounded-lg bg-[var(--chart-2)]/15 p-1.5" />
               </CardDescription>
               <CardTitle className="justify-center text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                {dashboardSummary.totalStudentCount[0].total_count}
+                {dashboardSummary.totalStudentCount[0].total_count === -1 ? (
+                  <Skeleton className="h-9 w-16" />
+                ) : (
+                  dashboardSummary.totalStudentCount[0].total_count
+                )}
               </CardTitle>
               <CardAction>
                 <Badge
                   variant="secondary"
                   className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
                 >
-                  Add Student
+                  View Student
                 </Badge>
               </CardAction>
             </CardHeader>
@@ -162,14 +169,19 @@ function Dashboard() {
                 <UserPlus className="h-8 w-8 text-(--chart-5) rounded-lg bg-(--secondary) p-1.5" />
               </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                {dashboardSummary.newAdmissionCount[0].new_admissions_count}
+                {dashboardSummary.newAdmissionCount[0].new_admissions_count ===
+                -1 ? (
+                  <Skeleton className="h-9 w-16" />
+                ) : (
+                  dashboardSummary.newAdmissionCount[0].new_admissions_count
+                )}
               </CardTitle>
               <CardAction>
                 <Badge
                   variant="secondary"
                   className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
                 >
-                  View Students
+                  Add Students
                 </Badge>
               </CardAction>
             </CardHeader>
@@ -179,40 +191,47 @@ function Dashboard() {
           </Card>
           <Card className="@container/card">
             <CardHeader>
-              <CardDescription>Teachers</CardDescription>
+              <CardDescription>
+                <IdCardLanyard className="h-8 w-8 text-(--chart-5) rounded-lg bg-(--secondary) p-1.5" />
+              </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                5
+                {dashboardSummary.teacherCount[0].teacher_count === -1 ? (
+                  <Skeleton className="h-9 w-16" />
+                ) : (
+                  dashboardSummary.teacherCount[0].teacher_count
+                )}
               </CardTitle>
               <CardAction>
                 <Badge
                   variant="secondary"
                   className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
                 >
-                  Add Teacher
+                  View Teacher
                 </Badge>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="text-muted-foreground">
-                <span>2 Maths </span>
-                <span>2 English </span>
-                <span>1 Dance </span>
-                <span>1 Music </span>
-              </div>
+              <div className="text-muted-foreground">Teachers</div>
             </CardFooter>
           </Card>
           <Card className="@container/card">
             <CardHeader>
-              <CardDescription>Users</CardDescription>
+              <CardDescription>
+                <Users className="h-8 w-8 text-(--chart-5) rounded-lg bg-(--secondary) p-1.5" />
+              </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                2
+                {dashboardSummary.usersCount[0].users_count === -1 ? (
+                  <Skeleton className="h-9 w-16" />
+                ) : (
+                  dashboardSummary.usersCount[0].users_count
+                )}
               </CardTitle>
               <CardAction>
                 <Badge
                   variant="secondary"
                   className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
                 >
-                  Add Users
+                  View Users
                 </Badge>
               </CardAction>
             </CardHeader>
