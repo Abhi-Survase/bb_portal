@@ -1,0 +1,188 @@
+{
+	"info": {
+		"_postman_id": "f7decb8d-1fbd-436b-949d-eaf1c11e25ba",
+		"name": "Blossom Book Portal",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46172335"
+	},
+	"item": [
+		{
+			"name": "student",
+			"item": [
+				{
+					"name": "active-students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8810/student/active-students",
+							"host": [
+								"localhost"
+							],
+							"port": "8810",
+							"path": [
+								"student",
+								"active-students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-student-by-admissionNo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8810/student/get-student-by-admissionNo/000003",
+							"host": [
+								"localhost"
+							],
+							"port": "8810",
+							"path": [
+								"student",
+								"get-student-by-admissionNo",
+								"000003"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add-student",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"admission_no\": \"000009\",\r\n    \"first_name\": \"Anupama\",\r\n    \"middle_name\": \"Rana\",\r\n    \"mother_name\": \"Sabu\",\r\n    \"last_name\": \"DCruz\",\r\n    \"d_o_b\": \"2020-12-15\",\r\n    \"gender\": \"F\",\r\n    \"date_of_admission\": \"2025-05-15\",\r\n    \"contact_number\": \"8958356578\",\r\n    \"parent_email\": \"rana.dcruz-1421@gmail.com\",\r\n    \"address\": \"Apt. 396 Jl. Kartini No. 17, Mamberamo Tengah, Srinagar, Tamil Nadu, 33755\",\r\n    \"city\": \"Srinagar\",\r\n    \"state\": \"Tamil Nadu\",\r\n    \"pincode\": \"033755\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8810/student/add-student",
+							"host": [
+								"localhost"
+							],
+							"port": "8810",
+							"path": [
+								"student",
+								"add-student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "student-details",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"admission_no\": \"000009\",\r\n    \"first_name\": \"Anupama\",\r\n    \"middle_name\": \"Rana\",\r\n    \"mother_name\": \"Sabu\",\r\n    \"last_name\": \"DCruz\",\r\n    \"d_o_b\": \"2020-12-15\",\r\n    \"gender\": \"F\",\r\n    \"date_of_admission\": \"2025-05-15\",\r\n    \"contact_number\": \"8958356578\",\r\n    \"parent_email\": \"rana.dcruz-1421@gmail.com\",\r\n    \"address\": \"Apt. 396 Jl. Kartini No. 17, Mamberamo Tengah, Srinagar, Tamil Nadu, 33755\",\r\n    \"city\": \"Srinagar\",\r\n    \"state\": \"Tamil Nadu\",\r\n    \"pincode\": \"033755\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:8810/student/student-details?searchParam=2&detailKeyword=anu",
+							"host": [
+								"localhost"
+							],
+							"port": "8810",
+							"path": [
+								"student",
+								"student-details"
+							],
+							"query": [
+								{
+									"key": "searchParam",
+									"value": "2"
+								},
+								{
+									"key": "detailKeyword",
+									"value": "anu"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateStudentDetails",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8810/student/update-student-details",
+							"host": [
+								"localhost"
+							],
+							"port": "8810",
+							"path": [
+								"student",
+								"update-student-details"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "dashboard",
+			"item": [
+				{
+					"name": "latest-student-list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8810/dashboard/latest-student-list",
+							"host": [
+								"localhost"
+							],
+							"port": "8810",
+							"path": [
+								"dashboard",
+								"latest-student-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "student-summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8810/dashboard/student-summary",
+							"host": [
+								"localhost"
+							],
+							"port": "8810",
+							"path": [
+								"dashboard",
+								"student-summary"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "teachers",
+			"item": []
+		},
+		{
+			"name": "users",
+			"item": []
+		}
+	]
+}
