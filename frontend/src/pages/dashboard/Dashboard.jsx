@@ -62,7 +62,7 @@ function Dashboard() {
   const [dashboardSummary, fetchDashbardSummary] = useState({
     newAdmissionCount: [{ new_admissions_count: -1 }],
     totalStudentCount: [{ total_count: -1 }],
-    teacherCount: [{ teacher_count: -1 }],
+    teachersCount: [{ teachers_count: -1 }],
     usersCount: [{ users_count: -1 }],
   });
   useEffect(() => {
@@ -88,12 +88,12 @@ function Dashboard() {
     };
 
     const dashboardSummaryData = async () => {
-      console.log(dashboardSummary.totalStudentCount[0].total_count);
+      console.log(dashboardSummary);
       try {
         const apiUrl = import.meta.env.VITE_DASHBOARD_SUMMARY_API;
         const response = await axios.get(apiUrl);
         fetchDashbardSummary(response.data.data);
-        console.log(response.data.data.totalStudentCount[0].total_count);
+        console.log(response.data.data);
       } catch (error) {
         console.log(error);
         // setError(error.message);
@@ -105,7 +105,7 @@ function Dashboard() {
 
     fetchLatestStudentsData();
     dashboardSummaryData();
-    console.log(dashboardSummary.totalStudentCount[0].total_count);
+    console.log(dashboardSummary);
   }, []);
 
   return (
@@ -195,10 +195,10 @@ function Dashboard() {
                 <IdCardLanyard className="h-8 w-8 text-(--chart-5) rounded-lg bg-(--secondary) p-1.5" />
               </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                {dashboardSummary.teacherCount[0].teacher_count === -1 ? (
+                {dashboardSummary.teachersCount[0].teachers_count === -1 ? (
                   <Skeleton className="h-9 w-16" />
                 ) : (
-                  dashboardSummary.teacherCount[0].teacher_count
+                  dashboardSummary.teachersCount[0].teachers_count
                 )}
               </CardTitle>
               <CardAction>
@@ -291,7 +291,7 @@ function Dashboard() {
                           <TableCell>{student.first_name}</TableCell>
                           <TableCell>{student.last_name}</TableCell>
                           <TableCell>{student.gender}</TableCell>
-                          <TableCell>{student.contact_number}</TableCell>
+                          <TableCell>{student.parent_contact_number}</TableCell>
                           <TableCell className="text-right">
                             {
                               new Date(student.date_of_admission)
