@@ -32,7 +32,7 @@ router.get("/latest-student-list", async (req, res) => {
     //   });
     // }, 2000);
   } catch (err) {
-    logger.error("dashboard/latest-student-list | Exception =>> " + err);
+    logger.error("dashboard/latest-student-list | Exception =>> " + err.stack);
     return res.status(500).json({
       error: "Something Went Wrong",
       code: err.errno,
@@ -87,7 +87,8 @@ router.get("/student-summary", async (req, res) => {
       },
     });
   } catch (err) {
-    logger.error("dashboard/summary | Exception =>> " + err);
+    // console.error(err.stack);
+    logger.error("dashboard/summary | Exception =>> " + err.stack);
     return res.status(500).json({
       error: "Something Went Wrong",
       code: err.errno,

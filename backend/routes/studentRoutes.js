@@ -44,7 +44,7 @@ router.get("/active-students", async (req, res) => {
       "fetchAllStudentData | " +
         `page: ${page}, limit: ${limit}, offset: ${offset}` +
         " | Exception =>> " +
-        err,
+        err.stack,
     );
     return res.status(500).json({
       error: err.message,
@@ -149,7 +149,7 @@ router.get("/student-details", async (req, res) => {
     }
     return res.status(200).json(output);
   } catch (err) {
-    logger.error("getStudentDetails | Exception =>> " + err);
+    logger.error("getStudentDetails | Exception =>> " + err.stack);
     return res
       .status(500)
       .json({ status: "Failed", message: "Internal Server Error" });
@@ -190,7 +190,7 @@ router.get("/get-student-by-admissionNo/:admission_no", async (req, res) => {
       status = 400;
       message = "Invalid Input!";
     }
-    logger.error("getStudentByAdmissionId | Exception =>> " + err);
+    logger.error("getStudentByAdmissionId | Exception =>> " + err.stack);
     return res.status(status).json({
       error: message,
       type: err.code,
@@ -262,7 +262,7 @@ router.patch("/update-student-details", async (req, res) => {
     );
     return res.status(201).json("Student record updated Successfully!");
   } catch (err) {
-    logger.error("updateStudentDetails | Exception =>>" + err);
+    logger.error("updateStudentDetails | Exception =>>" + err.stack);
     return res.status(501).json({ message: "Internal Server Error" });
   }
 });
