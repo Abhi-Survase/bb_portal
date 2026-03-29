@@ -1,6 +1,6 @@
 export { default as AllStudentPage } from "./students/AllStudentPage.jsx";
 export { default as AddStudentPage } from "./students/AddStudentPage.jsx";
-export { default as GetStudentPage } from "./students/FindStudentPage.jsx";
+export { default as FindStudentPage } from "./students/FindStudentPage.jsx";
 export { default as UpdateStudentPage } from "./students/UpdateStudentPage.jsx";
 export { default as Dashboard_new } from "./dashboard/Dashboard_dummy.jsx";
 export { default as Dashboard } from "./dashboard/Dashboard.jsx";

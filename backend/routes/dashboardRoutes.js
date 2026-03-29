@@ -11,26 +11,26 @@ router.get("/latest-student-list", async (req, res) => {
     const latestAdmissionsListResult = await student_metadata_db.query(
       latestAdmissionsListQuery,
     );
-    logger.info(
-      "dashboard/latest-student-list | Response | latestAdmissionsListResult => " +
-        JSON.stringify(latestAdmissionsListResult[0]),
-    );
-    return res.status(200).json({
-      data: {
-        latestAdmissionsList: latestAdmissionsListResult[0],
-      },
-    });
-    // setTimeout(() => {
-    //   logger.info(
-    //     "dashboard/latest-student-list | DELAYED Response | latestAdmissionsListResult =>",
+    // logger.info(
+    //   "dashboard/latest-student-list | Response | latestAdmissionsListResult => " +
     //     JSON.stringify(latestAdmissionsListResult[0]),
-    //   );
-    //   res.status(200).json({
-    //     data: {
-    //       latestAdmissionsList: latestAdmissionsListResult[0],
-    //     },
-    //   });
-    // }, 2000);
+    // );
+    // return res.status(200).json({
+    //   data: {
+    //     latestAdmissionsList: latestAdmissionsListResult[0],
+    //   },
+    // });
+    setTimeout(() => {
+      logger.info(
+        "dashboard/latest-student-list | DELAYED Response | latestAdmissionsListResult =>" +
+          JSON.stringify(latestAdmissionsListResult[0]),
+      );
+      return res.status(200).json({
+        data: {
+          latestAdmissionsList: latestAdmissionsListResult[0],
+        },
+      });
+    }, 2000);
   } catch (err) {
     logger.error("dashboard/latest-student-list | Exception =>> " + err.stack);
     return res.status(500).json({

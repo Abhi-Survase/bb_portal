@@ -54,6 +54,7 @@ import { ModeToggle } from "@/components/mode-toggle.tsx";
 import axios from "axios";
 import { differenceInDays } from "date-fns";
 import ScheduleWidget from "@/components/calender-schedule/ScheduleWidget.jsx";
+import { Spinner } from "@/components/ui/spinner";
 
 function Dashboard() {
   const [latestStudents, fetchLatestStudents] = useState([
@@ -145,7 +146,7 @@ function Dashboard() {
               </CardDescription>
               <CardTitle className="justify-center text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {dashboardSummary.totalStudentCount[0].total_count === -1 ? (
-                  <Skeleton className="h-9 w-16" />
+                  <Spinner className="!mt-3 size-5" />
                 ) : (
                   dashboardSummary.totalStudentCount[0].total_count
                 )}
@@ -160,7 +161,7 @@ function Dashboard() {
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <p className="text-muted-foreground">Total Students</p>
+              <p className="text-muted-foreground ">Total Students</p>
             </CardFooter>
           </Card>
           <Card className="@container/card">
@@ -171,7 +172,7 @@ function Dashboard() {
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {dashboardSummary.newAdmissionCount[0].new_admissions_count ===
                 -1 ? (
-                  <Skeleton className="h-9 w-16" />
+                  <Spinner className="!mt-3 size-5" />
                 ) : (
                   dashboardSummary.newAdmissionCount[0].new_admissions_count
                 )}
@@ -196,7 +197,7 @@ function Dashboard() {
               </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {dashboardSummary.teachersCount[0].teachers_count === -1 ? (
-                  <Skeleton className="h-9 w-16" />
+                  <Spinner className="!mt-3 size-5" />
                 ) : (
                   dashboardSummary.teachersCount[0].teachers_count
                 )}
@@ -221,7 +222,7 @@ function Dashboard() {
               </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {dashboardSummary.usersCount[0].users_count === -1 ? (
-                  <Skeleton className="h-9 w-16" />
+                  <Spinner className="!mt-3 size-5" />
                 ) : (
                   dashboardSummary.usersCount[0].users_count
                 )}
@@ -249,7 +250,7 @@ function Dashboard() {
                   <span className="hidden @[540px]/card:block">
                     {"Last Admission was "}
                     {latestStudents[0].id === "pre" ? (
-                      <Skeleton className="h-4 w-5 inline-block align-middle" />
+                      <Spinner className="size-3 inline-block align-middle" />
                     ) : (
                       differenceInDays(
                         new Date(),

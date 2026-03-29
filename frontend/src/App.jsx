@@ -3,7 +3,7 @@ import { Navigate, BrowserRouter, Routes, Route } from "react-router";
 import {
   AllStudentPage,
   AddStudentPage,
-  GetStudentPage,
+  FindStudentPage,
   UpdateStudentPage,
   Dashboard_new,
   Dashboard,
@@ -38,7 +38,7 @@ function App() {
             <Route index element={<AllStudentPage />} />
             <Route
               path={import.meta.env.VITE_FIND_STUDENT_URL}
-              element={<GetStudentPage />}
+              element={<FindStudentPage />}
             />
             <Route
               path={import.meta.env.VITE_ADD_STUDENT_URL}
