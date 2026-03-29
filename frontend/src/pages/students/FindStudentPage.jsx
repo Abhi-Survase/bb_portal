@@ -45,6 +45,14 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   admission_no: z.string().regex(/^\d{6,}$/, {
@@ -54,6 +62,15 @@ const formSchema = z.object({
 
 function FindStudentPage() {
   const [studentData, setStudentData] = useState("");
+  const [studentSearchParam, setStudentSearchParam] =
+    useState("Admission Number");
+  const SEARCH_FIELDS = {
+    "Admission Number": 0,
+    "Date of Admission": 1,
+    "First Name": 2,
+    "Last Name": 3,
+    "Contact Number": 4,
+  };
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -65,7 +82,8 @@ function FindStudentPage() {
   async function onSubmitHandler(value) {
     // console.log(value);
     const inputValue = value.admission_no;
-    const apiUrl = `${import.meta.env.VITE_FIND_STUDENT_API}/${inputValue}`;
+    const apiUrl = `${import.meta.env.VITE_SEARCH_STUDENT_API}?searchParam=${SEARCH_FIELDS[studentSearchParam]}&detailKeyword=${inputValue}`;
+    console.log(apiUrl);
     try {
       const response = await axios.get(apiUrl);
       // console.log(response);
@@ -89,7 +107,6 @@ function FindStudentPage() {
   // let placeHolderText = "Enter Admission Number";
   return (
     <div className="flex flex-col flex-1 min-h-screen">
-      {/* Header */}
       <header className="sticky top-0 z-10 flex items-center justify-between h-16 px-8 border-b bg-background">
         <h1 className="flex items-center gap-4 text-xl font-semibold text-foreground">
           <SidebarTrigger />
@@ -105,7 +122,6 @@ function FindStudentPage() {
 
       {/* Main Content Area */}
       <main className="flex flex-col items-center justify-start flex-1 p-8 pt-20 gap-10">
-        {/* --- FORM SECTION --- */}
         <Form {...form}>
           <form
             className="w-full max-w-md space-y-6"
@@ -116,9 +132,34 @@ function FindStudentPage() {
               name="admission_no"
               render={({ field }) => (
                 <FormItem className="flex flex-col items-center justify-center gap-2">
-                  <FormLabel className="text-xl">
-                    Search with Admission Number
-                  </FormLabel>
+                  <div className="flex items-center justify-center gap-3 w-full">
+                    <FormLabel className=" flex items-center gap-3 text-xl">
+                      Search with{" "}
+                    </FormLabel>
+                    <Select
+                      value={studentSearchParam}
+                      onValueChange={setStudentSearchParam}
+                    >
+                      <SelectTrigger className="w-full max-w-48 !text-primary-foreground">
+                        <SelectValue placeholder="Admission Number" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="Admission Number">
+                            Admission Number
+                          </SelectItem>
+                          <SelectItem value="Date of Admission">
+                            Date of Admission
+                          </SelectItem>
+                          <SelectItem value="First Name">First Name</SelectItem>
+                          <SelectItem value="Last Name">Last Name</SelectItem>
+                          <SelectItem value="Contact Number">
+                            Contact Number
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <FormControl>
                     <Input
                       placeholder="Enter Admission Number"
@@ -136,7 +177,7 @@ function FindStudentPage() {
                 </FormItem>
               )}
             />
-            {/* Buttons grouped logically right under the input */}
+
             <div className="flex gap-4 w-full">
               <Button type="submit" className="flex-1">
                 Search
@@ -151,7 +192,6 @@ function FindStudentPage() {
           </form>
         </Form>
 
-        {/* --- RESULT CARD SECTION --- */}
         {studentData && (
           <Card className="relative w-full max-w-sm p-6 transition shadow-md rounded-2xl hover:shadow-lg">
             {/* Edit Button positioned absolutely to the card */}
