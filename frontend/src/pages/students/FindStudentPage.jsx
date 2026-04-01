@@ -217,10 +217,10 @@ function FindStudentPage() {
                     alt={`${student.first_name} ${student.last_name}`}
                   />
                   <CardTitle className="text-xl">
-                    {`${student.first_name} ${student.middle_name || ""} ${student.last_name}`}
+                    {`${student.first_name} ${student.father_name || ""} ${student.last_name}`}
                   </CardTitle>
                   <CardDescription>
-                    Contact: {student.contact_number}
+                    Contact: {student.parent_contact_number}
                   </CardDescription>
                 </CardHeader>
 
@@ -231,8 +231,10 @@ function FindStudentPage() {
                   <p>Gender: {student.gender === "M" ? "Male" : "Female"}</p>
                   <p>
                     DOB:{" "}
-                    {student.d_o_b &&
-                      new Date(student.d_o_b).toISOString().split("T")[0]}
+                    {student.date_of_birth &&
+                      new Date(student.date_of_birth)
+                        .toISOString()
+                        .split("T")[0]}
                   </p>
                   <p>
                     DOA:{" "}

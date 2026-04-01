@@ -149,7 +149,7 @@ function AllStudentPage() {
                 </Button>
               </CardAction>
               <CardTitle className="text-base">
-                {`${data.first_name} ${data.middle_name} ${data.last_name}`}
+                {`${data.first_name} ${data.father_name} ${data.last_name}`}
               </CardTitle>
               <p className="text-base">{data.admission_no}</p>
             </CardHeader>
@@ -158,14 +158,14 @@ function AllStudentPage() {
                 {data.gender === "M" ? "Male" : "Female"}
               </p>
               <p className="read-the-docs text-sm">
-                DOB: {new Date(data.d_o_b).toISOString().split("T")[0]}
+                DOB: {new Date(data.date_of_birth).toISOString().split("T")[0]}
               </p>
               <p className="read-the-docs text-sm">
                 DOA:
                 {new Date(data.date_of_admission).toISOString().split("T")[0]}
               </p>
               <p className="read-the-docs text-sm">
-                Mob: {data.contact_number}
+                Mob: {data.parent_contact_number}
               </p>
             </CardContent>
           </Card>

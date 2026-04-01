@@ -14,9 +14,9 @@ router.get("/active-students", async (req, res) => {
   // console.log(page, limit, offset);
   try {
     const dataQuery =
-      "SELECT * FROM school_metadata.students WHERE is_active = 'true' ORDER BY date_of_admission desc, id asc LIMIT ? OFFSET ?";
+      "SELECT s.id, s.admission_no, sd.first_name, sci.father_name, sd.last_name, s.date_of_admission, sd.date_of_birth, sd.gender, sd.photo_url, sci.parent_contact_number FROM school_metadata.students s INNER JOIN school_metadata.student_details sd ON s.id = sd.student_id INNER JOIN school_metadata.student_contact_info sci ON sd.id = sci.student_detail_id WHERE s.is_active = 1 ORDER BY s.date_of_admission desc, s.id asc LIMIT ? OFFSET ?";
     const countQuery =
-      "SELECT count(*) as total_count FROM school_metadata.students WHERE is_active = 'true'";
+      "SELECT count(*) as total_count FROM school_metadata.students WHERE is_active = 1";
     const [countResult, dataResult] = await Promise.all([
       student_metadata_db.query(countQuery),
       student_metadata_db.query(dataQuery, [limit, offset]),
@@ -137,7 +137,7 @@ router.get("/search-student", async (req, res) => {
       "searchStudent | Request Details => " +
         JSON.stringify({ fieldName, finalDetailKeyword }),
     );
-    const q = `SELECT * FROM school_metadata.students WHERE ${fieldName} like ? ORDER BY ${fieldName} ASC LIMIT 40`;
+    const q = `SELECT s.id, s.admission_no, sd.first_name, sci.father_name, sd.last_name, s.date_of_admission, sd.date_of_birth, sd.gender, sd.photo_url, sci.parent_contact_number FROM school_metadata.students s INNER JOIN school_metadata.student_details sd ON s.id = sd.student_id INNER JOIN school_metadata.student_contact_info sci ON sd.id = sci.student_detail_id WHERE ${fieldName} like ? ORDER BY ${fieldName} ASC LIMIT 40`;
     const [output] = await student_metadata_db.query(q, [finalDetailKeyword]);
     logger.info("searchStudent | Response =>> " + JSON.stringify(output));
     if (output.length === 0) {
