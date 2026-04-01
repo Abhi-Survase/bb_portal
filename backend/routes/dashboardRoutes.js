@@ -5,6 +5,7 @@ import logger from "../utils/logger.js";
 
 router.get("/latest-student-list", async (req, res) => {
   try {
+    const responseDelay = 2000;
     logger.info("dashboard/latest-student-list | fetching data");
     const latestAdmissionsListQuery =
       "SELECT s.id, s.admission_no, sd.first_name, sd.last_name, sd.gender, sci.parent_contact_number, s.date_of_admission FROM school_metadata.students s JOIN school_metadata.student_details sd ON s.id = sd.student_id JOIN school_metadata.student_contact_info sci ON sd.id = sci.student_detail_id WHERE s.is_active = 1 ORDER BY s.date_of_admission desc, s.id asc LIMIT 5";
@@ -22,7 +23,9 @@ router.get("/latest-student-list", async (req, res) => {
     // });
     setTimeout(() => {
       logger.info(
-        "dashboard/latest-student-list | DELAYED Response | latestAdmissionsListResult =>" +
+        "dashboard/latest-student-list | DELAYED Response By " +
+          `${responseDelay}ms` +
+          " | latestAdmissionsListResult =>" +
           JSON.stringify(latestAdmissionsListResult[0]),
       );
       return res.status(200).json({
@@ -30,7 +33,7 @@ router.get("/latest-student-list", async (req, res) => {
           latestAdmissionsList: latestAdmissionsListResult[0],
         },
       });
-    }, 2000);
+    }, responseDelay);
   } catch (err) {
     logger.error("dashboard/latest-student-list | Exception =>> " + err.stack);
     return res.status(500).json({

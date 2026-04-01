@@ -53,7 +53,7 @@ router.get("/active-students", async (req, res) => {
   }
 });
 
-router.get("/student-details", async (req, res) => {
+router.get("/search-student", async (req, res) => {
   try {
     const { searchParam, detailKeyword } = req.query;
     const SEARCH_FIELDS = [
@@ -64,10 +64,10 @@ router.get("/student-details", async (req, res) => {
       "contact_number",
     ];
     const fieldName = SEARCH_FIELDS[searchParam];
-    logger.info("getStudentDetails | Request =>> " + JSON.stringify(req.query));
+    logger.info("searchStudent | Request =>> " + JSON.stringify(req.query));
     if (!fieldName) {
       logger.error(
-        "getStudentDetails | fieldName=> " +
+        "searchStudent | fieldName=> " +
           fieldName +
           " | Exception =>> " +
           "Invalid Search Parameter!",
@@ -76,7 +76,7 @@ router.get("/student-details", async (req, res) => {
     }
     if (!detailKeyword || !detailKeyword.trim()) {
       logger.error(
-        "getStudentDetails | detailKeyword=> " +
+        "searchStudent | detailKeyword=> " +
           detailKeyword +
           " | Exception =>> " +
           "Search Keyword is Required!",
@@ -87,7 +87,7 @@ router.get("/student-details", async (req, res) => {
     if (["2", "3"].includes(searchParam)) {
       if (detailKeyword.length < 2) {
         logger.error(
-          "getStudentDetails | detailKeyword=> " +
+          "searchStudent | detailKeyword=> " +
             detailKeyword +
             " | Exception =>> " +
             "Name should have atleast 2 characters!!",
@@ -101,7 +101,7 @@ router.get("/student-details", async (req, res) => {
     if (["0", "4"].includes(searchParam)) {
       if (detailKeyword.length <= 4) {
         logger.error(
-          "getStudentDetails | detailKeyword=> " +
+          "searchStudent | detailKeyword=> " +
             detailKeyword +
             " | Exception =>> " +
             "Enter Atleast 5 digits!",
@@ -111,18 +111,19 @@ router.get("/student-details", async (req, res) => {
       // console.log(/^\d+$/.test(detailKeyword), detailKeyword);
       if (!/^\d+$/.test(detailKeyword)) {
         logger.error(
-          "getStudentDetails | detailKeyword=> " +
+          "searchStudent | detailKeyword=> " +
             detailKeyword +
             " | Exception =>> " +
             "Only Numbers Expected!",
         );
         return res.status(400).json({ message: "Only Numbers Expected!" });
       }
+      finalDetailKeyword = `${detailKeyword}%`;
     }
     if (searchParam == 1) {
       if (!/^[0-9]+(-[0-9]+)*$/.test(detailKeyword)) {
         logger.error(
-          "getStudentDetails | detailKeyword=>" +
+          "searchStudent | detailKeyword=>" +
             detailKeyword +
             " | Exception =>> " +
             "Only Numbers and Hypen Expected!",
@@ -133,15 +134,15 @@ router.get("/student-details", async (req, res) => {
       }
     }
     logger.info(
-      "getStudentDetails | Request Details => " +
+      "searchStudent | Request Details => " +
         JSON.stringify({ fieldName, finalDetailKeyword }),
     );
     const q = `SELECT * FROM school_metadata.students WHERE ${fieldName} like ? ORDER BY ${fieldName} ASC LIMIT 40`;
     const [output] = await student_metadata_db.query(q, [finalDetailKeyword]);
-    logger.info("getStudentDetails | Response =>> " + JSON.stringify(output));
+    logger.info("searchStudent | Response =>> " + JSON.stringify(output));
     if (output.length === 0) {
       logger.error(
-        "getStudentDetails | Empty Set Received as Response =>> " +
+        "searchStudent | Empty Set Received as Response =>> " +
           JSON.stringify(output) +
           "No Student Found",
       );
@@ -149,7 +150,7 @@ router.get("/student-details", async (req, res) => {
     }
     return res.status(200).json(output);
   } catch (err) {
-    logger.error("getStudentDetails | Exception =>> " + err.stack);
+    logger.error("searchStudent | Exception =>> " + err.stack);
     return res
       .status(500)
       .json({ status: "Failed", message: "Internal Server Error" });

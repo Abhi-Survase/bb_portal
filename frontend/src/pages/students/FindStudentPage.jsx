@@ -55,8 +55,8 @@ import {
 } from "@/components/ui/select";
 
 const formSchema = z.object({
-  admission_no: z.string().regex(/^\d{6,}$/, {
-    message: "Enter a 6 Digit Number",
+  admission_no: z.string().regex(/^\d{5,}$/, {
+    message: "Enter atleast 5 Digit Number",
   }),
 });
 
@@ -90,8 +90,8 @@ function FindStudentPage() {
       if (response.data.length === 0) {
         toast.error(`No Student Found for: ${inputValue}`);
       } else {
-        setStudentData(response.data[0]);
-        // console.log(response.data[0]);
+        setStudentData(response.data);
+        // console.log(response.data);
       }
     } catch (error) {
       setStudentData("");
@@ -120,7 +120,6 @@ function FindStudentPage() {
         </div>
       </header>
 
-      {/* Main Content Area */}
       <main className="flex flex-col items-center justify-start flex-1 p-8 pt-20 gap-10">
         <Form {...form}>
           <form
@@ -162,7 +161,7 @@ function FindStudentPage() {
                   </div>
                   <FormControl>
                     <Input
-                      placeholder="Enter Admission Number"
+                      placeholder={`Enter ${studentSearchParam}`}
                       className="w-full text-center"
                       type="text"
                       {...field}
@@ -193,53 +192,59 @@ function FindStudentPage() {
         </Form>
 
         {studentData && (
-          <Card className="relative w-full max-w-sm p-6 transition shadow-md rounded-2xl hover:shadow-lg">
-            {/* Edit Button positioned absolutely to the card */}
-            <CardAction className="absolute top-4 right-4 z-10">
-              <Button variant="ghost" size="icon">
-                <Pencil className="w-4 h-4" />
-              </Button>
-            </CardAction>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
+            {studentData.map((student) => (
+              <Card
+                key={student.id}
+                className="relative w-full p-6 transition shadow-md rounded-2xl hover:shadow-lg"
+              >
+                <CardAction className="absolute top-4 right-4 z-10">
+                  <Button variant="ghost" size="icon">
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                </CardAction>
 
-            <CardHeader className="flex flex-col items-center text-center">
-              <img
-                className="object-cover w-24 h-24 mb-4 rounded-full"
-                src={
-                  studentData.photo_url
-                    ? studentData.photo_url
-                    : studentData.gender === "F"
-                      ? "/f_icon.png"
-                      : "/m_icon.png"
-                }
-                alt={`${studentData.first_name} ${studentData.last_name}`}
-              />
-              <CardTitle className="text-xl">
-                {`${studentData.first_name} ${studentData.middle_name || ""} ${studentData.last_name}`}
-              </CardTitle>
-              <CardDescription>
-                Contact: {studentData.contact_number}
-              </CardDescription>
-            </CardHeader>
+                <CardHeader className="flex flex-col items-center text-center">
+                  <img
+                    className="object-cover w-24 h-24 mb-4 rounded-full"
+                    src={
+                      student.photo_url
+                        ? student.photo_url
+                        : student.gender === "F"
+                          ? "/f_icon.png"
+                          : "/m_icon.png"
+                    }
+                    alt={`${student.first_name} ${student.last_name}`}
+                  />
+                  <CardTitle className="text-xl">
+                    {`${student.first_name} ${student.middle_name || ""} ${student.last_name}`}
+                  </CardTitle>
+                  <CardDescription>
+                    Contact: {student.contact_number}
+                  </CardDescription>
+                </CardHeader>
 
-            <CardContent className="flex flex-col items-center gap-2 text-sm text-muted-foreground">
-              <p className="font-medium text-foreground">
-                Admission No: {studentData.admission_no}
-              </p>
-              <p>Gender: {studentData.gender === "M" ? "Male" : "Female"}</p>
-              <p>
-                DOB:{" "}
-                {studentData.d_o_b &&
-                  new Date(studentData.d_o_b).toISOString().split("T")[0]}
-              </p>
-              <p>
-                DOA:{" "}
-                {studentData.date_of_admission &&
-                  new Date(studentData.date_of_admission)
-                    .toISOString()
-                    .split("T")[0]}
-              </p>
-            </CardContent>
-          </Card>
+                <CardContent className="flex flex-col items-center gap-2 text-sm text-muted-foreground">
+                  <p className="font-medium text-foreground">
+                    Admission No: {student.admission_no}
+                  </p>
+                  <p>Gender: {student.gender === "M" ? "Male" : "Female"}</p>
+                  <p>
+                    DOB:{" "}
+                    {student.d_o_b &&
+                      new Date(student.d_o_b).toISOString().split("T")[0]}
+                  </p>
+                  <p>
+                    DOA:{" "}
+                    {student.date_of_admission &&
+                      new Date(student.date_of_admission)
+                        .toISOString()
+                        .split("T")[0]}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         )}
       </main>
     </div>
