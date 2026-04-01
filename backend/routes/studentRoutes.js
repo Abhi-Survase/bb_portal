@@ -12,6 +12,7 @@ router.get("/active-students", async (req, res) => {
   );
   const offset = (page - 1) * limit;
   // console.log(page, limit, offset);
+  const responseDelay = 2000;
   try {
     const dataQuery =
       "SELECT s.id, s.admission_no, sd.first_name, sci.father_name, sd.last_name, s.date_of_admission, sd.date_of_birth, sd.gender, sd.photo_url, sci.parent_contact_number FROM school_metadata.students s INNER JOIN school_metadata.student_details sd ON s.id = sd.student_id INNER JOIN school_metadata.student_contact_info sci ON sd.id = sci.student_detail_id WHERE s.is_active = 1 ORDER BY s.date_of_admission desc, s.id asc LIMIT ? OFFSET ?";
@@ -24,21 +25,38 @@ router.get("/active-students", async (req, res) => {
     const total_studentCount = countResult[0][0].total_count;
     const total_pages = Math.ceil(total_studentCount / limit);
     // console.log(countResult[0][0].total_count, dataResult[0]);
+    // logger.info(
+    //   "fetchAllStudentData | " +
+    //     `Currentpage: ${page}, limit: ${limit}, offset: ${offset}, totalCount: ${total_studentCount}, totalPages: ${total_pages}` +
+    //     " | Response =>> " +
+    //     JSON.stringify(dataResult[0]),
+    // );
+    //   return res.status(200).json({
+    //     data: dataResult[0],
+    //     pagination: {
+    //       totalCount: total_studentCount,
+    //       totalPages: total_pages,
+    //       currentPage: page,
+    //       limit: limit,
+    //     },
+    //   });
     logger.info(
       "fetchAllStudentData | " +
         `Currentpage: ${page}, limit: ${limit}, offset: ${offset}, totalCount: ${total_studentCount}, totalPages: ${total_pages}` +
-        " | Response =>> " +
+        ` | Response DELAYED by ${responseDelay}ms =>> ` +
         JSON.stringify(dataResult[0]),
     );
-    return res.status(200).json({
-      data: dataResult[0],
-      pagination: {
-        totalCount: total_studentCount,
-        totalPages: total_pages,
-        currentPage: page,
-        limit: limit,
-      },
-    });
+    setTimeout(() => {
+      return res.status(200).json({
+        data: dataResult[0],
+        pagination: {
+          totalCount: total_studentCount,
+          totalPages: total_pages,
+          currentPage: page,
+          limit: limit,
+        },
+      });
+    }, responseDelay);
   } catch (err) {
     logger.error(
       "fetchAllStudentData | " +

@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/button-group";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Spinner } from "@/components/ui/spinner";
 
 function AllStudentPage() {
   const [studentData, setStudentData] = useState([]);
@@ -86,8 +87,6 @@ function AllStudentPage() {
     };
     fetchAllStudentData();
   }, [paginationData]);
-  if (loading) return <p>Loading users...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
 
   function handleEditButtonClick() {
     console.log("Edit Button Clicked!");
@@ -122,54 +121,67 @@ function AllStudentPage() {
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
-        {studentData.map((data) => (
-          <Card key={data.id} className="p-3 !gap-1 transition">
-            <CardHeader className="pb-1">
-              <img
-                className="mx-start"
-                src={
-                  data.photo_url
-                    ? data.photo_url
-                    : data.gender === "F"
-                      ? "/f_icon.png"
-                      : "/m_icon.png"
-                }
-                alt={`${data.first_name} ${data.last_name} Photo`}
-                height={90}
-                width={90}
-              />
-              <CardAction>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="top-2 right-2 "
-                  onClick={handleEditButtonClick}
-                >
-                  <Pencil className="w-4 h-4" />
-                </Button>
-              </CardAction>
-              <CardTitle className="text-base">
-                {`${data.first_name} ${data.father_name} ${data.last_name}`}
-              </CardTitle>
-              <p className="text-base">{data.admission_no}</p>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <p className="read-the-docs text-sm">
-                {data.gender === "M" ? "Male" : "Female"}
-              </p>
-              <p className="read-the-docs text-sm">
-                DOB: {new Date(data.date_of_birth).toISOString().split("T")[0]}
-              </p>
-              <p className="read-the-docs text-sm">
-                DOA:
-                {new Date(data.date_of_admission).toISOString().split("T")[0]}
-              </p>
-              <p className="read-the-docs text-sm">
-                Mob: {data.parent_contact_number}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
+        {loading && (
+          <p className="col-span-full flex justify-center items-center py-65">
+            <Spinner className="size-6" />
+          </p>
+        )}
+        {error && (
+          <p className="col-span-full text-center text-red-500 py-10">
+            Error: {error}
+          </p>
+        )}
+        {!loading &&
+          !error &&
+          studentData.map((data) => (
+            <Card key={data.id} className="p-3 !gap-1 transition">
+              <CardHeader className="pb-1">
+                <img
+                  className="mx-start"
+                  src={
+                    data.photo_url
+                      ? data.photo_url
+                      : data.gender === "F"
+                        ? "/f_icon.png"
+                        : "/m_icon.png"
+                  }
+                  alt={`${data.first_name} ${data.last_name} Photo`}
+                  height={90}
+                  width={90}
+                />
+                <CardAction>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="top-2 right-2 "
+                    onClick={handleEditButtonClick}
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                </CardAction>
+                <CardTitle className="text-base">
+                  {`${data.first_name} ${data.father_name} ${data.last_name}`}
+                </CardTitle>
+                <p className="text-base">{data.admission_no}</p>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <p className="read-the-docs text-sm">
+                  {data.gender === "M" ? "Male" : "Female"}
+                </p>
+                <p className="read-the-docs text-sm">
+                  DOB:{" "}
+                  {new Date(data.date_of_birth).toISOString().split("T")[0]}
+                </p>
+                <p className="read-the-docs text-sm">
+                  DOA:
+                  {new Date(data.date_of_admission).toISOString().split("T")[0]}
+                </p>
+                <p className="read-the-docs text-sm">
+                  Mob: {data.parent_contact_number}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
       </div>
       <ButtonGroup className="px-6 pb-1">
         <ButtonGroup>
