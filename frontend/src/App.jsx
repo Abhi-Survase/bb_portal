@@ -5,7 +5,6 @@ import {
   AddStudentPage,
   FindStudentPage,
   UpdateStudentPage,
-  Dashboard_new,
   Dashboard,
   ShowUsersPage,
   AddUserPage,
@@ -68,7 +67,6 @@ function App() {
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Route>
-        {/* <Route path="dashboard_new" element={<Dashboard_new />} />*/}
       </Routes>
     </BrowserRouter>
   );

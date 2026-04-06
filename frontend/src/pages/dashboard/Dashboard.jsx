@@ -55,6 +55,15 @@ import axios from "axios";
 import { differenceInDays } from "date-fns";
 import ScheduleWidget from "@/components/calender-schedule/ScheduleWidget.jsx";
 import { Spinner } from "@/components/ui/spinner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function Dashboard() {
   const [latestStudents, fetchLatestStudents] = useState([
@@ -112,7 +121,7 @@ function Dashboard() {
   return (
     <div className="@container/main flex-1 flex flex-col">
       <header className="h-16 bg-background border-b flex items-center justify-between px-8 sticky top-0 z-10">
-        <h1 className="text-xl font-semibold --foreground flex items-center gap-4">
+        <h1 className="text-xl font-semibold text-foreground flex items-center gap-4">
           <SidebarTrigger />
           Dashboard Overview
         </h1>
@@ -132,9 +141,29 @@ function Dashboard() {
             </Link>
           </div>
           <ModeToggle />
-          <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center text-rose-700 font-medium text-sm">
-            BP
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Avatar>
+                  <AvatarFallback className="bg-rose-100  text-rose-700 ">
+                    BP
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-32">
+              <DropdownMenuGroup>
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem className="text-red-700 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/20">
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
