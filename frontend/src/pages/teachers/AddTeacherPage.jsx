@@ -9,7 +9,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 function AddTeacherPage() {
   return (
     <div className="flex-1 flex flex-col">
-      <header className="h-16 --background border-b flex items-center justify-between px-8 sticky top-0 z-10">
+      <header className="h-16 bg-background border-b flex items-center justify-between px-8 sticky top-0 z-10">
         <h1 className="text-xl font-semibold --foreground flex items-center gap-4">
           <SidebarTrigger />
           Add Teacher
