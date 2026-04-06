@@ -72,17 +72,20 @@ const formSchema = z.object({
   first_name: z.string().min(2, {
     message: "First name must be at least 2 characters.",
   }),
-  middle_name: z.string().optional(),
+  father_name: z.string().optional(),
   mother_name: z.string().optional(),
   last_name: z.string().optional(),
   gender: z.string({
     required_error: "Please select child's gender at birth.",
   }),
-  d_o_b: z.coerce.date({
+  date_of_birth: z.coerce.date({
     required_error: "A date of birth is required.",
   }),
-  contact_number: z.string().regex(/^\d{10,10}$/, {
+  parent_contact_number: z.string().regex(/^\d{10,10}$/, {
     message: "Contact Number must be 10 digits.",
+  }),
+  parent_email: z.string().email({
+    message: "Please enter a valid email address.",
   }),
   address: z.string().min(10, {
     message: "Address must be at least 10 characters.",
@@ -96,9 +99,12 @@ const formSchema = z.object({
       message: "State name must be at least 3 characters.",
     })
     .default("Maharashtra"),
-  pincode: z.string().regex(/^\d{6}$/, {
-    message: "Pincode must be exactly 6 digits.",
-  }),
+  pincode: z
+    .string()
+    .regex(/^\d{6}$/, {
+      message: "Pincode must be exactly 6 digits.",
+    })
+    .default("400701"),
   disability: z.string().default("None"),
 });
 
@@ -112,12 +118,13 @@ function AddStudentPage() {
       // date_of_admission: new Date().toISOString().split("T")[0],
       date_of_admission: "",
       first_name: "",
-      middle_name: "",
+      father_name: "",
       mother_name: "",
       last_name: "",
       gender: "",
-      d_o_b: "",
-      contact_number: "",
+      date_of_birth: "",
+      parent_contact_number: "",
+      parent_email: "",
       address: "",
       city: "",
       state: "",
@@ -131,26 +138,27 @@ function AddStudentPage() {
   // }
 
   async function handleAddStudent(filledStudentDetails) {
-    // toast.loading("Processing...");
-    // console.log(
-    //   new Date(),
-    //   " INFO ",
-    //   "AddStudentPage | handleAddStudent | Request =>> ",
-    //   studentDetails
-    // );
+    const loadingToastAfterSubmit = toast.loading("Processing...");
     const studentDataPayload = {
       ...filledStudentDetails,
       date_of_admission: format(
         filledStudentDetails.date_of_admission,
         "yyyy-MM-dd HH:mm",
       ),
-      d_o_b: format(filledStudentDetails.d_o_b, "yyyy-MM-dd"),
+      date_of_birth: format(filledStudentDetails.date_of_birth, "yyyy-MM-dd"),
     };
+    console.log(
+      new Date(),
+      " INFO ",
+      "AddStudentPage | handleAddStudent | Request =>> ",
+      studentDataPayload,
+    );
 
     try {
       const apiUrl = import.meta.env.VITE_ADD_STUDENT_API;
       const response = await axios.post(apiUrl, studentDataPayload);
       // alert("SUCCESS! " + response.data);
+      toast.dismiss(loadingToastAfterSubmit);
       toast.success(response.data.message);
       console.log(
         new Date(),
@@ -167,6 +175,7 @@ function AddStudentPage() {
         error,
       );
       // alert("ERROR! " + error.response.data.error);
+      toast.dismiss(loadingToastAfterSubmit);
       toast.error(error.response.data.error);
     }
   }
@@ -338,18 +347,18 @@ function AddStudentPage() {
                   )}
                 />
                 <Controller
-                  name="d_o_b"
+                  name="date_of_birth"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="form-add-student-d_o_b">
+                      <FieldLabel htmlFor="form-add-student-date_of_birth">
                         Date of Birth
                       </FieldLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
-                            id="form-add-student-d_o_b"
+                            id="form-add-student-date_of_birth"
                             className={cn(
                               "w-full pl-3 text-left font-normal",
                               !field.value && "text-muted-foreground",
@@ -442,7 +451,7 @@ function AddStudentPage() {
                 />
               </FieldGroup>
             </CardContent>
-          </Card>{" "}
+          </Card>
           <Card>
             <CardHeader>
               <CardTitle>Parent & Contact Details</CardTitle>
@@ -450,16 +459,16 @@ function AddStudentPage() {
             <CardContent>
               <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Controller
-                  name="middle_name"
+                  name="father_name"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="form-add-student-middle_name">
+                      <FieldLabel htmlFor="form-add-student-father_name">
                         Father Name
                       </FieldLabel>
                       <Input
                         {...field}
-                        id="form-add-student-middle_name"
+                        id="form-add-student-father_name"
                         aria-invalid={fieldState.invalid}
                         placeholder="e.g. Xyz"
                         autoComplete="on"
@@ -492,18 +501,39 @@ function AddStudentPage() {
                   )}
                 />
                 <Controller
-                  name="contact_number"
+                  name="parent_contact_number"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="form-add-student-contact_number">
+                      <FieldLabel htmlFor="form-add-student-parent_contact_number">
                         Primary Contact Number
                       </FieldLabel>
                       <Input
                         {...field}
-                        id="form-add-student-contact_number"
+                        id="form-add-student-parent_contact_number"
                         aria-invalid={fieldState.invalid}
                         placeholder="10 Digit Contact Number"
+                        autoComplete="on"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="parent_email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="form-add-student-parent_email">
+                        Parent Email
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="form-add-student-parent_email"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Parent Email Id"
                         autoComplete="on"
                       />
                       {fieldState.invalid && (
@@ -522,19 +552,19 @@ function AddStudentPage() {
             <CardContent>
               <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Controller
-                  name="address"
+                  name="permanent_address"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field
                       data-invalid={fieldState.invalid}
                       className="md:col-span-2"
                     >
-                      <FieldLabel htmlFor="form-add-student-address">
+                      <FieldLabel htmlFor="form-add-permanent-address">
                         Address
                       </FieldLabel>
                       <Input
                         {...field}
-                        id="form-add-student-address"
+                        id="form-add-permanent-address"
                         aria-invalid={fieldState.invalid}
                         placeholder="Flat, House No., Building, Street"
                         autoComplete="on"

@@ -187,7 +187,9 @@ function Dashboard() {
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="text-muted-foreground">New Admissions</div>
+              <div className="text-muted-foreground">
+                New Admissions in 30 days
+              </div>
             </CardFooter>
           </Card>
           <Card className="@container/card">

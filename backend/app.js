@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { student_metadata_db } from "./config/db.js";
+// import { student_metadata_db } from "./config/db.js";
 import logger from "./utils/logger.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";

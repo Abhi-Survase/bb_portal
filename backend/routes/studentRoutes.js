@@ -219,52 +219,158 @@ router.get("/get-student-by-admissionNo/:admission_no", async (req, res) => {
 });
 
 router.post("/add-student", async (req, res) => {
+  const dbConnection = await student_metadata_db.getConnection();
   try {
-    const q =
-      "INSERT INTO students (`admission_no`,`date_of_admission`,`first_name`,`middle_name`,`mother_name`,`last_name`,`d_o_b`,`gender`,`contact_number`,`address`,`city`,`state`,`pincode`,`disability`) VALUES (?)";
-    const values = [
-      req.body.admission_no,
-      req.body.date_of_admission,
-      req.body.first_name,
-      req.body.middle_name,
-      req.body.mother_name,
-      req.body.last_name,
-      req.body.d_o_b,
-      req.body.gender,
-      req.body.contact_number,
-      req.body.address,
-      req.body.city,
-      req.body.state,
-      req.body.pincode,
-      req.body.disability,
-    ];
-    logger.info("addStudent | Request =>> " + q + `{${values}}`);
-    await student_metadata_db.query(q, [values]);
-
-    logger.error(
-      "addStudent | admission_no: " +
-        req.body.admission_no +
-        " | Student successfully added to Database!",
+    await dbConnection.beginTransaction();
+    const values = {
+      admission_no: req.body.admission_no,
+      date_of_admission: req.body.date_of_admission,
+      first_name: req.body.first_name,
+      father_name: req.body.father_name,
+      mother_name: req.body.mother_name,
+      last_name: req.body.last_name,
+      date_of_birth: req.body.date_of_birth,
+      gender: req.body.gender,
+      parent_contact_number: req.body.parent_contact_number,
+      parent_email: req.body.parent_email,
+      permanent_address: req.body.permanent_address,
+      city: req.body.city,
+      state: req.body.state,
+      pincode: req.body.pincode,
+      disability: req.body.disability,
+    };
+    logger.info("addStudent | Request =>> " + JSON.stringify(values));
+    const studentQuery =
+      "INSERT INTO students (`admission_no`,`date_of_admission`) VALUES (?)";
+    const studentDetailsQuery =
+      "INSERT INTO student_details (`student_id`,`first_name`,`last_name`,`date_of_birth`,`gender`,`disability`,`photo_url`) VALUES (?)";
+    const studentContactInfoQuery =
+      "INSERT INTO student_contact_info (`student_detail_id`,`father_name`,`mother_name`,`parent_contact_number`,`parent_email`) VALUES (?)";
+    const studentAddressDetailsQuery =
+      "INSERT INTO student_address_details (`contact_id`,`permanent_address`,`city`,`state`,`pincode`) VALUES (?)";
+    logger.info(
+      "addStudent | studentQuery =>> " +
+        studentQuery +
+        " | student data =>> " +
+        values.admission_no +
+        "," +
+        values.date_of_admission,
     );
+    // console.log([values.admission_no, values.date_of_admission],[[values.admission_no, values.date_of_admission]])
+    const studentResult = await dbConnection.query(studentQuery, [
+      [values.admission_no, values.date_of_admission],
+    ]);
+    logger.info(JSON.stringify(studentResult));
+    logger.info(
+      "addStudent | studentDetailsQuery =>> " +
+        studentDetailsQuery +
+        " | student data =>> " +
+        studentResult[0].insertId +
+        "," +
+        values.first_name +
+        "," +
+        values.last_name +
+        "," +
+        values.date_of_birth +
+        "," +
+        values.gender +
+        "," +
+        values.disability +
+        "," +
+        null,
+    );
+    const studentDetailsResult = await dbConnection.query(studentDetailsQuery, [
+      [
+        studentResult[0].insertId,
+        values.first_name,
+        values.last_name,
+        values.date_of_birth,
+        values.gender,
+        values.disability,
+        null,
+      ],
+    ]);
+    logger.info(JSON.stringify(studentDetailsResult));
+    logger.info(
+      "addStudent | studentContactInfoQuery =>> " +
+        studentContactInfoQuery +
+        " | student data =>> " +
+        studentDetailsResult[0].insertId +
+        "," +
+        values.mother_name +
+        "," +
+        values.father_name +
+        "," +
+        values.parent_contact_number +
+        "," +
+        values.parent_email,
+    );
+    const studentContactInfoResult = await dbConnection.query(
+      studentContactInfoQuery,
+      [
+        [
+          studentDetailsResult[0].insertId,
+          values.mother_name,
+          values.father_name,
+          values.parent_contact_number,
+          values.parent_email,
+        ],
+      ],
+    );
+    logger.info(JSON.stringify(studentContactInfoResult));
+    logger.info(
+      "addStudent | studentAddressDetailsQuery =>> " +
+        studentAddressDetailsQuery +
+        " | student data =>> " +
+        studentContactInfoResult[0].insertId +
+        "," +
+        values.permanent_address +
+        "," +
+        values.city +
+        "," +
+        values.state +
+        "," +
+        values.pincode,
+    );
+    const studentAddressDetailsResult = await dbConnection.query(
+      studentAddressDetailsQuery,
+      [
+        [
+          studentContactInfoResult[0].insertId,
+          values.permanent_address,
+          values.city,
+          values.state,
+          values.pincode,
+        ],
+      ],
+    );
+    logger.info(JSON.stringify(studentContactInfoResult));
+    await dbConnection.commit();
+    logger.info("addStudent | Student added to Database!");
+    dbConnection.release();
     return res.status(201).json({
       status: "Success",
       message: "Student added to Database!",
     });
   } catch (err) {
+    await dbConnection.rollback();
+    dbConnection.release();
     let message = err.message;
     logger.error(
       "addStudent | admission_no: " +
         req.body.admission_no +
         " | Exception =>> " +
-        JSON.stringify(message),
+        err.stack,
     );
     if (err.code === "ER_DUP_ENTRY") {
-      message = "Admission already exists!";
+      message = `Admission ${req.body.admission_no} already in use!`;
       res.status(400).json({
+        status: "Failed",
         error: message,
       });
     } else {
       res.status(400).json({
+        status: "Failed",
         error: err.message,
       });
     }
