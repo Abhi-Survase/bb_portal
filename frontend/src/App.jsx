@@ -12,6 +12,7 @@ import {
   AddTeacherPage,
   PageNotFound,
   SchoolCalendar,
+  LoginPage,
 } from "./pages";
 import Layout_with_sidebar from "./components/layout_with_sidebar.jsx";
 
@@ -20,6 +21,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="login" element={<LoginPage />} />
         <Route element={<Layout_with_sidebar />}>
           <Route path="/">
             <Route

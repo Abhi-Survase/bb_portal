@@ -4,6 +4,7 @@ import cors from "cors";
 import logger from "./utils/logger.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.get("/favicon.ico", (req, res) => {
 });
 
 app.use("/dashboard", dashboardRoutes);
+
+app.use("/auth", authRoutes);
 
 app.use("/student", studentRoutes);
 
