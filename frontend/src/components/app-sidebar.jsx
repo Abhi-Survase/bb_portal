@@ -17,7 +17,7 @@ import {
   Calendar,
   IdCardLanyard,
 } from "lucide-react";
-import bookLogo from "/smp_icon.svg";
+import bookLogo from "/bbp_icon.svg";
 import {
   Sidebar,
   SidebarHeader,
