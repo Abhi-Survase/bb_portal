@@ -3,23 +3,29 @@ const router = Router();
 import { student_metadata_db } from "../config/db.js";
 import logger from "../utils/logger.js";
 
-router.get("/", async (req, res) => {
-  function checkCredentials(user_email, user_password) {
-    if (user_email === null || user_password === null) {
+router.post("/", async (req, res) => {
+  function checkAuthCredentials(email_username, password) {
+    logger.info(
+      "checkAuthCredentials | Request =>> " +
+        JSON.stringify({ email_username, password }),
+    );
+    if (email_username === null || password === null) {
       return false;
-    } else if (user_email.length === 0 || user_password.length === 0) {
+    } else if (email_username.length === 0 || password.length === 0) {
       return false;
     }
     return true;
   }
   try {
-    const user_email = req.body.email.toLowerCase() || null;
-    const user_password = req.body.password || null;
-    logger.info(JSON.stringify(req.body));
-    if (checkCredentials(user_email, user_password)) {
-      const authQuery = `SELECT id FROM users WHERE username = '${user_email}' AND password = '${user_password}'`;
-      const authResult = await student_metadata_db.query(authQuery);
-      logger.info(JSON.stringify(authResult[0]));
+    const email_username = req.body.email_username.toLowerCase() || null;
+    const password = req.body.password || null;
+    if (checkAuthCredentials(email_username, password)) {
+      const authQuery = `SELECT id FROM users WHERE username = ? AND password = ? AND is_deleted = 0`;
+      const authResult = await student_metadata_db.query(authQuery, [
+        email_username,
+        password,
+      ]);
+      logger.info("authResult | Response =>> " + JSON.stringify(authResult[0]));
       if (authResult[0].length > 0) {
         res.send({ status: "Success", message: "Login Request Received!" });
       } else {

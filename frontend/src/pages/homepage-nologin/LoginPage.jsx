@@ -1,5 +1,6 @@
 import { LoginForm } from "@/components/login-form";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function LoginPage() {
   return (
@@ -17,6 +18,7 @@ export default function LoginPage() {
       </div>
       <div className="w-full max-w-sm md:max-w-4xl">
         <LoginForm />
+        <Toaster />
       </div>
     </div>
   );

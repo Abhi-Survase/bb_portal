@@ -21,20 +21,21 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="login" element={<LoginPage />} />
+        <Route path="/">
+          <Route
+            index
+            element={<Navigate to={import.meta.env.VITE_LOGIN_URL} replace />}
+          />
+          <Route
+            path={import.meta.env.VITE_LOGIN_URL}
+            element={<LoginPage />}
+          />
+        </Route>
         <Route element={<Layout_with_sidebar />}>
-          <Route path="/">
-            <Route
-              index
-              element={
-                <Navigate to={import.meta.env.VITE_DASHBOARD_URL} replace />
-              }
-            />
-            <Route
-              path={import.meta.env.VITE_DASHBOARD_URL}
-              element={<Dashboard />}
-            />
-          </Route>
+          <Route
+            path={import.meta.env.VITE_DASHBOARD_URL}
+            element={<Dashboard />}
+          />
           <Route path={import.meta.env.VITE_ALL_STUDENT_URL}>
             <Route index element={<AllStudentPage />} />
             <Route

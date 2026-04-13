@@ -71,7 +71,7 @@ import {
 
 import axios from "axios";
 
-const formSchema = z.object({
+const addSTudentFormSchema = z.object({
   admission_no: z.string().regex(/^\d{6,}$/, {
     message: "Must be at least 6 digits and contain only numbers.",
   }),
@@ -120,7 +120,7 @@ const formSchema = z.object({
 function AddStudentPage() {
   // const [studentDetails, setStudentDetails] = useState({});
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(addSTudentFormSchema),
     mode: "onBlur",
     defaultValues: {
       admission_no: "",
