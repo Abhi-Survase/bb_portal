@@ -2,7 +2,7 @@ import { LoginForm } from "@/components/login-form";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { Toaster } from "@/components/ui/sonner";
 
-export default function LoginPage() {
+export default function Login_Signup_Page({ children }) {
   return (
     <div
       className="relative flex min-h-svh flex-col items-center justify-center p-6 md:p-10 dark:brightness-[0.9] dark:bg-accent"
@@ -17,7 +17,7 @@ export default function LoginPage() {
         <ModeToggle />
       </div>
       <div className="w-full max-w-sm md:max-w-4xl">
-        <LoginForm />
+        {children}
         <Toaster />
       </div>
     </div>

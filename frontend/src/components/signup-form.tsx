@@ -19,8 +19,9 @@ import { Link } from "react-router";
 
 import axios from "axios";
 
-const loginFormSchema = z.object({
-  email_username: z.string().min(4, { message: "Email or Username" }),
+const singupFormSchema = z.object({
+  email_id: z.string().min(4, { message: "Enter valid email" }),
+  username: z.string().min(4, { message: "Minimum 4 characters" }),
   password: z.string().min(8, { message: "Minimum 8 characters" }),
   // .regex(/[a-z]/, { message: "At least one lowercase letter required" })
   // .regex(/[A-Z]/, { message: "At least one uppercase letter required" })
@@ -30,25 +31,25 @@ const loginFormSchema = z.object({
   // }),
 });
 
-export function LoginForm({
+export function SingupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const [isSubmit, setSubmit] = React.useState(false);
-  type loginFormValues = z.infer<typeof loginFormSchema>;
+  type signupFormValues = z.infer<typeof singupFormSchema>;
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<loginFormValues>({
-    resolver: zodResolver(loginFormSchema),
+  } = useForm<signupFormValues>({
+    resolver: zodResolver(singupFormSchema),
   });
 
-  async function onSubmitForm(loginData: loginFormValues) {
+  async function onSubmitForm(signupData: signupFormValues) {
     setSubmit(true);
     try {
       const apiURL = import.meta.env.VITE_AUTH_API;
-      const response = await axios.post(apiURL, loginData);
+      const response = await axios.post(apiURL, signupData);
       console.log(response.data);
       toast.success(response.data.message);
       setSubmit(false);
@@ -67,33 +68,52 @@ export function LoginForm({
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-4", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={handleSubmit(onSubmitForm)}>
+          <form className="p-4 md:p-8" onSubmit={handleSubmit(onSubmitForm)}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Welcome back</h1>
+                <h1 className="text-2xl font-bold">Welcome User</h1>
                 <p className="text-balance text-muted-foreground">
-                  Login to Blossom Book Portal
+                  Singup in Blossom Book Portal
                 </p>
               </div>
               <Field>
                 <FieldLabel htmlFor="email">
-                  Email or Username
-                  {errors?.email_username && (
+                  Email
+                  {errors?.email_id && (
                     <span className="text-xs text-red-600">
-                      {errors.email_username.message}
+                      {errors.email_id.message}
                     </span>
                   )}
                 </FieldLabel>
 
                 <Input
                   id="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="sameer@email.com"
+                  {...register("email_id")}
+                  required
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="username">
+                  Username
+                  {errors?.username && (
+                    <span className="text-xs text-red-600">
+                      {errors.username.message}
+                    </span>
+                  )}
+                </FieldLabel>
+
+                <Input
+                  id="username"
                   type="text"
                   autoComplete="email"
-                  placeholder="sameer21 OR sameer@email.com"
-                  {...register("email_username")}
+                  placeholder="sameer21"
+                  {...register("username")}
                   required
                 />
               </Field>
@@ -107,12 +127,6 @@ export function LoginForm({
                       </span>
                     )}
                   </FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-2 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
                 </div>
                 <Input
                   id="password"
@@ -124,19 +138,19 @@ export function LoginForm({
               </Field>
               <Field>
                 <Button type="submit">
-                  {isSubmit ? <Spinner /> : "Login"}
+                  {isSubmit ? <Spinner /> : "Submit"}
                 </Button>
               </Field>
               <FieldSeparator className="mt-1"></FieldSeparator>
               <FieldDescription className="mb-1 text-center">
-                Don&apos;t have an account?{" "}
-                <Link to={`/${import.meta.env.VITE_SIGNUP_URL}`}>Sign up</Link>
+                Already have an account?{" "}
+                <Link to={`/${import.meta.env.VITE_LOGIN_URL}`}>Login</Link>
               </FieldDescription>
             </FieldGroup>
           </form>
           <div className="relative hidden md:block">
             <img
-              src="/t_login.webp"
+              src="/signup3.webp"
               alt="Welcome"
               className="absolute inset-0 h-full w-full object-cover"
             />

@@ -12,8 +12,10 @@ import {
   AddTeacherPage,
   PageNotFound,
   SchoolCalendar,
-  LoginPage,
+  Login_Signup_Page,
 } from "./pages";
+import { LoginForm } from "./components/login-form.js";
+import { SingupForm } from "./components/signup-form.js";
 import Layout_with_sidebar from "./components/layout_with_sidebar.jsx";
 
 function App() {
@@ -28,7 +30,19 @@ function App() {
           />
           <Route
             path={import.meta.env.VITE_LOGIN_URL}
-            element={<LoginPage />}
+            element={
+              <Login_Signup_Page>
+                <LoginForm />
+              </Login_Signup_Page>
+            }
+          />
+          <Route
+            path={import.meta.env.VITE_SIGNUP_URL}
+            element={
+              <Login_Signup_Page>
+                <SingupForm />
+              </Login_Signup_Page>
+            }
           />
         </Route>
         <Route element={<Layout_with_sidebar />}>
@@ -68,8 +82,8 @@ function App() {
               />
             </Route>
           </Route>
-          <Route path="*" element={<PageNotFound />} />
         </Route>
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   );
