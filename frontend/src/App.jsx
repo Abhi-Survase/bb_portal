@@ -15,7 +15,7 @@ import {
   Login_Signup_Page,
 } from "./pages";
 import { LoginForm } from "./components/login-form.js";
-import { SingupForm } from "./components/signup-form.js";
+import { SignupForm } from "./components/signup-form.js";
 import Layout_with_sidebar from "./components/layout_with_sidebar.jsx";
 
 function App() {
@@ -40,7 +40,7 @@ function App() {
             path={import.meta.env.VITE_SIGNUP_URL}
             element={
               <Login_Signup_Page>
-                <SingupForm />
+                <SignupForm />
               </Login_Signup_Page>
             }
           />

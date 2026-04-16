@@ -15,13 +15,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import axios from "axios";
 
-const singupFormSchema = z.object({
+const signupFormSchema = z.object({
   email_id: z.string().min(4, { message: "Enter valid email" }),
-  username: z.string().min(4, { message: "Minimum 4 characters" }),
   password: z.string().min(8, { message: "Minimum 8 characters" }),
   // .regex(/[a-z]/, { message: "At least one lowercase letter required" })
   // .regex(/[A-Z]/, { message: "At least one uppercase letter required" })
@@ -31,31 +30,37 @@ const singupFormSchema = z.object({
   // }),
 });
 
-export function SingupForm({
+export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const [isSubmit, setSubmit] = React.useState(false);
-  type signupFormValues = z.infer<typeof singupFormSchema>;
+  type signupFormValues = z.infer<typeof signupFormSchema>;
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<signupFormValues>({
-    resolver: zodResolver(singupFormSchema),
+    resolver: zodResolver(signupFormSchema),
   });
+  let navigate = useNavigate();
 
   async function onSubmitForm(signupData: signupFormValues) {
     setSubmit(true);
     try {
-      const apiURL = import.meta.env.VITE_AUTH_API;
+      const apiURL = import.meta.env.VITE_SIGNUP_API;
+      // console.log(signupData);
       const response = await axios.post(apiURL, signupData);
       console.log(response.data);
       toast.success(response.data.message);
+      reset();
       setSubmit(false);
+      setTimeout(() => {
+        navigate(`/${import.meta.env.VITE_LOGIN_URL}`);
+      }, 2000);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        // Safely access error.response.data.message
         const backendMessage =
           error.response?.data?.message || "An error occurred with the request";
 
@@ -68,15 +73,15 @@ export function SingupForm({
   }
 
   return (
-    <div className={cn("flex flex-col gap-4", className)} {...props}>
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-4 md:p-8" onSubmit={handleSubmit(onSubmitForm)}>
+          <form className="p-6 md:p-8" onSubmit={handleSubmit(onSubmitForm)}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Welcome User</h1>
                 <p className="text-balance text-muted-foreground">
-                  Singup in Blossom Book Portal
+                  Sign up to Blossom Book Portal
                 </p>
               </div>
               <Field>
@@ -95,25 +100,6 @@ export function SingupForm({
                   autoComplete="email"
                   placeholder="sameer@email.com"
                   {...register("email_id")}
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="username">
-                  Username
-                  {errors?.username && (
-                    <span className="text-xs text-red-600">
-                      {errors.username.message}
-                    </span>
-                  )}
-                </FieldLabel>
-
-                <Input
-                  id="username"
-                  type="text"
-                  autoComplete="email"
-                  placeholder="sameer21"
-                  {...register("username")}
                   required
                 />
               </Field>

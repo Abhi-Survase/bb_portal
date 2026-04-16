@@ -20,7 +20,7 @@ import { Link } from "react-router";
 import axios from "axios";
 
 const loginFormSchema = z.object({
-  email_username: z.string().min(4, { message: "Email or Username" }),
+  email_id: z.string().min(4, { message: "Email or Username" }),
   password: z.string().min(8, { message: "Minimum 8 characters" }),
   // .regex(/[a-z]/, { message: "At least one lowercase letter required" })
   // .regex(/[A-Z]/, { message: "At least one uppercase letter required" })
@@ -47,17 +47,15 @@ export function LoginForm({
   async function onSubmitForm(loginData: loginFormValues) {
     setSubmit(true);
     try {
-      const apiURL = import.meta.env.VITE_AUTH_API;
+      const apiURL = import.meta.env.VITE_LOGIN_API;
       const response = await axios.post(apiURL, loginData);
       console.log(response.data);
       toast.success(response.data.message);
       setSubmit(false);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        // Safely access error.response.data.message
         const backendMessage =
           error.response?.data?.message || "An error occurred with the request";
-
         toast.error(backendMessage);
       }
       // console.log(error.response);
@@ -73,17 +71,17 @@ export function LoginForm({
           <form className="p-6 md:p-8" onSubmit={handleSubmit(onSubmitForm)}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Welcome back</h1>
+                <h1 className="text-2xl font-bold">Welcome Back</h1>
                 <p className="text-balance text-muted-foreground">
                   Login to Blossom Book Portal
                 </p>
               </div>
               <Field>
                 <FieldLabel htmlFor="email">
-                  Email or Username
-                  {errors?.email_username && (
+                  Email
+                  {errors?.email_id && (
                     <span className="text-xs text-red-600">
-                      {errors.email_username.message}
+                      {errors.email_id.message}
                     </span>
                   )}
                 </FieldLabel>
@@ -92,8 +90,8 @@ export function LoginForm({
                   id="email"
                   type="text"
                   autoComplete="email"
-                  placeholder="sameer21 OR sameer@email.com"
-                  {...register("email_username")}
+                  placeholder="sameer@email.com"
+                  {...register("email_id")}
                   required
                 />
               </Field>

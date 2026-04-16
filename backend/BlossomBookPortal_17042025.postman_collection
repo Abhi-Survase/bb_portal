@@ -189,13 +189,13 @@
       "name": "auth",
       "item": [
         {
-          "name": "auth",
+          "name": "login",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email_username\":\"ADMIN\",\r\n    \"password\":\"adminadmin\"\r\n}",
+              "raw": "{\r\n    \"email_id\": \"admin@email.com\",\r\n    \"password\": \"adminadmin\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -203,13 +203,14 @@
               }
             },
             "url": {
-              "raw": "localhost:8810/auth",
+              "raw": "localhost:8810/auth/login",
               "host": [
                 "localhost"
               ],
               "port": "8810",
               "path": [
-                "auth"
+                "auth",
+                "login"
               ]
             }
           },
@@ -222,7 +223,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email_id:\": \"admin@email.com\",\r\n    \"username\": \"ADMIN\",\r\n    \"password\": \"adminadmin\"\r\n}",
+              "raw": "{\r\n    \"email_id\": \"admin@email.com\",\r\n    \"password\": \"adminadmin\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
