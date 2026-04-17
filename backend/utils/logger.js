@@ -6,10 +6,10 @@ const logFormat = printf(({ level, message, timestamp }) => {
   return `[${timestamp}] ${capitalizedLevel} ${message}`;
 });
 const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || "info",
+  level: "verbose",
   format: combine(
     timestamp({
-      format: "YYYY-MM-DD HH:ss.SSS",
+      format: "YYYY-MM-DD HH:mm:ss.SSS",
     }),
     logFormat,
     colorize({ all: true }),
