@@ -42,11 +42,18 @@ router.post("/login", async (req, res) => {
             "loginRequest | Response =>> " +
               JSON.stringify({ status: "Success", user_id: user_id }),
           );
-          const auth_token = jwt.sign(email_id, process.env.ACCESS_SECRET);
-          // logger.info(auth_token);
+          const auth_token = jwt.sign({ email_id }, process.env.ACCESS_SECRET, {
+            expiresIn: "10m",
+          });
+          const tokenExpiryDate = new Date(
+            JSON.parse(atob(auth_token.split(".")[1])).exp * 1000,
+          ).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+          // logger.verbose(tokenExpiryDate);
+          logger.info("authenticateLoginCredentials | " + auth_token);
           return res.send({
             status: "Success",
             auth_token,
+            expiryDate: tokenExpiryDate,
           });
         } else {
           logger.info(
