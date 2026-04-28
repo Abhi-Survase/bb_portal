@@ -3,6 +3,7 @@ const router = Router();
 import { student_metadata_db } from "../config/db.js";
 import logger from "../utils/logger.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 router.post("/login", async (req, res) => {
   function checkLoginCredentials(email_id, password) {
@@ -29,21 +30,23 @@ router.post("/login", async (req, res) => {
         "loginResult | Response =>> " + JSON.stringify(loginResult[0]),
       );
       // console.log(loginResult[0][0].id);
-      const userHashedPassword = loginResult[0][0].password;
-      const user_id = loginResult[0][0].id;
-      logger.info(
-        "authenticateLoginCredentials | Request =>> " +
-          JSON.stringify({ email_id, userHashedPassword }),
-      );
       if (loginResult[0].length > 0) {
+        const userHashedPassword = loginResult[0][0].password;
+        const user_id = loginResult[0][0].id;
+        logger.info(
+          "authenticateLoginCredentials | Request =>> " +
+            JSON.stringify({ email_id, userHashedPassword }),
+        );
         if (await bcrypt.compare(password, userHashedPassword)) {
           logger.info(
             "loginRequest | Response =>> " +
               JSON.stringify({ status: "Success", user_id: user_id }),
           );
+          const auth_token = jwt.sign(email_id, process.env.ACCESS_SECRET);
+          // logger.info(auth_token);
           return res.send({
             status: "Success",
-            message: "Login Request Received!",
+            auth_token,
           });
         } else {
           logger.info(
