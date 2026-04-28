@@ -5,6 +5,7 @@ import logger from "./utils/logger.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import authenticateToken from "./utils/authenticateToken.js";
 
 const app = express();
 
@@ -25,10 +26,10 @@ app.get("/favicon.ico", (req, res) => {
   return res.status(204).end;
 });
 
-app.use("/dashboard", dashboardRoutes);
+app.use("/dashboard", authenticateToken, dashboardRoutes);
+
+app.use("/student", authenticateToken, studentRoutes);
 
 app.use("/auth", authRoutes);
-
-app.use("/student", studentRoutes);
 
 export default app;

@@ -14,7 +14,13 @@
           "name": "active-students",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiJ9.YWRtaW5AZW1haWwuY29t.RPJFB4xNNpZetdkVbjyTQ-Om1e9Eniza3Pw6fqP34GY",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "localhost:8810/student/active-students",
               "host": [
@@ -33,7 +39,13 @@
           "name": "get-student-by-admissionNo",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiJ9.YWRtaW5AZW1haWwuY29t.RPJFB4xNNpZetdkVbjyTQ-Om1e9Eniza3Pw6fqP34GY",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "localhost:8810/student/get-student-by-admissionNo/000003",
               "host": [
@@ -53,7 +65,13 @@
           "name": "add-student",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiJ9.YWRtaW5AZW1haWwuY29t.RPJFB4xNNpZetdkVbjyTQ-Om1e9Eniza3Pw6fqP34GY",
+                "type": "text"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"admission_no\": \"000009\",\r\n    \"first_name\": \"Anupama\",\r\n    \"middle_name\": \"Rana\",\r\n    \"mother_name\": \"Sabu\",\r\n    \"last_name\": \"DCruz\",\r\n    \"d_o_b\": \"2020-12-15\",\r\n    \"gender\": \"F\",\r\n    \"date_of_admission\": \"2025-05-15\",\r\n    \"contact_number\": \"8958356578\",\r\n    \"parent_email\": \"rana.dcruz-1421@gmail.com\",\r\n    \"address\": \"Apt. 396 Jl. Kartini No. 17, Mamberamo Tengah, Srinagar, Tamil Nadu, 33755\",\r\n    \"city\": \"Srinagar\",\r\n    \"state\": \"Tamil Nadu\",\r\n    \"pincode\": \"033755\"\r\n}",
@@ -78,26 +96,32 @@
           "response": []
         },
         {
-          "name": "student-details",
+          "name": "search-student",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiJ9.YWRtaW5AZW1haWwuY29t.RPJFB4xNNpZetdkVbjyTQ-Om1e9Eniza3Pw6fqP34GY",
+                "type": "text"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"admission_no\": \"000009\",\r\n    \"first_name\": \"Anupama\",\r\n    \"middle_name\": \"Rana\",\r\n    \"mother_name\": \"Sabu\",\r\n    \"last_name\": \"DCruz\",\r\n    \"d_o_b\": \"2020-12-15\",\r\n    \"gender\": \"F\",\r\n    \"date_of_admission\": \"2025-05-15\",\r\n    \"contact_number\": \"8958356578\",\r\n    \"parent_email\": \"rana.dcruz-1421@gmail.com\",\r\n    \"address\": \"Apt. 396 Jl. Kartini No. 17, Mamberamo Tengah, Srinagar, Tamil Nadu, 33755\",\r\n    \"city\": \"Srinagar\",\r\n    \"state\": \"Tamil Nadu\",\r\n    \"pincode\": \"033755\"\r\n}"
             },
             "url": {
-              "raw": "localhost:8810/student/student-details?searchParam=2&detailKeyword=anu",
+              "raw": "localhost:8810/student/search-student?searchParam=2&detailKeyword=anu",
               "host": [
                 "localhost"
               ],
               "port": "8810",
               "path": [
                 "student",
-                "student-details"
+                "search-student"
               ],
               "query": [
                 {
@@ -141,7 +165,13 @@
           "name": "latest-student-list",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiJ9.YWRtaW5AZW1haWwuY29t.RPJFB4xNNpZetdkVbjyTQ-Om1e9Eniza3Pw6fqP34GY",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "localhost:8810/dashboard/latest-student-list",
               "host": [
@@ -160,7 +190,13 @@
           "name": "student-summary",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiJ9.YWRtaW5AZW1haWwuY29t.RPJFB4xNNpZetdkVbjyTQ-Om1e9Eniza3Pw6fqP34GY",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "localhost:8810/dashboard/student-summary",
               "host": [
