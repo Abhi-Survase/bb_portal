@@ -70,7 +70,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import UserAvatar from "../../components/user-avatar";
 
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 
 const addSTudentFormSchema = z.object({
   admission_no: z.string().regex(/^\d{6,}$/, {
@@ -166,7 +166,7 @@ function AddStudentPage() {
 
     try {
       const apiUrl = import.meta.env.VITE_ADD_STUDENT_API;
-      const response = await axios.post(apiUrl, studentDataPayload);
+      const response = await axiosInstance.post(apiUrl, studentDataPayload);
       // alert("SUCCESS! " + response.data);
       toast.dismiss(loadingToastAfterSubmit);
       toast.success(response.data.message);

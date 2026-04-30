@@ -159,10 +159,9 @@ router.get("/search-student", async (req, res) => {
     const [output] = await student_metadata_db.query(q, [finalDetailKeyword]);
     logger.info("searchStudent | Response =>> " + JSON.stringify(output));
     if (output.length === 0) {
-      logger.error(
-        "searchStudent | Empty Set Received as Response =>> " +
-          JSON.stringify(output) +
-          "No Student Found",
+      logger.warn(
+        "searchStudent | No Student Found | Empty Set Received as Response =>> " +
+          JSON.stringify(output),
       );
       return res.status(404).json({ message: "No Student Found!" });
     }

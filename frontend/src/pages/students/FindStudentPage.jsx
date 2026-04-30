@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
   LayoutDashboard,
   Users,
@@ -30,7 +30,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import axios from "axios";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -64,6 +63,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import UserAvatar from "../../components/user-avatar";
 
+import axiosInstance from "../../utils/axiosInstance";
+
 const formSchema = z.object({
   admission_no: z.string().regex(/^\d{5,}$/, {
     message: "Enter atleast 5 Digit Number",
@@ -74,6 +75,7 @@ function FindStudentPage() {
   const [studentData, setStudentData] = useState("");
   const [studentSearchParam, setStudentSearchParam] =
     useState("Admission Number");
+  const navigateTo = useNavigate();
   const SEARCH_FIELDS = {
     "Admission Number": 0,
     "Date of Admission": 1,
@@ -95,7 +97,7 @@ function FindStudentPage() {
     const apiUrl = `${import.meta.env.VITE_SEARCH_STUDENT_API}?searchParam=${SEARCH_FIELDS[studentSearchParam]}&detailKeyword=${inputValue}`;
     console.log(apiUrl);
     try {
-      const response = await axios.get(apiUrl);
+      const response = await axiosInstance.get(apiUrl);
       // console.log(response);
       if (response.data.length === 0) {
         toast.error(`No Student Found for: ${inputValue}`);
@@ -106,11 +108,18 @@ function FindStudentPage() {
     } catch (error) {
       setStudentData("");
       {
-        error.code === "ERR_BAD_REQUEST" || error.code === "ERR_BAD_RESPONSE"
-          ? toast.error("No Student Found!")
-          : toast.error("Something Went Wrong");
+        if (error.message.includes("status code 403")) {
+          toast.error("Timeout! Redirecting to login");
+          setTimeout(() => {
+            navigateTo(`/${import.meta.env.VITE_LOGIN_URL}`);
+          }, 1500);
+        } else {
+          error.code === "ERR_BAD_REQUEST" || error.code === "ERR_BAD_RESPONSE"
+            ? toast.error("No Student Found!")
+            : toast.error("Something Went Wrong");
+        }
       }
-      console.log(error);
+      console.log(error.message);
     }
   }
   // const dataPlaceHolderText = "Hit Search!";

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
   LayoutDashboard,
   Users,
@@ -51,7 +51,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import { differenceInDays } from "date-fns";
 import ScheduleWidget from "@/components/calender-schedule/ScheduleWidget.jsx";
 import { Spinner } from "@/components/ui/spinner";
@@ -75,12 +75,13 @@ function Dashboard() {
     teachersCount: [{ teachers_count: -1 }],
     usersCount: [{ users_count: -1 }],
   });
+  const navigateTo = useNavigate();
   useEffect(() => {
     const fetchLatestStudentsData = async () => {
       try {
         const apiUrl = import.meta.env.VITE_DASHBOARD_LIST_API;
         // console.log(paginationData);
-        const response = await axios.get(apiUrl);
+        const response = await axiosInstance.get(apiUrl);
         fetchLatestStudents(response.data.data.latestAdmissionsList);
         // console.log(response.data.data.latestAdmissionsList)
         // lastAdmissionInterval = `Last Admission was ${response.data.data.date_of_admission - new Date() / 1000 / 60 / 24} months ago`
@@ -98,12 +99,12 @@ function Dashboard() {
     };
 
     const dashboardSummaryData = async () => {
-      console.log(dashboardSummary);
+      // console.log(dashboardSummary);
       try {
         const apiUrl = import.meta.env.VITE_DASHBOARD_SUMMARY_API;
-        const response = await axios.get(apiUrl);
+        const response = await axiosInstance.get(apiUrl);
         fetchDashbardSummary(response.data.data);
-        console.log(response.data.data);
+        // console.log(response.data.data);
       } catch (error) {
         console.log(error);
         // setError(error.message);
@@ -115,7 +116,7 @@ function Dashboard() {
 
     fetchLatestStudentsData();
     dashboardSummaryData();
-    console.log(dashboardSummary);
+    // console.log(dashboardSummary);
   }, []);
 
   return (

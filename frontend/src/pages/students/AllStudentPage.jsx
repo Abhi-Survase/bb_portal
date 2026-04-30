@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import {
   Card,
   CardAction,
@@ -52,6 +51,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import UserAvatar from "../../components/user-avatar";
 
+import axiosInstance from "../../utils/axiosInstance";
+
 function AllStudentPage() {
   const [studentData, setStudentData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -76,7 +77,7 @@ function AllStudentPage() {
         const apiUrl = import.meta.env.VITE_ALL_STUDENT_API;
         setLoading(true);
         // console.log(paginationData);
-        const response = await axios.get(apiUrl, {
+        const response = await axiosInstance.get(apiUrl, {
           params: {
             page: paginationData.current_page,
             limit: paginationData.limit,

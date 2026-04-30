@@ -43,7 +43,7 @@ router.post("/login", async (req, res) => {
               JSON.stringify({ status: "Success", user_id: user_id }),
           );
           const auth_token = jwt.sign({ email_id }, process.env.ACCESS_SECRET, {
-            expiresIn: "10m",
+            expiresIn: process.env.EXPIRY_PERIOD,
           });
           const tokenExpiryDate = new Date(
             JSON.parse(atob(auth_token.split(".")[1])).exp * 1000,
