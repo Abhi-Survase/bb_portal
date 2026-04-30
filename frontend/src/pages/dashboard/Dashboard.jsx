@@ -55,7 +55,6 @@ import axios from "axios";
 import { differenceInDays } from "date-fns";
 import ScheduleWidget from "@/components/calender-schedule/ScheduleWidget.jsx";
 import { Spinner } from "@/components/ui/spinner";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,6 +63,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import UserAvatar from "../../components/user-avatar";
 
 function Dashboard() {
   const [latestStudents, fetchLatestStudents] = useState([
@@ -141,29 +141,7 @@ function Dashboard() {
             </Link>
           </div>
           <ModeToggle />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Avatar>
-                  <AvatarFallback className="bg-rose-100  text-rose-700 ">
-                    BP
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-32">
-              <DropdownMenuGroup>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem className="text-red-700 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/20">
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <UserAvatar />
         </div>
       </header>
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
