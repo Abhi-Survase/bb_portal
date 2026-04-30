@@ -27,7 +27,7 @@ export default function authenticateToken(req, res, next) {
             .status(403)
             .json({ status: "Failed", message: "Invalid Token Provided" });
         }
-        logger.info(`Token verified for user: ${user_detail}`);
+        logger.info(`Token verified for user: ${JSON.stringify(user_detail)}`);
         next();
       },
     );

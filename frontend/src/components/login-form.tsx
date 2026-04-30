@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import axios from "axios";
 
@@ -35,6 +35,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [isSubmit, setSubmit] = React.useState(false);
+  const navigateTo = useNavigate();
   type loginFormValues = z.infer<typeof loginFormSchema>;
   const {
     register,
@@ -49,9 +50,13 @@ export function LoginForm({
     try {
       const apiURL = import.meta.env.VITE_LOGIN_API;
       const response = await axios.post(apiURL, loginData);
-      console.log(response.data);
-      toast.success(response.data.message);
-      setSubmit(false);
+      // console.log(response.data);
+      localStorage.setItem("auth_token", response.data.auth_token);
+      toast.success(response.data.status);
+      setTimeout(() => {
+        setSubmit(false);
+        navigateTo(`/${import.meta.env.VITE_DASHBOARD_URL}`);
+      }, 1000);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const backendMessage =

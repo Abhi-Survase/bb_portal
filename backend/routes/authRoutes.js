@@ -49,7 +49,9 @@ router.post("/login", async (req, res) => {
             JSON.parse(atob(auth_token.split(".")[1])).exp * 1000,
           ).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
           // logger.verbose(tokenExpiryDate);
-          logger.info("authenticateLoginCredentials | " + auth_token);
+          logger.info(
+            "authenticateLoginCredentials | Token Generated =>> " + auth_token,
+          );
           return res.send({
             status: "Success",
             auth_token,
