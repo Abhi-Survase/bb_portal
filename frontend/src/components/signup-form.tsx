@@ -19,16 +19,22 @@ import { Link, useNavigate } from "react-router";
 
 import axios from "axios";
 
-const signupFormSchema = z.object({
-  email_id: z.string().min(4, { message: "Enter valid email" }),
-  password: z.string().min(8, { message: "Minimum 8 characters" }),
-  // .regex(/[a-z]/, { message: "At least one lowercase letter required" })
-  // .regex(/[A-Z]/, { message: "At least one uppercase letter required" })
-  // .regex(/[0-9]/, { message: "At least one number required" })
-  // .regex(/[^a-zA-Z0-9]/, {
-  //   message: "At least one special character required",
-  // }),
-});
+const signupFormSchema = z
+  .object({
+    email_id: z.string().min(4, { message: "Enter valid email" }),
+    password: z.string().min(8, { message: "Minimum 8 characters" }),
+    confirm_password: z.string().min(8, { message: "Minimum 8 characters" }),
+    // .regex(/[a-z]/, { message: "At least one lowercase letter required" })
+    // .regex(/[A-Z]/, { message: "At least one uppercase letter required" })
+    // .regex(/[0-9]/, { message: "At least one number required" })
+    // .regex(/[^a-zA-Z0-9]/, {
+    //   message: "At least one special character required",
+    // }),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    message: "Passwords don't match",
+    path: ["confirm_password"], // Sets the error path
+  });
 
 export function SignupForm({
   className,
@@ -76,7 +82,7 @@ export function SignupForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={handleSubmit(onSubmitForm)}>
+          <form className="p-6 md:p-7" onSubmit={handleSubmit(onSubmitForm)}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Welcome User</h1>
@@ -119,6 +125,25 @@ export function SignupForm({
                   type="password"
                   autoComplete="current-password"
                   {...register("password")}
+                  required
+                />
+              </Field>
+              <Field>
+                <div className="flex items-center">
+                  <FieldLabel htmlFor="confirm_password">
+                    Confirm Password
+                    {errors?.confirm_password && (
+                      <span className="text-xs text-red-600">
+                        {errors.confirm_password.message}
+                      </span>
+                    )}
+                  </FieldLabel>
+                </div>
+                <Input
+                  id="confirm_password"
+                  type="password"
+                  autoComplete="new-password"
+                  {...register("confirm_password")}
                   required
                 />
               </Field>
