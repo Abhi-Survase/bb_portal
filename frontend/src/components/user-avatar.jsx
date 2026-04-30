@@ -15,7 +15,7 @@ function UserAvatar() {
   const navigateTo = useNavigate();
   function handleLogout() {
     localStorage.removeItem("auth_token");
-    navigateTo(import.meta.env.VITE_LOGIN_URL, { replace: true });
+    navigateTo(`/${import.meta.env.VITE_LOGIN_URL}`, { replace: true });
   }
   return (
     <DropdownMenu>

@@ -50,7 +50,12 @@ router.post("/login", async (req, res) => {
           ).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
           // logger.verbose(tokenExpiryDate);
           logger.info(
-            "authenticateLoginCredentials | Token Generated =>> " + auth_token,
+            "authenticateLoginCredentials | Token Generated =>> " +
+              JSON.stringify({
+                status: "Success",
+                auth_token,
+                expiryDate: tokenExpiryDate,
+              }),
           );
           return res.send({
             status: "Success",

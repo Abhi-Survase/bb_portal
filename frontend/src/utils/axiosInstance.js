@@ -17,4 +17,18 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
+axiosInstance.interceptors.response.use(
+  (response) => response, // pass through successful responses untouched
+
+  (error) => {
+    if (error.response?.status === 403) {
+      // Token expired or invalid → force logout
+      console.log("Session expired. Redirecting to login!");
+      localStorage.removeItem("auth_token");
+      window.location.href = import.meta.env.VITE_LOGIN_URL;
+    }
+    return Promise.reject(error);
+  },
+);
+
 export default axiosInstance;

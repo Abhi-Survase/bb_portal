@@ -6,13 +6,7 @@ export default function authenticateToken(req, res, next) {
     const reqHeaderAuthParam = req.headers["authorization"];
     // const user_token = reqHeaderAuthParam && reqHeaderAuthParam[0];
     // console.log(user_token);
-    logger.info(
-      "authenticateToken | Response =>> " +
-        JSON.stringify({
-          request: reqHeaderAuthParam,
-          message: "Not Authorised",
-        }),
-    );
+    logger.info("authenticateToken | Request =>> " + reqHeaderAuthParam);
 
     if (reqHeaderAuthParam && reqHeaderAuthParam === null) {
       return res.sendStatus(403);
