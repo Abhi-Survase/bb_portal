@@ -13,6 +13,10 @@ import { useNavigate } from "react-router";
 
 function UserAvatar() {
   const navigateTo = useNavigate();
+  function handleLogout() {
+    localStorage.removeItem("auth_token");
+    navigateTo(import.meta.env.VITE_LOGIN_URL, { replace: true });
+  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,7 +36,7 @@ function UserAvatar() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem
-            onClick={() => navigateTo("/login")}
+            onClick={handleLogout}
             className="text-red-700 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/20"
           >
             Log out
