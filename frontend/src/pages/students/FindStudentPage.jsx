@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import {
   LayoutDashboard,
@@ -65,12 +65,6 @@ import UserAvatar from "../../components/user-avatar";
 
 import axiosInstance from "../../utils/axiosInstance";
 
-const formSchema = z.object({
-  admission_no: z.string().regex(/^\d{5,}$/, {
-    message: "Enter atleast 5 Digit Number",
-  }),
-});
-
 function FindStudentPage() {
   const [studentData, setStudentData] = useState("");
   const [studentSearchParam, setStudentSearchParam] =
@@ -84,16 +78,47 @@ function FindStudentPage() {
     "Contact Number": 4,
   };
 
+  const dynamicFormSchema = useMemo(() => {
+    switch (studentSearchParam) {
+      case "Admission Number":
+        return z.object({
+          searchValue: z
+            .string()
+            .regex(/^\d{5,}$/, "Enter at least a 5 Digit Number"),
+        });
+      case "Date of Admission":
+        return z.object({
+          searchValue: z.string().min(1, "A date of admission is required."),
+        });
+      case "First Name":
+        return z.object({
+          searchValue: z.string().min(2, "Must be at least 2 characters."),
+        });
+      case "Last Name":
+        return z.object({
+          searchValue: z.string().min(2, "Must be at least 2 characters."),
+        });
+      case "Contact Number":
+        return z.object({
+          searchValue: z
+            .string()
+            .regex(/^\d{10}$/, "Contact Number must be exactly 10 digits."),
+        });
+      default:
+        return z.object({ searchValue: z.string() });
+    }
+  }, [studentSearchParam]);
+
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(dynamicFormSchema),
     defaultValues: {
-      admission_no: "",
+      searchValue: "",
     },
   });
 
   async function onSubmitHandler(value) {
     // console.log(value);
-    const inputValue = value.admission_no;
+    const inputValue = value.searchValue;
     const apiUrl = `${import.meta.env.VITE_SEARCH_STUDENT_API}?searchParam=${SEARCH_FIELDS[studentSearchParam]}&detailKeyword=${inputValue}`;
     console.log(apiUrl);
     try {
@@ -122,6 +147,10 @@ function FindStudentPage() {
       console.log(error.message);
     }
   }
+  const handleSearchParamChange = (value) => {
+    setStudentSearchParam(value);
+    form.reset({ searchValue: "" });
+  };
   // const dataPlaceHolderText = "Hit Search!";
   // let placeHolderText = "Enter Admission Number";
   return (
@@ -145,7 +174,7 @@ function FindStudentPage() {
           >
             <FormField
               control={form.control}
-              name="admission_no"
+              name="searchValue"
               render={({ field }) => (
                 <FormItem className="flex flex-col items-center justify-center gap-2">
                   <div className="flex items-center justify-center gap-3 w-full">
@@ -154,7 +183,7 @@ function FindStudentPage() {
                     </FormLabel>
                     <Select
                       value={studentSearchParam}
-                      onValueChange={setStudentSearchParam}
+                      onValueChange={handleSearchParamChange}
                     >
                       <SelectTrigger className="w-full max-w-48 !text-primary-foreground">
                         <SelectValue placeholder="Admission Number" />
@@ -180,7 +209,11 @@ function FindStudentPage() {
                     <Input
                       placeholder={`Enter ${studentSearchParam}`}
                       className="w-full text-center"
-                      type="text"
+                      type={
+                        studentSearchParam === "Date of Admission"
+                          ? "date"
+                          : "text"
+                      }
                       {...field}
                     />
                   </FormControl>
