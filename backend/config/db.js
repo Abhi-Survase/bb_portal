@@ -21,7 +21,7 @@ export const student_metadata_db = mysql.createPool({
     logger.info("Connection Successful with DB");
     connection.release(); // release back to pool
   } catch (err) {
-    logger.error("Connection failed with DB -", err.message);
+    logger.error("Connection failed with DB -", err);
   }
 })();
 
