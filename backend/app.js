@@ -6,6 +6,7 @@ import dashboardRoutes from "./routes/dashboardRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import authenticateToken from "./utils/authenticateToken.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 
@@ -31,5 +32,7 @@ app.use("/dashboard", authenticateToken, dashboardRoutes);
 app.use("/student", authenticateToken, studentRoutes);
 
 app.use("/auth", authRoutes);
+
+app.use("/user", userRoutes);
 
 export default app;

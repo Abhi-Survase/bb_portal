@@ -52,7 +52,7 @@ function SchoolCalendar() {
         </div>
       </header>
       <div className="h-screen flex items-center justify-center">
-        <h2>School Calendar</h2>
+        <h2>School Calendar WIP</h2>
       </div>
     </div>
   );
