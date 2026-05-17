@@ -7,6 +7,7 @@ import studentRoutes from "./routes/studentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import authenticateToken from "./utils/authenticateToken.js";
 import userRoutes from "./routes/userRoutes.js";
+import teacherRoutes from "./routes/teacherRoutes.js";
 
 const app = express();
 
@@ -34,5 +35,7 @@ app.use("/student", authenticateToken, studentRoutes);
 app.use("/auth", authRoutes);
 
 app.use("/user", userRoutes);
+
+app.use("/teacher", teacherRoutes);
 
 export default app;
