@@ -1,8 +1,9 @@
--- MySQL dump 10.13  Distrib 9.3.0, for Win64 (x86_64)
+Enter password: 
+-- MySQL dump 10.13  Distrib 9.7.0, for Linux (x86_64)
 --
 -- Host: localhost    Database: school_metadata
 -- ------------------------------------------------------
--- Server version	9.3.0
+-- Server version	9.7.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,6 +15,17 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+Warning: A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions, even those that changed suppressed parts of the database. If you don't want to restore GTIDs, pass --set-gtid-purged=OFF. To make a complete dump, pass --all-databases --triggers --routines --events. 
+Warning: A dump from a server that has GTIDs enabled will by default include the GTIDs of all transactions, even those that were executed during its extraction and might not be represented in the dumped data. This might result in an inconsistent data dump. 
+In order to ensure a consistent backup of the database, pass --single-transaction or --lock-all-tables or --source-data. 
+SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
+SET @@SESSION.SQL_LOG_BIN= 0;
+
+--
+-- GTID state at the beginning of the backup 
+--
+
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'bbd64a44-4dae-11f1-ac39-1abffcb9c849:1-101';
 
 --
 -- Current Database: `school_metadata`
@@ -184,34 +196,6 @@ INSERT INTO `students` VALUES (1,'xxx','2025-07-21',0,'2025-07-23 21:33:24','202
 UNLOCK TABLES;
 
 --
--- Table structure for table `teacher_contact_info`
---
-
-DROP TABLE IF EXISTS `teacher_contact_info`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `teacher_contact_info` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `teacher_info_id` int NOT NULL,
-  `contact_number` varchar(12) NOT NULL,
-  `email_id` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `teacher_info_id` (`teacher_info_id`),
-  CONSTRAINT `teacher_contact_info_ibfk_1` FOREIGN KEY (`teacher_info_id`) REFERENCES `teacher_details` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `teacher_contact_info`
---
-
-LOCK TABLES `teacher_contact_info` WRITE;
-/*!40000 ALTER TABLE `teacher_contact_info` DISABLE KEYS */;
-/*!40000 ALTER TABLE `teacher_contact_info` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `teacher_details`
 --
 
@@ -221,15 +205,16 @@ DROP TABLE IF EXISTS `teacher_details`;
 CREATE TABLE `teacher_details` (
   `id` int NOT NULL AUTO_INCREMENT,
   `teacher_id` int NOT NULL,
-  `first_name` varchar(50) NOT NULL,
-  `middle_name` varchar(50) DEFAULT NULL,
-  `last_name` varchar(50) DEFAULT NULL,
-  `gender` enum('M','F','O') DEFAULT NULL,
-  `date_of_joining` date NOT NULL DEFAULT (curdate()),
-  `UPDATED_AT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `photo_url` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `contact_number` varchar(12) NOT NULL,
+  `email_id` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `teacher_info_id` (`teacher_id`),
+  KEY `fk_tch_userid` (`user_id`),
+  CONSTRAINT `fk_tch_userid` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `teacher_details_ibfk_1` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -238,6 +223,7 @@ CREATE TABLE `teacher_details` (
 
 LOCK TABLES `teacher_details` WRITE;
 /*!40000 ALTER TABLE `teacher_details` DISABLE KEYS */;
+INSERT INTO `teacher_details` VALUES (1,1,'06969696969','admin@email.com','gnsl',1),(3,10,'0111111111','demo@email.com',NULL,35);
 /*!40000 ALTER TABLE `teacher_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -250,13 +236,19 @@ DROP TABLE IF EXISTS `teachers`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `teachers` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `employee_code` varchar(8) NOT NULL,
-  `subject` varchar(16) DEFAULT NULL,
-  `is_teaching` tinyint(1) DEFAULT '1',
-  `CREATED_AT` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `first_name` varchar(50) NOT NULL,
+  `middle_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `gender` enum('M','F','O') DEFAULT NULL,
+  `date_of_joining` date NOT NULL DEFAULT (curdate()),
   `UPDATED_AT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `photo_url` varchar(255) DEFAULT NULL,
+  `employee_no` varchar(100) NOT NULL,
+  `is_teaching` tinyint DEFAULT '1',
+  `subject` varchar(16) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `emp_code_unique` (`employee_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,7 +257,7 @@ CREATE TABLE `teachers` (
 
 LOCK TABLES `teachers` WRITE;
 /*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
-INSERT INTO `teachers` VALUES (1,'000001','Principal',1,'2026-03-29 17:41:47','2026-03-29 17:41:47');
+INSERT INTO `teachers` VALUES (1,'Bhakti','Dinesh','Patil','F','2019-05-19','2026-05-19 20:13:36',NULL,'000001',1,'Principal'),(10,'Vedika','Dinesh','Patil','F','2025-05-15','2026-05-23 15:23:08',NULL,'000002',1,'Maths');
 /*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -290,7 +282,7 @@ CREATE TABLE `user_details` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `user_details_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -299,6 +291,7 @@ CREATE TABLE `user_details` (
 
 LOCK TABLES `user_details` WRITE;
 /*!40000 ALTER TABLE `user_details` DISABLE KEYS */;
+INSERT INTO `user_details` VALUES (1,1,'Bhakti','Dinesh','Patil','F',NULL,'2026-05-17 09:46:38','2026-05-17 09:46:38','06969696969'),(2,35,'Vedika','Dinesh','Patil','F',NULL,'2026-05-23 15:23:08','2026-05-23 15:23:08','0111111111');
 /*!40000 ALTER TABLE `user_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,7 +312,7 @@ CREATE TABLE `users` (
   `is_deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`email_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -328,8 +321,10 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'3','admin@email.com','$2b$10$IZ49LMYucThudA7c.PX29e3iI50KtfpTqTcuEUSyQofLELbjM/uUC','2026-05-13 15:07:40','2026-05-16 19:30:23',0),(34,'3','admin2@email.com','$2b$10$RtdO6K2skrzNaUDdt8A6Ce5vGhFKeRWS5QUDS1aNG5fXUxFw406fy','2026-05-23 15:10:31','2026-05-23 15:10:31',0),(35,'3','demo@email.com','$2b$10$LkF2yzhZ7lTfvzZMMm8IZeX4/qgi/6yOoHXpTsCT8ivQMKf4hspIm','2026-05-23 15:23:08','2026-05-23 15:23:08',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -340,4 +335,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-17  2:09:05
+-- Dump completed on 2026-05-23 15:28:12

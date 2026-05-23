@@ -2,6 +2,7 @@ import { Router } from "express";
 const router = Router();
 import { student_metadata_db } from "../config/db.js";
 import logger from "../utils/logger.js";
+import { createUserAccount } from "../utils/createUserAccount.js";
 
 router.get("/teacher-list", async (req, res) => {
   try {
@@ -32,12 +33,14 @@ router.post("/add-teacher", async (req, res) => {
       last_name: req.body.last_name,
       gender: req.body.gender,
       email_id: req.body.email_id,
+      password: req.body.password,
       contact_number: req.body.contact_number,
       date_of_joining: req.body.date_of_joining,
+      address: req.body.address,
     };
     logger.info("teacher/add-teacher | Request =>> " + JSON.stringify(values));
-    const addTeacher = `INSERT INTO school_metadata.teachers (employee_no, date_of_joining, first_name, middle_name, last_name, gender, subject ) VALUES (?);`;
-    const addTeacherResult = await student_metadata_db.query(addTeacher, [
+    const addTeacherQuery = `INSERT INTO school_metadata.teachers (employee_no, date_of_joining, first_name, middle_name, last_name, gender, subject ) VALUES (?);`;
+    const addTeacherResult = await dbConnection.query(addTeacherQuery, [
       [
         values.employee_no,
         values.date_of_joining,
@@ -52,10 +55,39 @@ router.post("/add-teacher", async (req, res) => {
       "teacher/add-teacher | Response | addTeacherResult => " +
         JSON.stringify(addTeacherResult[0]),
     );
-    const addTeacherDetails = ``;
-    const addTeacherDetailsResult = await student_metadata_db.query(
-      addTeacherDetails,
-      [[]],
+    const addedTeacherId = addTeacherResult[0].insertId;
+    const { userId } = await createUserAccount(
+      dbConnection,
+      values.email_id,
+      values.password,
+    );
+    const addUserDetailsQuery = `INSERT INTO school_metadata.user_details (user_id, first_name, middle_name, last_name, gender, contact_number) VALUES (?);`;
+    const addUserDetailsResult = await dbConnection.query(addUserDetailsQuery, [
+      [
+        userId,
+        values.first_name,
+        values.middle_name,
+        values.last_name,
+        values.gender,
+        values.contact_number,
+      ],
+    ]);
+    logger.info(
+      "teacher/add-teacher | Response | addUserDetailsResult => " +
+        JSON.stringify(addUserDetailsResult[0]),
+    );
+    const addTeacherDetailsQuery = `INSERT INTO school_metadata.teacher_details (teacher_id, user_id, email_id, contact_number, address) VALUES (?);`;
+    const addTeacherDetailsResult = await dbConnection.query(
+      addTeacherDetailsQuery,
+      [
+        [
+          addedTeacherId,
+          userId,
+          values.email_id,
+          values.contact_number,
+          values.address,
+        ],
+      ],
     );
     logger.info(
       "teacher/add-teacher | Response | addTeacherDetailsResult => " +
@@ -71,7 +103,17 @@ router.post("/add-teacher", async (req, res) => {
     await dbConnection.rollback();
     dbConnection.release();
     logger.error("teacher/add-teacher | Exception =>> " + error.stack);
-    res.status(500).json({ error: "Internal server error" });
+    if (error.message.includes("Duplicate entry")) {
+      return res
+        .status(409)
+        .send({ status: "Error", message: "Entered Details Already In Use" });
+    } else {
+      res
+        .status(500)
+        .json({ status: "Failed", message: "Internal server error" });
+    }
+  } finally {
+    dbConnection.release();
   }
 });
 

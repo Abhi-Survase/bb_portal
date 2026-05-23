@@ -4,6 +4,7 @@ import { student_metadata_db } from "../config/db.js";
 import logger from "../utils/logger.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { createUserAccount } from "../utils/createUserAccount.js";
 
 router.post("/login", async (req, res) => {
   function checkLoginCredentials(email_id, password) {
@@ -117,38 +118,19 @@ router.post("/signup", async (req, res) => {
         .status(400)
         .send({ status: "Error", message: "Incomplete Credentials Received" });
     }
-    const saltValue = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, saltValue);
-    logger.info(
-      "signupRequest | Request =>> email_id : " +
-        email_id +
-        " , hashedPassword : " +
-        hashedPassword +
-        " , salt : " +
-        saltValue,
-    );
-    const signupQuery = `INSERT INTO users (email_id, password, is_deleted) VALUES (?,?,?)`;
-    const signupResult = await student_metadata_db.query(signupQuery, [
+    const signupResult = await createUserAccount(
+      student_metadata_db,
       email_id,
-      hashedPassword,
-      "0",
-    ]);
-    logger.info(
-      "signupResult | Response =>> " + JSON.stringify(signupResult[0]),
+      password,
     );
-    if (signupResult[0].affectedRows > 0) {
-      return res
-        .status(201)
-        .send({ status: "Success", message: "User Added to Database!" });
-    } else {
-      return res
-        .status(400)
-        .send({ status: "Error", message: "Something Went Wrong" });
-    }
+    logger.info("signupResult | Response =>> " + signupResult);
+    return res
+      .status(201)
+      .send({ status: "Success", message: "User Added to Database!" });
   } catch (error) {
     logger.error("signupResult | Response =>> " + error.message);
     logger.error(error.stack);
-    if (error.message.includes("Duplicate entry")) {
+    if (error.message.includes("EMAIL_ALREADY_EXISTS")) {
       return res
         .status(409)
         .send({ status: "Error", message: "Entered Email Already In Use" });
