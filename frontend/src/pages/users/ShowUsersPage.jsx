@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router";
 import {
   Pencil,
@@ -39,6 +39,17 @@ import {
 import UserAvatar from "../../components/user-avatar";
 
 function ShowUsersPage() {
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleSearchClick = () => {
+    console.log("Entered value:", searchValue);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearchClick();
+    }
+  };
   return (
     <div className="flex-1 flex flex-col">
       <header className="h-16 bg-background border-b flex items-center justify-between px-8 sticky top-0 z-10">
@@ -47,18 +58,31 @@ function ShowUsersPage() {
           User
         </h1>
         <div className="flex items-center gap-4">
-          {/* Global Search Bar (Replaces 'Find Student' Page) */}
-          <div className="relative hidden sm:block group">
-            <Link
-              to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
-                import.meta.env.VITE_FIND_STUDENT_URL
-              }`}
+          <Button className="px-1" variant="secondary">
+            <UserPlus size={16} />
+            Add User
+          </Button>
+          <div className="relative hidden sm:block group w-full max-w-sm">
+            <Input
+              type="text"
+              placeholder="Search User"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="pr-10"
+            />
+            <Button
+              type="button"
+              variant="muted_outline"
+              size="icon"
+              onClick={handleSearchClick}
+              className="absolute right-0 top-0 h-full w-10 rounded-l-none"
             >
-              <Button variant="muted_outline">
-                <Search size={16} />
-                Search Users
-              </Button>
-            </Link>
+              <Search
+                size={16}
+                className="text-muted-foreground group-hover:text-foreground transition-colors"
+              />
+            </Button>
           </div>
           <ModeToggle />
           <UserAvatar />
