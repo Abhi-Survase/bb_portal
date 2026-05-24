@@ -32,10 +32,10 @@ app.use("/dashboard", authenticateToken, dashboardRoutes);
 
 app.use("/student", authenticateToken, studentRoutes);
 
+app.use("/user", authenticateToken, userRoutes);
+
+app.use("/teacher", authenticateToken, teacherRoutes);
+
 app.use("/auth", authRoutes);
-
-app.use("/user", userRoutes);
-
-app.use("/teacher", teacherRoutes);
 
 export default app;

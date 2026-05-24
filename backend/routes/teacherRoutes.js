@@ -117,4 +117,57 @@ router.post("/add-teacher", async (req, res) => {
   }
 });
 
+router.get("/search-teacher", async (req, res) => {
+  try {
+    const inputText = req.body.searchKeyword;
+    const inputSearchKeyword = `%${req.body.searchKeyword}%`;
+    if (inputText.length <= 1) {
+      logger.error(
+        "teacher/search-teacher | Request =>> Atleast 2 characters expected. Received -> " +
+          inputText,
+      );
+      return res.status(401).json({
+        status: "Failed",
+        message: "Enter atleast 2 characters or digits!",
+      });
+    }
+    logger.info("teacher/search-teacher | Request =>> " + inputSearchKeyword);
+    const searchTeacherQuery =
+      "SELECT tch.id, tch.first_name, tch.last_name, tch.middle_name, tch.gender, tch.date_of_joining, tch.employee_no, tch.subject, td.email_id, td.contact_number, tch.photo_url FROM school_metadata.teachers tch INNER JOIN school_metadata.teacher_details td ON td.teacher_id = tch.id WHERE tch.first_name like (?) OR tch.last_name like (?) OR tch.subject like (?) OR tch.date_of_joining like (?) OR tch.employee_no like (?) OR td.email_id like (?) OR td.contact_number like (?);";
+    const searchTeacherResult = await student_metadata_db.query(
+      searchTeacherQuery,
+      [
+        inputSearchKeyword,
+        inputSearchKeyword,
+        inputSearchKeyword,
+        inputSearchKeyword,
+        inputSearchKeyword,
+        inputSearchKeyword,
+        inputSearchKeyword,
+      ],
+    );
+    if (searchTeacherResult[0].length === 0) {
+      logger.info(
+        "teacher/search-teacher | No Teacher Found | Response =>> " +
+          JSON.stringify(searchTeacherResult[0]),
+      );
+      return res
+        .status(404)
+        .json({ status: "Success", message: "No Teacher Found!" });
+    }
+    logger.info(
+      "teacher/search-teacher | Response =>> " +
+        JSON.stringify(searchTeacherResult[0]),
+    );
+    return res
+      .status(200)
+      .json({ status: "Success", searchData: searchTeacherResult[0] });
+  } catch (error) {
+    logger.error("teacher/search-teacher | Exception =>> " + error.stack);
+    return res
+      .status(500)
+      .json({ status: "Failed", message: "Internal server error" });
+  }
+});
+
 export default router;
