@@ -64,6 +64,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import UserAvatar from "../../components/user-avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
+const avatarPalette = [
+  { bg: "bg-blue-100", text: "text-blue-700" },
+  { bg: "bg-amber-100", text: "text-amber-700" },
+  { bg: "bg-orange-100", text: "text-orange-700" },
+  { bg: "bg-violet-100", text: "text-violet-700" },
+];
 
 function Dashboard() {
   const [latestStudents, fetchLatestStudents] = useState([
@@ -150,7 +158,7 @@ function Dashboard() {
           <Card className="@container/card">
             <CardHeader>
               <CardDescription>
-                <Users className="h-8 w-8 text-(--chart-2) rounded-lg bg-[var(--chart-2)]/15 p-1.5" />
+                <Users className="h-8 w-8 text-blue-600 rounded-lg bg-blue-100 p-1.5" />
               </CardDescription>
               <CardTitle className="justify-center text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {dashboardSummary.totalStudentCount[0].total_count === -1 ? (
@@ -160,12 +168,18 @@ function Dashboard() {
                 )}
               </CardTitle>
               <CardAction>
-                <Badge
-                  variant="secondary"
-                  className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
+                <Link
+                  to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
+                    import.meta.env.VITE_FIND_STUDENT_URL
+                  }`}
                 >
-                  View Student
-                </Badge>
+                  <Badge
+                    variant="secondary"
+                    className="bg-blue-50 text-blue-700 hover:bg-blue-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
+                  >
+                    View Student
+                  </Badge>
+                </Link>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -175,7 +189,7 @@ function Dashboard() {
           <Card className="@container/card">
             <CardHeader>
               <CardDescription>
-                <UserPlus className="h-8 w-8 text-(--chart-5) rounded-lg bg-(--secondary) p-1.5" />
+                <UserPlus className="h-8 w-8 text-amber-600 rounded-lg bg-amber-100 p-1.5" />
               </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {dashboardSummary.newAdmissionCount[0].new_admissions_count ===
@@ -186,12 +200,18 @@ function Dashboard() {
                 )}
               </CardTitle>
               <CardAction>
-                <Badge
-                  variant="secondary"
-                  className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
+                <Link
+                  to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
+                    import.meta.env.VITE_ADD_STUDENT_URL
+                  }`}
                 >
-                  Add Students
-                </Badge>
+                  <Badge
+                    variant="secondary"
+                    className="bg-amber-50 text-amber-800 hover:bg-amber-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
+                  >
+                    Add Students
+                  </Badge>
+                </Link>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -203,7 +223,7 @@ function Dashboard() {
           <Card className="@container/card">
             <CardHeader>
               <CardDescription>
-                <IdCardLanyard className="h-8 w-8 text-(--chart-5) rounded-lg bg-(--secondary) p-1.5" />
+                <IdCardLanyard className="h-8 w-8 text-orange-600 rounded-lg bg-orange-100 p-1.5" />
               </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {dashboardSummary.teachersCount[0].teachers_count === -1 ? (
@@ -213,12 +233,18 @@ function Dashboard() {
                 )}
               </CardTitle>
               <CardAction>
-                <Badge
-                  variant="secondary"
-                  className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
+                <Link
+                  to={`/${import.meta.env.VITE_ADMIN_URL}/${
+                    import.meta.env.VITE_TEACHERS_URL
+                  }`}
                 >
-                  View Teacher
-                </Badge>
+                  <Badge
+                    variant="secondary"
+                    className="bg-orange-50 text-orange-800 hover:bg-orange-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
+                  >
+                    View Teacher
+                  </Badge>
+                </Link>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -228,7 +254,7 @@ function Dashboard() {
           <Card className="@container/card">
             <CardHeader>
               <CardDescription>
-                <Users className="h-8 w-8 text-(--chart-5) rounded-lg bg-(--secondary) p-1.5" />
+                <Users className="h-8 w-8 text-violet-600 rounded-lg bg-violet-100 p-1.5" />
               </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {dashboardSummary.usersCount[0].users_count === -1 ? (
@@ -238,12 +264,18 @@ function Dashboard() {
                 )}
               </CardTitle>
               <CardAction>
-                <Badge
-                  variant="secondary"
-                  className="bg-[var(--secondary)]/40 text-emerald-600 hover:bg-emerald-50 border-none px-3 py-1 rounded-full font-semibold"
+                <Link
+                  to={`/${import.meta.env.VITE_ADMIN_URL}/${
+                    import.meta.env.VITE_USERS_URL
+                  }`}
                 >
-                  View Users
-                </Badge>
+                  <Badge
+                    variant="secondary"
+                    className="bg-violet-50 text-violet-800 hover:bg-violet-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
+                  >
+                    View Users
+                  </Badge>
+                </Link>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -294,24 +326,44 @@ function Dashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {latestStudents.map((student) => (
-                        <TableRow key={student.id}>
-                          <TableCell className="font-medium">
-                            {student.admission_no}
-                          </TableCell>
-                          <TableCell>{student.first_name}</TableCell>
-                          <TableCell>{student.last_name}</TableCell>
-                          <TableCell>{student.gender}</TableCell>
-                          <TableCell>{student.parent_contact_number}</TableCell>
-                          <TableCell className="text-right">
-                            {
-                              new Date(student.date_of_admission)
-                                .toISOString()
-                                .split("T")[0]
-                            }
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {latestStudents.map((student, index) => {
+                        const colors =
+                          avatarPalette[index % avatarPalette.length];
+                        const initials = `${student.first_name?.[0] ?? ""}${
+                          student.last_name?.[0] ?? ""
+                        }`.toUpperCase();
+                        return (
+                          <TableRow key={student.id}>
+                            <TableCell className="font-medium">
+                              {student.admission_no}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Avatar className="h-7 w-7">
+                                  <AvatarFallback
+                                    className={`${colors.bg} ${colors.text} text-xs font-semibold`}
+                                  >
+                                    {initials}
+                                  </AvatarFallback>
+                                </Avatar>
+                                {student.first_name}
+                              </div>
+                            </TableCell>
+                            <TableCell>{student.last_name}</TableCell>
+                            <TableCell>{student.gender}</TableCell>
+                            <TableCell>
+                              {student.parent_contact_number}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              {
+                                new Date(student.date_of_admission)
+                                  .toISOString()
+                                  .split("T")[0]
+                              }
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 )}

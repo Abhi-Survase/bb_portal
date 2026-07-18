@@ -4,19 +4,22 @@ import { Toaster } from "@/components/ui/sonner";
 
 export default function Login_Signup_Page({ children }) {
   return (
-    <div
-      className="relative flex min-h-svh flex-col items-center justify-center p-6 md:p-10 dark:brightness-[0.9] dark:bg-accent"
-      style={{
-        backgroundImage: "url('/t_bg.webp')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <div className="absolute top-4 right-4">
+    <div className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden bg-background p-6 md:p-10">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full opacity-40 blur-3xl"
+        style={{ backgroundColor: "var(--primary)" }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-24 -bottom-40 h-[28rem] w-[28rem] rounded-full opacity-30 blur-3xl"
+        style={{ backgroundColor: "var(--chart-4)" }}
+      />
+
+      <div className="absolute top-4 right-4 z-10">
         <ModeToggle />
       </div>
-      <div className="w-full max-w-sm md:max-w-4xl">
+      <div className="relative z-10 w-full max-w-sm md:max-w-4xl">
         {children}
         <Toaster />
       </div>

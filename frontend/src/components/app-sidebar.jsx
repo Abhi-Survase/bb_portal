@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   Users,
-  UserPlus,
   List,
   Search,
   Bell,
@@ -30,43 +29,53 @@ import {
   SidebarMenuItem,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 // Menu items.
+// `matchPrefix` decides which sidebar item lights up. Any route that starts
+// with a given prefix counts as "on that section" - so /students/add,
+// /students/find, and any future /students/... route all highlight the
+// item(s) sharing the /students prefix, while Teachers and Users stay
+// independent since they're separate resources, not sub-pages of one another.
+const studentsBaseUrl = `/${import.meta.env.VITE_ALL_STUDENT_URL}`;
+
 const sidebar_menu_items = [
   {
     title: "Dashboard",
     icon: LayoutDashboard,
-    url: import.meta.env.VITE_DASHBOARD_URL,
+    url: `/${import.meta.env.VITE_DASHBOARD_URL}`,
+    matchPrefix: `/${import.meta.env.VITE_DASHBOARD_URL}`,
   },
   {
-    title: "Student Directory",
+    title: "Students",
     icon: List,
-    // url: import.meta.env.VITE_ALL_STUDENT_URL,
     url: `/${import.meta.env.VITE_ALL_STUDENT_URL}/${
       import.meta.env.VITE_FIND_STUDENT_URL
     }`,
-  },
-  {
-    title: "Add Admission",
-    icon: UserPlus,
-    url: `/${import.meta.env.VITE_ALL_STUDENT_URL}/${
-      import.meta.env.VITE_ADD_STUDENT_URL
-    }`,
+    matchPrefix: studentsBaseUrl,
   },
   {
     title: "Teachers",
     icon: IdCardLanyard,
     url: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_TEACHERS_URL}`,
+    matchPrefix: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_TEACHERS_URL}`,
   },
   {
     title: "Users",
     icon: Users,
     url: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_USERS_URL}`,
+    matchPrefix: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_USERS_URL}`,
   },
 ];
 
+// True if the current path is this item's own route, or a nested route
+// underneath it (e.g. "/students" matches "/students/add/step-2").
+function isSectionActive(pathname, prefix) {
+  return pathname === prefix || pathname.startsWith(`${prefix}/`);
+}
+
 export function AppSidebar() {
+  const location = useLocation();
   return (
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarHeader>
@@ -96,7 +105,14 @@ export function AppSidebar() {
                   className="py-[0.2rem] w-full"
                   key={item.title}
                 >
-                  <SidebarMenuButton asChild className="w-full">
+                  <SidebarMenuButton
+                    asChild
+                    className="w-full"
+                    isActive={isSectionActive(
+                      location.pathname,
+                      item.matchPrefix,
+                    )}
+                  >
                     <Link to={item.url}>
                       <item.icon />
                       <span>
@@ -113,13 +129,21 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu className="pl-2 pb-1">
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="gap-3 px-4 py-5 w-full">
+            <SidebarMenuButton
+              asChild
+              className="gap-3 px-4 py-5 w-full"
+              isActive={isSectionActive(location.pathname, "/school/calendar")}
+            >
               <Link to="/school/calendar">
                 <Calendar />
                 <span>Calendar</span>
               </Link>
             </SidebarMenuButton>
-            <SidebarMenuButton asChild className="gap-3 px-4 py-5 w-full">
+            <SidebarMenuButton
+              asChild
+              className="gap-3 px-4 py-5 w-full"
+              isActive={location.pathname === "settings"}
+            >
               <Link to="settings">
                 <Settings />
                 <span>Settings</span>
