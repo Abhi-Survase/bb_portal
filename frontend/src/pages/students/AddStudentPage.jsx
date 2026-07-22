@@ -1,22 +1,6 @@
 import * as React from "react";
 import { Link } from "react-router";
-import {
-  LayoutDashboard,
-  Users,
-  UserPlus,
-  Search,
-  TrendingDown,
-  Bell,
-  GraduationCap,
-  FileText,
-  Settings,
-  ChevronRight,
-  TrendingUp,
-  MoreHorizontal,
-  List,
-  Edit,
-  Moon,
-} from "lucide-react";
+import { Search, List, CalendarIcon } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +16,6 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { CalendarIcon, ArrowLeftIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -49,28 +32,46 @@ import {
 } from "@/components/ui/select";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import UserAvatar from "../../components/user-avatar";
 
 import axiosInstance from "../../utils/axiosInstance";
+
+// Same accent cycle used on the dashboard and student directory - here it
+// doubles as both a step number and a category color, so each section of
+// the form reads as a distinct, ordered step instead of four identical cards.
+const sectionPalette = [
+  { bg: "bg-blue-100", text: "text-blue-700" },
+  { bg: "bg-amber-100", text: "text-amber-700" },
+  { bg: "bg-orange-100", text: "text-orange-700" },
+  { bg: "bg-violet-100", text: "text-violet-700" },
+];
+
+function SectionHeader({ step, title, description }) {
+  const colors = sectionPalette[(step - 1) % sectionPalette.length];
+  return (
+    <CardHeader>
+      <div className="flex items-center gap-3">
+        <div
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${colors.bg} ${colors.text}`}
+        >
+          {step}
+        </div>
+        <div>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </div>
+      </div>
+    </CardHeader>
+  );
+}
 
 const addSTudentFormSchema = z.object({
   admission_no: z.string().regex(/^\d{6,}$/, {
@@ -125,8 +126,7 @@ function AddStudentPage() {
     mode: "onBlur",
     defaultValues: {
       admission_no: "",
-      // date_of_admission: new Date().toISOString().split("T")[0],
-      date_of_admission: "",
+      date_of_admission: new Date(),
       first_name: "",
       father_name: "",
       mother_name: "",
@@ -193,13 +193,18 @@ function AddStudentPage() {
   return (
     <div className="flex-1 flex flex-col">
       <header className="h-16 bg-background border-b flex items-center justify-between px-8 sticky top-0 z-10">
-        <h1 className="text-xl font-semibold --foreground flex items-center gap-4">
+        <h1 className="text-xl font-semibold text-foreground flex items-center gap-4">
           <SidebarTrigger />
           Add Student Admission
         </h1>
         <div className="flex items-center gap-4">
-          {/* Global Search Bar (Replaces 'Find Student' Page) */}
-          <div className="relative hidden sm:block group">
+          <div className="hidden sm:flex items-center gap-3">
+            <Link to={`/${import.meta.env.VITE_ALL_STUDENT_URL}`}>
+              <Button variant="muted_outline">
+                <List size={16} />
+                All Students
+              </Button>
+            </Link>
             <Link
               to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
                 import.meta.env.VITE_FIND_STUDENT_URL
@@ -216,7 +221,7 @@ function AddStudentPage() {
         </div>
       </header>
       <Toaster />
-      <div className="space-y-6 p-4 max-w-6xl">
+      <div className="space-y-6 p-4 max-w-5xl">
         <form
           id="form-add-student"
           onSubmit={form.handleSubmit(handleAddStudent)}
@@ -226,12 +231,11 @@ function AddStudentPage() {
           // })}
         >
           <Card>
-            <CardHeader>
-              <CardTitle>Admission Details</CardTitle>
-              <CardDescription>
-                Enter the student's official admission information.
-              </CardDescription>
-            </CardHeader>
+            <SectionHeader
+              step={1}
+              title="Admission Details"
+              description="Enter the student's official admission information."
+            />
             <CardContent>
               <div>
                 <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -307,9 +311,11 @@ function AddStudentPage() {
             </CardContent>
           </Card>
           <Card>
-            <CardHeader>
-              <CardTitle>Student's Personal Details</CardTitle>
-            </CardHeader>
+            <SectionHeader
+              step={2}
+              title="Student's Personal Details"
+              description="Basic identifying information for the student."
+            />
             <CardContent>
               <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Controller
@@ -339,7 +345,10 @@ function AddStudentPage() {
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel htmlFor="form-add-student-last_name">
-                        Last Name
+                        Last Name{" "}
+                        <span className="font-normal text-muted-foreground">
+                          (optional)
+                        </span>
                       </FieldLabel>
                       <Input
                         {...field}
@@ -430,7 +439,10 @@ function AddStudentPage() {
                   name="disability"
                   control={form.control}
                   render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+                    <Field
+                      data-invalid={fieldState.invalid}
+                      className="md:col-span-2"
+                    >
                       <FieldLabel htmlFor="form-add-student-disability">
                         Disability
                       </FieldLabel>
@@ -461,9 +473,11 @@ function AddStudentPage() {
             </CardContent>
           </Card>
           <Card>
-            <CardHeader>
-              <CardTitle>Parent & Contact Details</CardTitle>
-            </CardHeader>
+            <SectionHeader
+              step={3}
+              title="Parent & Contact Details"
+              description="How we'll reach the family for school communication."
+            />
             <CardContent>
               <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Controller
@@ -472,7 +486,10 @@ function AddStudentPage() {
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel htmlFor="form-add-student-father_name">
-                        Father Name
+                        Father Name{" "}
+                        <span className="font-normal text-muted-foreground">
+                          (optional)
+                        </span>
                       </FieldLabel>
                       <Input
                         {...field}
@@ -493,7 +510,10 @@ function AddStudentPage() {
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel htmlFor="form-add-student-mother_name">
-                        Mother Name
+                        Mother Name{" "}
+                        <span className="font-normal text-muted-foreground">
+                          (optional)
+                        </span>
                       </FieldLabel>
                       <Input
                         {...field}
@@ -554,25 +574,27 @@ function AddStudentPage() {
             </CardContent>
           </Card>
           <Card>
-            <CardHeader>
-              <CardTitle>Residential Address</CardTitle>
-            </CardHeader>
+            <SectionHeader
+              step={4}
+              title="Residential Address"
+              description="Where the student currently resides."
+            />
             <CardContent>
-              <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FieldGroup className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Controller
-                  name="permanent_address"
+                  name="address"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field
                       data-invalid={fieldState.invalid}
-                      className="md:col-span-2"
+                      className="md:col-span-3"
                     >
-                      <FieldLabel htmlFor="form-add-permanent-address">
+                      <FieldLabel htmlFor="form-add-address">
                         Address
                       </FieldLabel>
                       <Input
                         {...field}
-                        id="form-add-permanent-address"
+                        id="form-add-address"
                         aria-invalid={fieldState.invalid}
                         placeholder="Flat, House No., Building, Street"
                         autoComplete="on"
@@ -650,10 +672,13 @@ function AddStudentPage() {
             </CardContent>
           </Card>
         </form>
-        <Field orientation="horizontal" className="flex justify-end">
+        <Field
+          orientation="horizontal"
+          className="sticky bottom-0 -mx-4 flex justify-end gap-3 border-t bg-background/95 px-4 py-4 backdrop-blur"
+        >
           <Button
             type="button"
-            variant="destructive"
+            variant="outline"
             onClick={() => {
               form.reset();
               toast.warning("Details Cleared");
