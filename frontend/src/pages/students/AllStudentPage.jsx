@@ -33,7 +33,6 @@ import axiosInstance from "../../utils/axiosInstance";
 
 // Same accent cycle used on the dashboard's Recent Admissions table, so a
 // student without a photo still gets a distinct, on-brand initials avatar
-// instead of a generic gendered placeholder icon.
 const avatarPalette = [
   { bg: "bg-blue-100", text: "text-blue-700" },
   { bg: "bg-amber-100", text: "text-amber-700" },
@@ -61,9 +60,6 @@ function AllStudentPage() {
 
   const [editingAdmissionNo, setEditingAdmissionNo] = useState(null);
 
-  // Re-runs the current page's fetch effect (it depends on paginationData)
-  // by handing it a new object reference, so the grid reflects the edit
-  // without a full page reload.
   function refreshCurrentPage() {
     setPaginationData((prevData) => ({ ...prevData }));
   }

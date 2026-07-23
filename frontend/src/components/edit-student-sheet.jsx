@@ -20,29 +20,18 @@ const avatarPalette = [
   { bg: "bg-violet-100", text: "text-violet-700" },
 ];
 
-// GET responses use standard ISO 8601 (e.g. "2020-09-07T18:30:00.000Z") -
-// JS's native Date parsing handles that correctly, no custom format needed.
-function parseApiDateTime(value) {
-  if (!value) return undefined;
-  return new Date(value);
-}
-
-// The update endpoint expects a different shape on the way back out:
-// space-separated, no "T"/"Z", no milliseconds (e.g. "2025-06-18 18:30:00").
 function formatApiDateTime(date) {
   return format(date, "yyyy-MM-dd HH:mm:ss");
 }
 
-/**
- * Controlled by `admissionNo`: pass a student's admission number to open the
- * sheet and fetch their full record; pass null/undefined to keep it closed.
- */
+// Controlled by `admissionNo`: pass a student's admission number to open the sheet and fetch their full record; pass null/undefined to keep it closed.
 export function EditStudentSheet({ admissionNo, onOpenChange, onSuccess }) {
   const [studentRecord, setStudentRecord] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const latestRequestRef = React.useRef(null);
 
+  // Stabilizes the function which inturn stabilizes admissionNo across re-renders
   const fetchStudent = React.useCallback(async () => {
     if (!admissionNo) return;
     const requestId = admissionNo;
@@ -52,12 +41,8 @@ export function EditStudentSheet({ admissionNo, onOpenChange, onSuccess }) {
     try {
       const apiUrl = `${import.meta.env.VITE_GET_STUDENT_BY_ADMISSION_API}/${admissionNo}`;
       const response = await axiosInstance.get(apiUrl);
-      // Response is an array (even for a single admission number lookup) -
-      // wrapped in { data: [...] } if your other endpoints' convention
-      // holds, otherwise a bare array. Either way, we want the first match.
       const record = response.data?.data ?? response.data;
-      // Guard: if the person opened a different student's edit sheet before
-      // this request resolved, don't let the stale response overwrite it.
+      // Race condition guard - only the latest request is allowed to be set
       if (latestRequestRef.current === requestId) {
         setStudentRecord(record[0]);
       }
@@ -146,15 +131,13 @@ export function EditStudentSheet({ admissionNo, onOpenChange, onSuccess }) {
               formId="student-edit-form"
               defaultValues={{
                 admission_no: studentRecord.admission_no,
-                date_of_admission: parseApiDateTime(
-                  studentRecord.date_of_admission,
-                ),
+                date_of_admission: studentRecord.date_of_admission,
                 first_name: studentRecord.first_name,
                 father_name: studentRecord.father_name ?? "",
                 mother_name: studentRecord.mother_name ?? "",
                 last_name: studentRecord.last_name ?? "",
                 gender: studentRecord.gender,
-                date_of_birth: parseApiDateTime(studentRecord.date_of_birth),
+                date_of_birth: studentRecord.date_of_birth,
                 parent_contact_number: studentRecord.parent_contact_number,
                 parent_email: studentRecord.parent_email ?? "",
                 address: studentRecord.permanent_address ?? "",

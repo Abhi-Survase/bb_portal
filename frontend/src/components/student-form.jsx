@@ -38,9 +38,6 @@ import {
 import { toast } from "sonner";
 import axiosInstance from "../utils/axiosInstance";
 
-// Same accent cycle used on the dashboard and student directory - here it
-// doubles as both a step number and a category color, so each section of
-// the form reads as a distinct, ordered step instead of four identical cards.
 const sectionPalette = [
   { bg: "bg-blue-100", text: "text-blue-700" },
   { bg: "bg-amber-100", text: "text-amber-700" },
@@ -133,10 +130,7 @@ const emptyDefaults = {
   disability: "None",
 };
 
-/**
- * Shared 4-section student form, used by both the Add Student page and the
- * Edit Student sheet.
- *
+/*
  * IMPORTANT layout contract: render this inside a wrapper with `p-4` padding
  * (see AddStudentPage.jsx / EditStudentSheet.jsx) - the sticky footer uses
  * `-mx-4` to cancel that padding out so it sits edge-to-edge. If your
@@ -144,20 +138,12 @@ const emptyDefaults = {
  *
  * Props:
  * - mode: "add" | "edit" - controls button labels and footer behavior.
- * - defaultValues: partial values to merge over the empty defaults. For
- *   "edit", pass the existing student record here, with date_of_admission
- *   and date_of_birth already converted to real Date objects (the calendar
- *   button needs `.toLocaleDateString()`, which plain strings don't have).
+ * - defaultValues: partial values to merge over the empty defaults. For "edit", pass the existing student record here
  * - apiUrl: full URL to submit to.
  * - httpMethod: "post" (default for add), "put", or "patch".
- * - buildPayload(values): optional. Shapes the validated form values into
- *   the exact request body your API expects (e.g. renaming fields, adding
- *   pass-through IDs the form doesn't edit, custom date formats). If
- *   omitted, a simple default shape is sent as-is.
+ * - buildPayload(values): optional. Shapes the validated form values into the exact request body your API expects. If omitted, a simple default shape is sent as-is.
  * - onSuccess(responseData): called after a successful submit.
- * - onCancel(): called when Cancel/Reset is pressed (for "edit", this should
- *   close the sheet; for "add" it's optional - Reset already clears the form
- *   on its own).
+ * - onCancel(): called when Cancel/Reset is pressed (for "edit", this should close the sheet)
  */
 export function StudentForm({
   mode = "add",
@@ -195,11 +181,7 @@ export function StudentForm({
 
     try {
       const submit =
-        httpMethod === "put"
-          ? axiosInstance.put
-          : httpMethod === "patch"
-            ? axiosInstance.patch
-            : axiosInstance.post;
+        httpMethod === "put" ? axiosInstance.put : axiosInstance.post;
       const response = await submit(apiUrl, studentDataPayload);
       toast.dismiss(loadingToast);
       toast.success(response.data.message);
@@ -238,7 +220,7 @@ export function StudentForm({
                       {...field}
                       id={`${formId}-admission_no`}
                       aria-invalid={fieldState.invalid}
-                      placeholder="e.g. 000000"
+                      placeholder="e.g. 123456"
                       autoComplete="on"
                     />
                     <FieldDescription htmlFor={`${formId}-admission_no`}>
