@@ -27,6 +27,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Spinner } from "@/components/ui/spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import UserAvatar from "../../components/user-avatar";
+import { EditStudentSheet } from "../../components/edit-student-sheet";
 
 import axiosInstance from "../../utils/axiosInstance";
 
@@ -58,6 +59,15 @@ function AllStudentPage() {
     setPaginationData((prevData) => ({ ...prevData, current_page: newPage }));
   }
 
+  const [editingAdmissionNo, setEditingAdmissionNo] = useState(null);
+
+  // Re-runs the current page's fetch effect (it depends on paginationData)
+  // by handing it a new object reference, so the grid reflects the edit
+  // without a full page reload.
+  function refreshCurrentPage() {
+    setPaginationData((prevData) => ({ ...prevData }));
+  }
+
   useEffect(() => {
     const fetchAllStudentData = async () => {
       try {
@@ -85,10 +95,6 @@ function AllStudentPage() {
     };
     fetchAllStudentData();
   }, [paginationData]);
-
-  function handleEditButtonClick() {
-    console.log("Edit Button Clicked!");
-  }
 
   return (
     <div className="flex-1 flex flex-col bg-background">
@@ -163,7 +169,7 @@ function AllStudentPage() {
                       variant="ghost"
                       size="sm"
                       className="top-2 right-2 "
-                      onClick={handleEditButtonClick}
+                      onClick={() => setEditingAdmissionNo(data.admission_no)}
                     >
                       <Pencil className="w-4 h-4" />
                     </Button>
@@ -270,6 +276,12 @@ function AllStudentPage() {
           </Button>
         </ButtonGroup>
       </ButtonGroup>
+
+      <EditStudentSheet
+        admissionNo={editingAdmissionNo}
+        onOpenChange={(open) => !open && setEditingAdmissionNo(null)}
+        onSuccess={refreshCurrentPage}
+      />
     </div>
   );
 }

@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import UserAvatar from "../../components/user-avatar";
+import { EditStudentSheet } from "../../components/edit-student-sheet";
 
 import axiosInstance from "../../utils/axiosInstance";
 
@@ -52,6 +53,8 @@ function FindStudentPage() {
   const [studentData, setStudentData] = useState("");
   const [studentSearchParam, setStudentSearchParam] =
     useState("Admission Number");
+  const [editingAdmissionNo, setEditingAdmissionNo] = useState(null);
+  const [lastSearchValue, setLastSearchValue] = useState(null);
   const navigateTo = useNavigate();
   const SEARCH_FIELDS = {
     "Admission Number": 0,
@@ -101,6 +104,7 @@ function FindStudentPage() {
 
   async function onSubmitHandler(value) {
     // console.log(value);
+    setLastSearchValue(value);
     const inputValue = value.searchValue;
     const apiUrl = `${import.meta.env.VITE_SEARCH_STUDENT_API}?searchParam=${SEARCH_FIELDS[studentSearchParam]}&detailKeyword=${inputValue}`;
     console.log(apiUrl);
@@ -134,6 +138,10 @@ function FindStudentPage() {
     setStudentSearchParam(value);
     form.reset({ searchValue: "" });
   };
+
+  function refreshSearchResults() {
+    if (lastSearchValue) onSubmitHandler(lastSearchValue);
+  }
   // const dataPlaceHolderText = "Hit Search!";
   // let placeHolderText = "Enter Admission Number";
   return (
@@ -186,7 +194,7 @@ function FindStudentPage() {
                       value={studentSearchParam}
                       onValueChange={handleSearchParamChange}
                     >
-                      <SelectTrigger className="w-full max-w-48 !text-primary-foreground">
+                      <SelectTrigger className="w-full max-w-48">
                         <SelectValue placeholder="Admission Number" />
                       </SelectTrigger>
                       <SelectContent>
@@ -255,7 +263,13 @@ function FindStudentPage() {
                   className="relative w-full p-6 transition shadow-md rounded-2xl hover:shadow-lg"
                 >
                   <CardAction className="absolute top-4 right-4 z-10">
-                    <Button variant="ghost" size="icon">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() =>
+                        setEditingAdmissionNo(student.admission_no)
+                      }
+                    >
                       <Pencil className="w-4 h-4" />
                     </Button>
                   </CardAction>
@@ -306,6 +320,12 @@ function FindStudentPage() {
           </div>
         )}
       </main>
+
+      <EditStudentSheet
+        admissionNo={editingAdmissionNo}
+        onOpenChange={(open) => !open && setEditingAdmissionNo(null)}
+        onSuccess={refreshSearchResults}
+      />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CircleCheckIcon,
   InfoIcon,
@@ -16,22 +18,27 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
       icons={{
-        success: <CircleCheckIcon color="var(--chart-5)" className="size-4" />,
+        success: <CircleCheckIcon color="var(--chart-1)" className="size-4" />,
         info: <InfoIcon className="size-4" />,
         warning: (
           <TriangleAlertIcon color="var(--chart-4)" className="size-4" />
         ),
-        error: <OctagonXIcon color="var(--destructive)" className="size-4" />,
+        error: <OctagonXIcon className="size-4" />,
         loading: <Loader2Icon className="size-4 animate-spin" />,
       }}
       style={
         {
           "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--primary-foreground)",
+          "--normal-text": "var(--popover-foreground)",
           "--normal-border": "var(--border)",
           "--border-radius": "var(--radius)",
         } as React.CSSProperties
       }
+      toastOptions={{
+        classNames: {
+          toast: "cn-toast",
+        },
+      }}
       {...props}
     />
   );

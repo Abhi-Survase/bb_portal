@@ -12,7 +12,7 @@ router.get("/active-students", async (req, res) => {
   );
   const offset = (page - 1) * limit;
   // console.log(page, limit, offset);
-  const responseDelay = 2000;
+  const responseDelay = 1000;
   try {
     const dataQuery =
       "SELECT s.id, s.admission_no, sd.first_name, sci.father_name, sd.last_name, s.date_of_admission, sd.date_of_birth, sd.gender, sd.photo_url, sci.parent_contact_number FROM school_metadata.students s INNER JOIN school_metadata.student_details sd ON s.id = sd.student_id INNER JOIN school_metadata.student_contact_info sci ON sd.id = sci.student_detail_id WHERE s.is_active = 1 ORDER BY s.date_of_admission desc, s.id asc LIMIT ? OFFSET ?";
@@ -198,7 +198,8 @@ router.get("/get-student-by-admissionNo/:admission_no", async (req, res) => {
     logger.info(
       "getStudentByAdmissionId | Response =>> " + JSON.stringify(output),
     );
-    return res.status(200).json(output);
+    setTimeout(() => res.status(200).json(output), 500);
+    // return res.status(200).json(output);
   } catch (err) {
     let status = 500;
     let message = err.message;
@@ -406,7 +407,7 @@ router.put("/update-student-details", async (req, res) => {
     };
     // logger.info("updateStudentDetail | Request =>> " + JSON.stringify(values));
     const studentQuery =
-      "UPDATE students SET `is_active` = ? WHERE `admission_no` = ?";
+      "UPDATE students SET `admission_no` = ? , `date_of_admission` = ? WHERE `id` = ?";
     const studentDetailsQuery =
       "UPDATE student_details SET `first_name` = ? ,`last_name` = ? ,`date_of_birth` = ? ,`gender` = ? ,`disability` = ? ,`photo_url` = ? WHERE `id` = ?";
     const studentContactInfoQuery =
@@ -417,13 +418,16 @@ router.put("/update-student-details", async (req, res) => {
       "updateStudent | studentQuery =>> " +
         studentQuery +
         " | student data =>> " +
-        values.is_active +
+        values.admission_no +
         "," +
-        values.admission_no,
+        values.date_of_admission +
+        "," +
+        values.id,
     );
     const studentResult = await dbConnection.query(studentQuery, [
-      values.is_active,
       values.admission_no,
+      values.date_of_admission,
+      values.id,
     ]);
     logger.info(JSON.stringify(studentResult));
     logger.info(
