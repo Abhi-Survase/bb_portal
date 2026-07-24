@@ -31,7 +31,7 @@ app.get("/favicon.ico", (req, res) => {
 
 app.use("/dashboard", authenticateToken, dashboardRoutes);
 
-app.use("/events", authenticateToken, eventRoutes);
+app.use("/calendar", authenticateToken, eventRoutes);
 
 app.use("/student", authenticateToken, studentRoutes);
 

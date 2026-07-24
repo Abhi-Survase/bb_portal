@@ -98,7 +98,7 @@ router.get("/dashboard", async (req, res) => {
 });
 
 // GET /events/all?month=3&year=2026
-router.get("/all", async (req, res) => {
+router.get("/events/all", async (req, res) => {
   try {
     const month = parseInt(req.query.month, 10);
     const year = parseInt(req.query.year, 10);
@@ -166,7 +166,7 @@ router.get("/all", async (req, res) => {
  * POST /events/add
  * Body: { title, description?, event_date, event_time?, is_all_day?, color? }
  */
-router.post("/add", async (req, res) => {
+router.post("/events/add", async (req, res) => {
   try {
     const { title, description, event_date, event_time, is_all_day, color } =
       req.body;

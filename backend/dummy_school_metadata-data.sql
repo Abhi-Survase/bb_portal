@@ -1,9 +1,8 @@
-Enter password: 
--- MySQL dump 10.13  Distrib 9.7.0, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 9.3.0, for Win64 (x86_64)
 --
 -- Host: localhost    Database: school_metadata
 -- ------------------------------------------------------
--- Server version	9.7.0
+-- Server version	9.3.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,17 +14,6 @@ Enter password:
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-Warning: A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions, even those that changed suppressed parts of the database. If you don't want to restore GTIDs, pass --set-gtid-purged=OFF. To make a complete dump, pass --all-databases --triggers --routines --events. 
-Warning: A dump from a server that has GTIDs enabled will by default include the GTIDs of all transactions, even those that were executed during its extraction and might not be represented in the dumped data. This might result in an inconsistent data dump. 
-In order to ensure a consistent backup of the database, pass --single-transaction or --lock-all-tables or --source-data. 
-SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
-SET @@SESSION.SQL_LOG_BIN= 0;
-
---
--- GTID state at the beginning of the backup 
---
-
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'bbd64a44-4dae-11f1-ac39-1abffcb9c849:1-101';
 
 --
 -- Current Database: `school_metadata`
@@ -34,6 +22,41 @@ SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'bbd64a44-4dae-11f1-ac39-1abffcb9c849:1-
 CREATE DATABASE /*!32312 IF NOT EXISTS*/ `school_metadata` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `school_metadata`;
+
+--
+-- Table structure for table `events`
+--
+
+DROP TABLE IF EXISTS `events`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `events` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `description` text,
+  `event_date` date NOT NULL,
+  `event_time` time DEFAULT NULL,
+  `is_all_day` tinyint(1) NOT NULL DEFAULT '0',
+  `color` varchar(50) NOT NULL DEFAULT 'bg-blue-500',
+  `created_by` int DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_event_date` (`event_date`),
+  KEY `fk_events_users` (`created_by`),
+  CONSTRAINT `fk_events_users` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `events`
+--
+
+LOCK TABLES `events` WRITE;
+/*!40000 ALTER TABLE `events` DISABLE KEYS */;
+INSERT INTO `events` VALUES (1,'Birthday','Happy','2025-06-18',NULL,1,'bg-red-500',NULL,'2026-07-24 21:11:01','2026-07-24 21:11:01'),(2,'Scooby','Dooby','2026-06-18',NULL,1,'bg-red-500',NULL,'2026-07-24 21:20:29','2026-07-24 21:20:29');
+/*!40000 ALTER TABLE `events` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `student_academic_details`
@@ -76,7 +99,7 @@ DROP TABLE IF EXISTS `student_address_details`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `student_address_details` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `contact_id` int NOT NULL,
+  `student_contact_id` int NOT NULL,
   `current_address` text,
   `permanent_address` text,
   `city` varchar(30) DEFAULT NULL,
@@ -84,8 +107,8 @@ CREATE TABLE `student_address_details` (
   `pincode` varchar(6) DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `contact_id` (`contact_id`),
-  CONSTRAINT `student_address_details_ibfk_1` FOREIGN KEY (`contact_id`) REFERENCES `student_contact_info` (`id`) ON DELETE RESTRICT
+  KEY `contact_id` (`student_contact_id`),
+  CONSTRAINT `student_address_details_ibfk_1` FOREIGN KEY (`student_contact_id`) REFERENCES `student_contact_info` (`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -128,7 +151,7 @@ CREATE TABLE `student_contact_info` (
 
 LOCK TABLES `student_contact_info` WRITE;
 /*!40000 ALTER TABLE `student_contact_info` DISABLE KEYS */;
-INSERT INTO `student_contact_info` VALUES (1,1,'Darshana',NULL,'Darshana','06969696969','06969696969',NULL,'2026-03-19 22:27:38'),(2,2,'Sabu',NULL,'Sabu','8958356578','8958356578',NULL,'2026-03-19 22:27:38'),(3,3,'Sayali',NULL,'Sayali','9032778693','9032778693',NULL,'2026-03-19 22:27:38'),(4,4,'Sarika',NULL,'Sarika','7316485164','7316485164',NULL,'2026-03-19 22:27:38'),(5,5,'Anita',NULL,'Anita','9282655877','9282655877',NULL,'2026-03-19 22:27:38'),(6,6,'Anita',NULL,'Anita','7006460453','7006460453',NULL,'2026-03-19 22:27:38'),(7,7,'Yasmeen',NULL,'Yasmeen','7006460453','7006460453',NULL,'2026-03-19 22:27:38'),(8,8,'Preeti',NULL,'Preeti','8106460496','8106460496',NULL,'2026-03-19 22:27:38'),(9,9,'Auntiji',NULL,'Auntiji','9206460882','9206460882',NULL,'2026-03-19 22:27:38'),(10,10,'Sabu',NULL,'Sabu','8958356578','8958356578',NULL,'2026-03-19 22:27:38'),(11,11,'Mummy',NULL,'Mummy','321654789','321654789',NULL,'2026-03-19 22:27:38'),(12,12,'',NULL,'','aa','aa',NULL,'2026-03-19 22:27:38'),(13,13,'Minali',NULL,'Minali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(14,14,'Minali',NULL,'Minali','9159271873','9159271873',NULL,'2026-03-19 22:27:38'),(15,15,'Minali',NULL,'Minali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(16,16,'Binali',NULL,'Binali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(17,17,'Pinali',NULL,'Pinali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(18,18,'Sinali',NULL,'Sinali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(19,19,'Minali',NULL,'Minali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(20,20,'Kinali',NULL,'Kinali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(21,21,'Jinali',NULL,'Jinali','9159264873','9159264873',NULL,'2026-03-19 22:27:38');
+INSERT INTO `student_contact_info` VALUES (1,1,'Darshana',NULL,'Darshana','06969696969','06969696969',NULL,'2026-03-19 22:27:38'),(2,2,'Sabu','Gaunda','Sabu','8958356578','8958356578','gaundapuma@email.gz','2026-07-23 03:34:22'),(3,3,'Sayali',NULL,'Sayali','9032778693','9032778693',NULL,'2026-03-19 22:27:38'),(4,4,'Sarika','Dhananjay','Sarika','7316485164','7316485164',NULL,'2026-07-23 02:37:06'),(5,5,'Anita',NULL,'Anita','9282655877','9282655877',NULL,'2026-03-19 22:27:38'),(6,6,'Anita',NULL,'Anita','7006460453','7006460453',NULL,'2026-03-19 22:27:38'),(7,7,'Yasmeen',NULL,'Yasmeen','7006460453','7006460453',NULL,'2026-03-19 22:27:38'),(8,8,'Preeti',NULL,'Preeti','8106460496','8106460496',NULL,'2026-03-19 22:27:38'),(9,9,'Auntiji',NULL,'Auntiji','9206460882','9206460882',NULL,'2026-03-19 22:27:38'),(10,10,'Sabu',NULL,'Sabu','8958356578','8958356578',NULL,'2026-03-19 22:27:38'),(11,11,'Mummy',NULL,'Mummy','321654789','321654789',NULL,'2026-03-19 22:27:38'),(12,12,'',NULL,'','aa','aa',NULL,'2026-03-19 22:27:38'),(13,13,'Minali',NULL,'Minali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(14,14,'Minali',NULL,'Minali','9159271873','9159271873',NULL,'2026-03-19 22:27:38'),(15,15,'Minali',NULL,'Minali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(16,16,'Binali',NULL,'Binali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(17,17,'Pinali',NULL,'Pinali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(18,18,'Sinali',NULL,'Sinali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(19,19,'Minali',NULL,'Minali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(20,20,'Kinali',NULL,'Kinali','9159264873','9159264873',NULL,'2026-03-19 22:27:38'),(21,21,'Jinali',NULL,'Jinali','9159264873','9159264873',NULL,'2026-03-19 22:27:38');
 /*!40000 ALTER TABLE `student_contact_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -162,7 +185,7 @@ CREATE TABLE `student_details` (
 
 LOCK TABLES `student_details` WRITE;
 /*!40000 ALTER TABLE `student_details` DISABLE KEYS */;
-INSERT INTO `student_details` VALUES (1,1,'Unnati','Patil','1998-11-22','F','None',NULL,'2025-07-23 21:33:24','2026-03-18 15:11:18'),(2,2,'Anupama','DCruz','2020-12-16','F','None',NULL,'2025-07-24 10:13:17','2025-07-24 10:13:17'),(3,3,'Gurdeep','Patil','2020-04-05','M','None',NULL,'2025-07-24 10:23:15','2025-07-24 10:23:15'),(4,4,'Rakesh','Gupta','2021-04-03','M','None',NULL,'2025-07-24 10:26:56','2025-07-24 10:26:56'),(5,5,'Shubham','Rao','2018-05-01','M','None',NULL,'2025-07-24 10:31:35','2025-07-24 10:31:35'),(6,6,'Dhaval','Anand','2021-07-10','M','None',NULL,'2025-07-24 10:40:25','2025-07-24 10:40:25'),(7,7,'Hafsa','Begum','2020-12-03','F','None',NULL,'2025-07-24 10:42:41','2025-07-24 11:05:57'),(8,8,'Hemant','Chaudhary','2019-03-12','M','Hearing',NULL,'2025-07-24 11:08:42','2025-07-24 11:11:02'),(9,9,'Banvi','More','2020-12-02','F','Learning',NULL,'2025-07-24 11:10:23','2025-09-08 20:25:25'),(10,10,'Anupama','DCruz','2020-12-15','F','None',NULL,'2025-07-27 16:53:20','2025-07-27 16:53:20'),(11,11,'Surbhi','Jhuti','2021-08-16','F','None',NULL,'2025-08-26 21:56:12','2025-10-10 14:11:26'),(12,12,'From','End','2025-08-05','M','None',NULL,'2025-08-26 22:12:57','2026-03-19 22:15:19'),(13,13,'Fareeha','Gulrukh','2020-09-08','F','None',NULL,'2025-09-08 20:38:57','2025-09-08 20:38:57'),(14,14,'Gurdeep','Rao','2020-07-10','M','None',NULL,'2025-10-08 20:38:57','2025-10-08 20:38:57'),(15,15,'Fareeha','Hulrukh','2020-09-08','F','Learning',NULL,'2025-09-08 20:38:57','2025-09-08 20:38:57'),(16,16,'Mateha','Mulrukh','2020-07-08','F','None',NULL,'2025-06-08 20:38:57','2026-03-18 15:11:18'),(17,17,'Bareha','Fulrukh','2020-09-08','F','None',NULL,'2025-05-08 20:38:57','2025-05-08 20:38:57'),(18,18,'Lareeha','Bulrukh','2020-02-08','F','Visual',NULL,'2025-11-08 20:38:57','2025-11-08 20:38:57'),(19,19,'Pareha','Pulrukh','2020-11-08','F','None',NULL,'2025-09-18 20:38:57','2025-09-18 20:38:57'),(20,20,'Tabeeha','Falrukh','2020-10-08','F','None',NULL,'2025-04-28 20:38:57','2026-03-18 15:11:18'),(21,21,'Safeeha','Tulrukh','2020-07-08','F','Other',NULL,'2025-10-18 20:38:57','2025-10-18 20:38:57');
+INSERT INTO `student_details` VALUES (1,1,'Unnati','Patil','1998-11-22','F','None',NULL,'2025-07-23 21:33:24','2026-03-18 15:11:18'),(2,2,'Anupama','DCruz','2020-12-16','F','None',NULL,'2025-07-24 10:13:17','2025-07-24 10:13:17'),(3,3,'Gurdeep','Patil','2020-04-05','M','None',NULL,'2025-07-24 10:23:15','2025-07-24 10:23:15'),(4,4,'Rakesh','Gupta','2021-04-02','M','None',NULL,'2025-07-24 10:26:56','2026-07-23 02:37:06'),(5,5,'Shubham','Rao','2018-05-01','M','None',NULL,'2025-07-24 10:31:35','2025-07-24 10:31:35'),(6,6,'Dhaval','Anand','2021-07-10','M','None',NULL,'2025-07-24 10:40:25','2025-07-24 10:40:25'),(7,7,'Hafsa','Begum','2020-12-03','F','None',NULL,'2025-07-24 10:42:41','2025-07-24 11:05:57'),(8,8,'Hemant','Chaudhary','2019-03-12','M','Hearing',NULL,'2025-07-24 11:08:42','2025-07-24 11:11:02'),(9,9,'Banvi','More','2020-12-02','F','Learning',NULL,'2025-07-24 11:10:23','2025-09-08 20:25:25'),(10,10,'Anupama','DCruz','2020-12-15','F','None',NULL,'2025-07-27 16:53:20','2025-07-27 16:53:20'),(11,11,'Surbhi','Jhuti','2021-08-16','F','None',NULL,'2025-08-26 21:56:12','2025-10-10 14:11:26'),(12,12,'From','End','2025-08-05','M','None',NULL,'2025-08-26 22:12:57','2026-03-19 22:15:19'),(13,13,'Fareeha','Gulrukh','2020-09-08','F','None',NULL,'2025-09-08 20:38:57','2025-09-08 20:38:57'),(14,14,'Gurdeep','Rao','2020-07-10','M','None',NULL,'2025-10-08 20:38:57','2025-10-08 20:38:57'),(15,15,'Fareeha','Hulrukh','2020-09-08','F','Learning',NULL,'2025-09-08 20:38:57','2025-09-08 20:38:57'),(16,16,'Mateha','Mulrukh','2020-07-08','F','None',NULL,'2025-06-08 20:38:57','2026-03-18 15:11:18'),(17,17,'Bareha','Fulrukh','2020-09-08','F','None',NULL,'2025-05-08 20:38:57','2025-05-08 20:38:57'),(18,18,'Lareeha','Bulrukh','2020-02-08','F','Visual',NULL,'2025-11-08 20:38:57','2025-11-08 20:38:57'),(19,19,'Pareha','Pulrukh','2020-11-08','F','None',NULL,'2025-09-18 20:38:57','2025-09-18 20:38:57'),(20,20,'Tabeeha','Falrukh','2020-10-08','F','None',NULL,'2025-04-28 20:38:57','2026-03-18 15:11:18'),(21,21,'Safeeha','Tulrukh','2020-07-08','F','Other',NULL,'2025-10-18 20:38:57','2025-10-18 20:38:57');
 /*!40000 ALTER TABLE `student_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -182,7 +205,7 @@ CREATE TABLE `students` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `admission_no` (`admission_no`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -191,8 +214,36 @@ CREATE TABLE `students` (
 
 LOCK TABLES `students` WRITE;
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
-INSERT INTO `students` VALUES (1,'xxx','2025-07-21',0,'2025-07-23 21:33:24','2026-03-18 15:11:18'),(2,'000001','2025-05-16',1,'2025-07-24 10:13:17','2025-07-24 10:13:17'),(3,'000002','2025-06-01',1,'2025-07-24 10:23:15','2025-07-24 10:23:15'),(4,'000003','2025-06-19',1,'2025-07-24 10:26:56','2025-07-24 10:26:56'),(5,'000004','2024-05-01',1,'2025-07-24 10:31:35','2025-07-24 10:31:35'),(6,'000005','2024-05-01',1,'2025-07-24 10:40:25','2025-07-24 10:40:25'),(7,'000006','2024-07-10',1,'2025-07-24 10:42:41','2025-07-24 11:05:57'),(8,'000007','2023-07-10',1,'2025-07-24 11:08:42','2025-07-24 11:11:02'),(9,'000008','2025-07-10',1,'2025-07-24 11:10:23','2025-09-08 20:25:25'),(10,'000009','2025-05-15',1,'2025-07-27 16:53:20','2025-07-27 16:53:20'),(11,'000111','2025-08-13',1,'2025-08-26 21:56:12','2025-10-10 14:11:26'),(12,'000012','2025-08-03',0,'2025-08-26 22:12:57','2026-03-18 15:11:18'),(13,'000010','2025-05-13',1,'2025-09-08 20:38:57','2025-09-08 20:38:57'),(14,'000011','2025-05-13',1,'2025-10-08 20:38:57','2025-10-08 20:38:57'),(15,'000013','2025-05-13',1,'2025-09-08 20:38:57','2025-09-08 20:38:57'),(16,'000014','2025-05-13',0,'2025-06-08 20:38:57','2026-03-18 15:11:18'),(17,'000015','2025-05-13',1,'2025-05-08 20:38:57','2025-05-08 20:38:57'),(18,'000016','2025-05-13',1,'2025-11-08 20:38:57','2025-11-08 20:38:57'),(19,'000017','2025-05-13',1,'2025-09-18 20:38:57','2025-09-18 20:38:57'),(20,'000018','2025-05-13',0,'2025-04-28 20:38:57','2026-03-18 15:11:18'),(21,'000019','2025-05-13',1,'2025-10-18 20:38:57','2025-10-18 20:38:57');
+INSERT INTO `students` VALUES (1,'xxx','2025-07-21',0,'2025-07-23 21:33:24','2026-03-18 15:11:18'),(2,'000001','2025-05-16',1,'2025-07-24 10:13:17','2025-07-24 10:13:17'),(3,'000002','2025-06-01',1,'2025-07-24 10:23:15','2025-07-24 10:23:15'),(4,'000003','2025-06-18',1,'2025-07-24 10:26:56','2026-07-23 03:37:51'),(5,'000004','2024-05-01',1,'2025-07-24 10:31:35','2025-07-24 10:31:35'),(6,'000005','2024-05-01',1,'2025-07-24 10:40:25','2025-07-24 10:40:25'),(7,'000006','2024-07-10',1,'2025-07-24 10:42:41','2025-07-24 11:05:57'),(8,'000007','2023-07-10',1,'2025-07-24 11:08:42','2025-07-24 11:11:02'),(9,'000008','2025-07-10',1,'2025-07-24 11:10:23','2025-09-08 20:25:25'),(10,'000009','2025-05-15',1,'2025-07-27 16:53:20','2025-07-27 16:53:20'),(11,'000111','2025-08-13',1,'2025-08-26 21:56:12','2025-10-10 14:11:26'),(12,'000012','2025-08-03',0,'2025-08-26 22:12:57','2026-03-18 15:11:18'),(13,'000010','2025-05-13',1,'2025-09-08 20:38:57','2025-09-08 20:38:57'),(14,'000011','2025-05-13',1,'2025-10-08 20:38:57','2025-10-08 20:38:57'),(15,'000013','2025-05-13',1,'2025-09-08 20:38:57','2025-09-08 20:38:57'),(16,'000014','2025-05-13',0,'2025-06-08 20:38:57','2026-03-18 15:11:18'),(17,'000015','2025-05-13',1,'2025-05-08 20:38:57','2025-05-08 20:38:57'),(18,'000016','2025-05-13',1,'2025-11-08 20:38:57','2025-11-08 20:38:57'),(19,'000017','2025-05-13',1,'2025-09-18 20:38:57','2025-09-18 20:38:57'),(20,'000018','2025-05-13',0,'2025-04-28 20:38:57','2026-03-18 15:11:18'),(21,'000019','2025-05-13',1,'2025-10-18 20:38:57','2025-10-18 20:38:57');
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `teacher_contact_info`
+--
+
+DROP TABLE IF EXISTS `teacher_contact_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `teacher_contact_info` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `teacher_info_id` int NOT NULL,
+  `contact_number` varchar(12) NOT NULL,
+  `email_id` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `teacher_info_id` (`teacher_info_id`),
+  CONSTRAINT `teacher_contact_info_ibfk_1` FOREIGN KEY (`teacher_info_id`) REFERENCES `teacher_details` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `teacher_contact_info`
+--
+
+LOCK TABLES `teacher_contact_info` WRITE;
+/*!40000 ALTER TABLE `teacher_contact_info` DISABLE KEYS */;
+/*!40000 ALTER TABLE `teacher_contact_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -205,16 +256,15 @@ DROP TABLE IF EXISTS `teacher_details`;
 CREATE TABLE `teacher_details` (
   `id` int NOT NULL AUTO_INCREMENT,
   `teacher_id` int NOT NULL,
-  `contact_number` varchar(12) NOT NULL,
-  `email_id` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `user_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `teacher_info_id` (`teacher_id`),
-  KEY `fk_tch_userid` (`user_id`),
-  CONSTRAINT `fk_tch_userid` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `teacher_details_ibfk_1` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `first_name` varchar(50) NOT NULL,
+  `middle_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `gender` enum('M','F','O') DEFAULT NULL,
+  `date_of_joining` date NOT NULL DEFAULT (curdate()),
+  `UPDATED_AT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `photo_url` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -223,7 +273,6 @@ CREATE TABLE `teacher_details` (
 
 LOCK TABLES `teacher_details` WRITE;
 /*!40000 ALTER TABLE `teacher_details` DISABLE KEYS */;
-INSERT INTO `teacher_details` VALUES (1,1,'06969696969','admin@email.com','gnsl',1),(3,10,'0111111111','demo@email.com',NULL,35);
 /*!40000 ALTER TABLE `teacher_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,19 +285,13 @@ DROP TABLE IF EXISTS `teachers`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `teachers` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(50) NOT NULL,
-  `middle_name` varchar(50) DEFAULT NULL,
-  `last_name` varchar(50) DEFAULT NULL,
-  `gender` enum('M','F','O') DEFAULT NULL,
-  `date_of_joining` date NOT NULL DEFAULT (curdate()),
-  `UPDATED_AT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `photo_url` varchar(255) DEFAULT NULL,
-  `employee_no` varchar(100) NOT NULL,
-  `is_teaching` tinyint DEFAULT '1',
+  `employee_code` varchar(8) NOT NULL,
   `subject` varchar(16) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `emp_code_unique` (`employee_no`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `is_teaching` tinyint(1) DEFAULT '1',
+  `CREATED_AT` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `UPDATED_AT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -257,7 +300,7 @@ CREATE TABLE `teachers` (
 
 LOCK TABLES `teachers` WRITE;
 /*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
-INSERT INTO `teachers` VALUES (1,'Bhakti','Dinesh','Patil','F','2019-05-19','2026-05-19 20:13:36',NULL,'000001',1,'Principal'),(10,'Vedika','Dinesh','Patil','F','2025-05-15','2026-05-23 15:23:08',NULL,'000002',1,'Maths');
+INSERT INTO `teachers` VALUES (1,'000001','Principal',1,'2026-03-29 17:41:47','2026-03-29 17:41:47');
 /*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -282,7 +325,7 @@ CREATE TABLE `user_details` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `user_details_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -291,7 +334,6 @@ CREATE TABLE `user_details` (
 
 LOCK TABLES `user_details` WRITE;
 /*!40000 ALTER TABLE `user_details` DISABLE KEYS */;
-INSERT INTO `user_details` VALUES (1,1,'Bhakti','Dinesh','Patil','F',NULL,'2026-05-17 09:46:38','2026-05-17 09:46:38','06969696969'),(2,35,'Vedika','Dinesh','Patil','F',NULL,'2026-05-23 15:23:08','2026-05-23 15:23:08','0111111111');
 /*!40000 ALTER TABLE `user_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,7 +354,7 @@ CREATE TABLE `users` (
   `is_deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`email_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,10 +363,9 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'3','admin@email.com','$2b$10$IZ49LMYucThudA7c.PX29e3iI50KtfpTqTcuEUSyQofLELbjM/uUC','2026-05-13 15:07:40','2026-05-16 19:30:23',0),(34,'3','admin2@email.com','$2b$10$RtdO6K2skrzNaUDdt8A6Ce5vGhFKeRWS5QUDS1aNG5fXUxFw406fy','2026-05-23 15:10:31','2026-05-23 15:10:31',0),(35,'3','demo@email.com','$2b$10$LkF2yzhZ7lTfvzZMMm8IZeX4/qgi/6yOoHXpTsCT8ivQMKf4hspIm','2026-05-23 15:23:08','2026-05-23 15:23:08',0);
+INSERT INTO `users` VALUES (1,'1','admin@email.com','$2b$10$H.hx3wGka.RnQaSeZ0raMuwYMd.TxpjxQ0xEfwrW3ZWSUtQ.MeIEG','2026-04-17 19:30:27','2026-04-17 19:31:23',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
-SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -335,4 +376,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-23 15:28:12
+-- Dump completed on 2026-07-25  2:51:55
