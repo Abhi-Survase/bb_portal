@@ -19,7 +19,10 @@ export default function Login_Signup_Page({ children }) {
       <div className="absolute top-4 right-4 z-10">
         <ModeToggle />
       </div>
-      <div className="relative z-10 w-full max-w-sm md:max-w-4xl">
+      <div
+        className="relative z-10 w-full max-w-sm md:max-w-4xl"
+        style={{ viewTransitionName: "auth-card" }}
+      >
         {children}
         <Toaster />
       </div>

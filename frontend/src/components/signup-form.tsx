@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Link, useNavigate } from "react-router";
 
 import axios from "axios";
+import { useTransitionNavigate } from "@/hooks/use-transition-navigate";
 
 const signupFormSchema = z
   .object({
@@ -51,6 +52,7 @@ export function SignupForm({
     resolver: zodResolver(signupFormSchema),
   });
   let navigate = useNavigate();
+  const transitionNavigate = useTransitionNavigate();
 
   async function onSubmitForm(signupData: signupFormValues) {
     setSubmit(true);
@@ -155,7 +157,25 @@ export function SignupForm({
               <FieldSeparator className="mt-1"></FieldSeparator>
               <FieldDescription className="mb-1 text-center">
                 Already have an account?{" "}
-                <Link to={`/${import.meta.env.VITE_LOGIN_URL}`}>Login</Link>
+                <Link
+                  to={`/${import.meta.env.VITE_LOGIN_URL}`}
+                  onClick={(e) => {
+                    if (
+                      e.defaultPrevented ||
+                      e.button !== 0 ||
+                      e.metaKey ||
+                      e.ctrlKey ||
+                      e.shiftKey ||
+                      e.altKey
+                    ) {
+                      return;
+                    }
+                    e.preventDefault();
+                    transitionNavigate(`/${import.meta.env.VITE_LOGIN_URL}`);
+                  }}
+                >
+                  Login
+                </Link>
               </FieldDescription>
             </FieldGroup>
           </form>

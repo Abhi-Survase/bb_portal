@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Link, useNavigate } from "react-router";
 
 import axios from "axios";
+import { useTransitionNavigate } from "@/hooks/use-transition-navigate";
 
 const loginFormSchema = z.object({
   email_id: z.string().min(4, { message: "Email or Username" }),
@@ -36,6 +37,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const [isSubmit, setSubmit] = React.useState(false);
   const navigateTo = useNavigate();
+  const transitionNavigate = useTransitionNavigate();
   type loginFormValues = z.infer<typeof loginFormSchema>;
   const {
     register,
@@ -133,7 +135,26 @@ export function LoginForm({
               <FieldSeparator className="mt-1"></FieldSeparator>
               <FieldDescription className="mb-1 text-center">
                 Don&apos;t have an account?{" "}
-                <Link to={`/${import.meta.env.VITE_SIGNUP_URL}`}>Sign up</Link>
+                <Link
+                  to={`/${import.meta.env.VITE_SIGNUP_URL}`}
+                  onClick={(e) => {
+                    // Let modified clicks (new tab, etc.) behave normally.
+                    if (
+                      e.defaultPrevented ||
+                      e.button !== 0 ||
+                      e.metaKey ||
+                      e.ctrlKey ||
+                      e.shiftKey ||
+                      e.altKey
+                    ) {
+                      return;
+                    }
+                    e.preventDefault();
+                    transitionNavigate(`/${import.meta.env.VITE_SIGNUP_URL}`);
+                  }}
+                >
+                  Sign up
+                </Link>
               </FieldDescription>
             </FieldGroup>
           </form>
