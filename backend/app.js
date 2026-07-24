@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import authenticateToken from "./utils/authenticateToken.js";
 import userRoutes from "./routes/userRoutes.js";
 import teacherRoutes from "./routes/teacherRoutes.js";
+import eventRoutes from "./routes/eventRoutes.js";
 
 const app = express();
 
@@ -29,6 +30,8 @@ app.get("/favicon.ico", (req, res) => {
 });
 
 app.use("/dashboard", authenticateToken, dashboardRoutes);
+
+app.use("/events", authenticateToken, eventRoutes);
 
 app.use("/student", authenticateToken, studentRoutes);
 
