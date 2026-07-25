@@ -1,0 +1,497 @@
+{
+  "info": {
+    "_postman_id": "1d56b3ab-5e46-4338-9646-9a179ca6f0b9",
+    "name": "Blossom Book Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "46900292",
+    "_collection_link": "https://go.postman.co/collection/46900292-1d56b3ab-5e46-4338-9646-9a179ca6f0b9?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "student",
+      "item": [
+        {
+          "name": "active-students",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{supabase_service_role_api_key_1ar6}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{bbp_backend_url}}/student/active-students",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "student",
+                "active-students"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-student-by-admissionNo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{bbp_backend_url}}/student/get-student-by-admissionNo/000003",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "student",
+                "get-student-by-admissionNo",
+                "000003"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "add-student",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"admission_no\": \"000009\",\r\n    \"first_name\": \"Anupama\",\r\n    \"middle_name\": \"Rana\",\r\n    \"mother_name\": \"Sabu\",\r\n    \"last_name\": \"DCruz\",\r\n    \"d_o_b\": \"2020-12-15\",\r\n    \"gender\": \"F\",\r\n    \"date_of_admission\": \"2025-05-15\",\r\n    \"contact_number\": \"8958356578\",\r\n    \"parent_email\": \"rana.dcruz-1421@gmail.com\",\r\n    \"address\": \"Apt. 396 Jl. Kartini No. 17, Mamberamo Tengah, Srinagar, Tamil Nadu, 33755\",\r\n    \"city\": \"Srinagar\",\r\n    \"state\": \"Tamil Nadu\",\r\n    \"pincode\": \"033755\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bbp_backend_url}}/student/add-student",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "student",
+                "add-student"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "student-details",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"admission_no\": \"000009\",\r\n    \"first_name\": \"Anupama\",\r\n    \"middle_name\": \"Rana\",\r\n    \"mother_name\": \"Sabu\",\r\n    \"last_name\": \"DCruz\",\r\n    \"d_o_b\": \"2020-12-15\",\r\n    \"gender\": \"F\",\r\n    \"date_of_admission\": \"2025-05-15\",\r\n    \"contact_number\": \"8958356578\",\r\n    \"parent_email\": \"rana.dcruz-1421@gmail.com\",\r\n    \"address\": \"Apt. 396 Jl. Kartini No. 17, Mamberamo Tengah, Srinagar, Tamil Nadu, 33755\",\r\n    \"city\": \"Srinagar\",\r\n    \"state\": \"Tamil Nadu\",\r\n    \"pincode\": \"033755\"\r\n}"
+            },
+            "url": {
+              "raw": "{{bbp_backend_url}}/student/student-details?searchParam=2&detailKeyword=anu",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "student",
+                "student-details"
+              ],
+              "query": [
+                {
+                  "key": "searchParam",
+                  "value": "2"
+                },
+                {
+                  "key": "detailKeyword",
+                  "value": "anu"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateStudentDetails",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": 4,\r\n    \"admission_no\": \"000003\",\r\n    \"sd_id\": 4,\r\n    \"sci_id\": 4,\r\n    \"sad_id\": 4,\r\n    \"first_name\": \"Rakesh\",\r\n    \"father_name\": \"Dhananjay\",\r\n    \"mother_name\": \"Sarika\",\r\n    \"last_name\": \"Gupta\",\r\n    \"date_of_admission\": \"2025-06-18 18:30:00.000\",\r\n    \"date_of_birth\": \"2021-04-02 18:30:00.000\",\r\n    \"gender\": \"M\",\r\n    \"disability\": \"None\",\r\n    \"is_active\": 1,\r\n    \"photo_url\": null,\r\n    \"parent_contact_number\": \"7316485164\",\r\n    \"parent_email\": null,\r\n    \"permanent_address\": \"E-8,0/1, Vardhaman Market, Sector 1, Vashi, Navi Mumbai\",\r\n    \"city\": \"Vashi\",\r\n    \"state\": \"Maharashtra\",\r\n    \"pincode\": \"400705\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bbp_backend_url}}/student/update-student-details",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "student",
+                "update-student-details"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "dashboard",
+      "item": [
+        {
+          "name": "latest-student-list",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{bbp_backend_url}}/dashboard/latest-student-list",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "dashboard",
+                "latest-student-list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "student-summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{bbp_backend_url}}/dashboard/student-summary",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "dashboard",
+                "student-summary"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "teachers",
+      "item": [
+        {
+          "name": "teacher-list",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "localhost:8810/teacher/teacher-list",
+              "host": [
+                "localhost"
+              ],
+              "port": "8810",
+              "path": [
+                "teacher",
+                "teacher-list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "add-teacher",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employee_no\": \"000002\",\n    \"subject\": \"Maths\",\n    \"first_name\": \"Vedika\",\n    \"middle_name\": \"Dinesh\",\n    \"last_name\": \"Patil\",\n    \"date_of_joining\": \"2025-05-15\",\n    \"email_id\":\"demo@email.com\",\n    \"password\":\"demopassword\",\n    \"gender\": \"F\",\n    \"contact_number\":\"0111111111\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8810/teacher/add-teacher",
+              "host": [
+                "localhost"
+              ],
+              "port": "8810",
+              "path": [
+                "teacher",
+                "add-teacher"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "users",
+      "item": [
+        {
+          "name": "users-list",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "localhost:8810/user/users-list",
+              "host": [
+                "localhost"
+              ],
+              "port": "8810",
+              "path": [
+                "user",
+                "users-list"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email_id\": \"admin@email.com\",\r\n    \"password\": \"adminadmin\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bbp_backend_url}}/auth/login",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "signup",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email_id\": \"admin2@email.com\",\r\n    \"password\": \"adminadmin\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bbp_backend_url}}/auth/signup",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "events",
+      "item": [
+        {
+          "name": "All Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{bbp_backend_url}}/calendar/events/all?month=6&year=2026",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "calendar",
+                "events",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "6"
+                },
+                {
+                  "key": "year",
+                  "value": "2026"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Event",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Scooby\",\r\n    \"description\": \"Dooby\",\r\n    \"event_date\": \"2026-06-18\",\r\n    \"event_time\": null,\r\n    \"is_all_day\": 1,\r\n    \"color\": \"bg-red-500\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bbp_backend_url}}/calendar/events/add",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "calendar",
+                "events",
+                "add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Dashboard Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{bbp_backend_url}}/calendar/dashboard",
+              "host": [
+                "{{bbp_backend_url}}"
+              ],
+              "path": [
+                "calendar",
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "bbp_backend_url",
+      "value": ""
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    }
+  ]
+}

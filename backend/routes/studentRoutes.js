@@ -12,7 +12,7 @@ router.get("/active-students", async (req, res) => {
   );
   const offset = (page - 1) * limit;
   // console.log(page, limit, offset);
-  const responseDelay = 2000;
+  const responseDelay = 1000;
   try {
     const dataQuery =
       "SELECT s.id, s.admission_no, sd.first_name, sci.father_name, sd.last_name, s.date_of_admission, sd.date_of_birth, sd.gender, sd.photo_url, sci.parent_contact_number FROM school_metadata.students s INNER JOIN school_metadata.student_details sd ON s.id = sd.student_id INNER JOIN school_metadata.student_contact_info sci ON sd.id = sci.student_detail_id WHERE s.is_active = 1 ORDER BY s.date_of_admission desc, s.id asc LIMIT ? OFFSET ?";
@@ -183,7 +183,8 @@ router.get("/get-student-by-admissionNo/:admission_no", async (req, res) => {
         student_admissionNo,
     );
     // const q = `SELECT * FROM school_metadata.students WHERE admission_no = ${student_admissionNo}`; //admission_no = ?`;
-    const q = `SELECT * FROM school_metadata.students WHERE admission_no = ?`;
+    const q =
+      "SELECT s.id, s.admission_no, sd.id as sd_id, sci.id as sci_id, sad.id as sad_id, sd.first_name, sci.father_name, sci.mother_name, sd.last_name, s.date_of_admission, sd.date_of_birth, sd.gender, sd.disability, s.is_active, sd.photo_url, sci.parent_contact_number, sci.parent_email, sad.permanent_address, sad.city, sad.state, sad.pincode FROM school_metadata.students s INNER JOIN school_metadata.student_details sd ON s.id = sd.student_id INNER JOIN school_metadata.student_contact_info sci ON sd.id = sci.student_detail_id INNER JOIN school_metadata.student_address_details sad ON sci.id = sad.student_contact_id WHERE s.admission_no = ?";
     // const [output] = await student_metadata_db.query(q); //query(q, [student_admissionNo]);
     const [output] = await student_metadata_db.query(q, [student_admissionNo]);
     if (output.length === 0) {
@@ -197,16 +198,17 @@ router.get("/get-student-by-admissionNo/:admission_no", async (req, res) => {
     logger.info(
       "getStudentByAdmissionId | Response =>> " + JSON.stringify(output),
     );
-    return res.status(200).json(output);
+    setTimeout(() => res.status(200).json(output), 500);
+    // return res.status(200).json(output);
   } catch (err) {
     let status = 500;
     let message = err.message;
     if (err.code == "ER_BAD_FIELD_ERROR") {
       status = 400;
-      message = "Enter Valid Admission Number!";
+      message = "Invalid Admission Number!";
     } else {
       status = 400;
-      message = "Invalid Input!";
+      message = "Invalid Reqest Received!";
     }
     logger.error("getStudentByAdmissionId | Exception =>> " + err.stack);
     return res.status(status).json({
@@ -238,7 +240,7 @@ router.post("/add-student", async (req, res) => {
       pincode: req.body.pincode,
       disability: req.body.disability,
     };
-    logger.info("addStudent | Request =>> " + JSON.stringify(values));
+    // logger.info("addStudent | Request =>> " + JSON.stringify(values));
     const studentQuery =
       "INSERT INTO students (`admission_no`,`date_of_admission`) VALUES (?)";
     const studentDetailsQuery =
@@ -246,7 +248,7 @@ router.post("/add-student", async (req, res) => {
     const studentContactInfoQuery =
       "INSERT INTO student_contact_info (`student_detail_id`,`father_name`,`mother_name`,`parent_contact_number`,`parent_email`) VALUES (?)";
     const studentAddressDetailsQuery =
-      "INSERT INTO student_address_details (`contact_id`,`permanent_address`,`city`,`state`,`pincode`) VALUES (?)";
+      "INSERT INTO student_address_details (`student_contact_id`,`permanent_address`,`city`,`state`,`pincode`) VALUES (?)";
     logger.info(
       "addStudent | studentQuery =>> " +
         studentQuery +
@@ -376,18 +378,160 @@ router.post("/add-student", async (req, res) => {
   }
 });
 
-router.patch("/update-student-details", async (req, res) => {
+router.put("/update-student-details", async (req, res) => {
+  const dbConnection = await student_metadata_db.getConnection();
   try {
-    const requestDetails = req.query ?? "No Request Details Received";
-    const output = "Dummy!";
-    logger.error("updateStudentDetails | Request =>>" + requestDetails);
-    logger.error(
-      "updateStudentDetails | Response =>>" + JSON.stringify(output),
+    await dbConnection.beginTransaction();
+    const values = {
+      id: req.body.id,
+      admission_no: req.body.admission_no,
+      sd_id: req.body.sd_id,
+      sci_id: req.body.sci_id,
+      sad_id: req.body.sad_id,
+      date_of_admission: req.body.date_of_admission,
+      first_name: req.body.first_name,
+      father_name: req.body.father_name,
+      mother_name: req.body.mother_name,
+      last_name: req.body.last_name,
+      date_of_birth: req.body.date_of_birth,
+      gender: req.body.gender,
+      parent_contact_number: req.body.parent_contact_number,
+      parent_email: req.body.parent_email,
+      permanent_address: req.body.permanent_address,
+      photo_url: req.body.photo_url,
+      city: req.body.city,
+      state: req.body.state,
+      pincode: req.body.pincode,
+      disability: req.body.disability,
+      is_active: req.body.is_active,
+    };
+    // logger.info("updateStudentDetail | Request =>> " + JSON.stringify(values));
+    const studentQuery =
+      "UPDATE students SET `admission_no` = ? , `date_of_admission` = ? WHERE `id` = ?";
+    const studentDetailsQuery =
+      "UPDATE student_details SET `first_name` = ? ,`last_name` = ? ,`date_of_birth` = ? ,`gender` = ? ,`disability` = ? ,`photo_url` = ? WHERE `id` = ?";
+    const studentContactInfoQuery =
+      "UPDATE student_contact_info SET `father_name` = ? ,`mother_name` = ? ,`parent_contact_number` = ? ,`parent_email` = ? WHERE `id` = ?";
+    const studentAddressDetailsQuery =
+      "UPDATE student_address_details SET `permanent_address` = ? ,`city` = ? ,`state` = ? ,`pincode` = ? WHERE `id` = ?";
+    logger.info(
+      "updateStudent | studentQuery =>> " +
+        studentQuery +
+        " | student data =>> " +
+        values.admission_no +
+        "," +
+        values.date_of_admission +
+        "," +
+        values.id,
     );
-    return res.status(201).json("Student record updated Successfully!");
+    const studentResult = await dbConnection.query(studentQuery, [
+      values.admission_no,
+      values.date_of_admission,
+      values.id,
+    ]);
+    logger.info(JSON.stringify(studentResult));
+    logger.info(
+      "updateStudentDetail | studentDetailsQuery =>> " +
+        studentDetailsQuery +
+        " | student data =>> " +
+        values.first_name +
+        "," +
+        values.last_name +
+        "," +
+        values.date_of_birth +
+        "," +
+        values.gender +
+        "," +
+        values.disability +
+        "," +
+        values.photo_url +
+        "," +
+        values.sd_id,
+    );
+    const studentDetailsResult = await dbConnection.query(studentDetailsQuery, [
+      values.first_name,
+      values.last_name,
+      values.date_of_birth,
+      values.gender,
+      values.disability,
+      values.photo_url,
+      values.sd_id,
+    ]);
+    logger.info(JSON.stringify(studentDetailsResult));
+    logger.info(
+      "updateStudentDetail | studentContactInfoQuery =>> " +
+        studentContactInfoQuery +
+        " | student data =>> " +
+        values.father_name +
+        "," +
+        values.mother_name +
+        "," +
+        values.parent_contact_number +
+        "," +
+        values.parent_email +
+        "," +
+        values.sd_id,
+    );
+    const studentContactInfoResult = await dbConnection.query(
+      studentContactInfoQuery,
+      [
+        values.father_name,
+        values.mother_name,
+        values.parent_contact_number,
+        values.parent_email,
+        values.sci_id,
+      ],
+    );
+    logger.info(JSON.stringify(studentContactInfoResult));
+    logger.info(
+      "updateStudentDetail | studentAddressDetailsQuery =>> " +
+        studentAddressDetailsQuery +
+        " | student data =>> " +
+        values.permanent_address +
+        "," +
+        values.city +
+        "," +
+        values.state +
+        "," +
+        values.pincode +
+        "," +
+        values.sad_id,
+    );
+    const studentAddressDetailsResult = await dbConnection.query(
+      studentAddressDetailsQuery,
+      [
+        values.permanent_address,
+        values.city,
+        values.state,
+        values.pincode,
+        values.sad_id,
+      ],
+    );
+    logger.info(JSON.stringify(studentContactInfoResult));
+    await dbConnection.commit();
+    logger.info(
+      "updateStudentDetail | admission_no: " +
+        req.body.admission_no +
+        " | Student details updated!",
+    );
+    dbConnection.release();
+    return res.status(201).json({
+      status: "Success",
+      message: "Student details updated!",
+    });
   } catch (err) {
-    logger.error("updateStudentDetails | Exception =>>" + err.stack);
-    return res.status(501).json({ message: "Internal Server Error" });
+    await dbConnection.rollback();
+    dbConnection.release();
+    logger.error(
+      "updateStudentDetail | admission_no: " +
+        req.body.admission_no +
+        " | Exception =>> " +
+        err.stack,
+    );
+    res.status(400).json({
+      status: "Failed",
+      error: "Something went wrong",
+    });
   }
 });
 

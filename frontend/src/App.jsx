@@ -4,7 +4,6 @@ import {
   AllStudentPage,
   AddStudentPage,
   FindStudentPage,
-  UpdateStudentPage,
   Dashboard,
   ShowUsersPage,
   AddUserPage,
@@ -63,10 +62,6 @@ function App() {
               <Route
                 path={import.meta.env.VITE_ADD_STUDENT_URL}
                 element={<AddStudentPage />}
-              />
-              <Route
-                path={import.meta.env.VITE_UPDATE_STUDENT_URL}
-                element={<UpdateStudentPage />}
               />
             </Route>
             <Route path={import.meta.env.VITE_ADMIN_URL}>

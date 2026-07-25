@@ -5,32 +5,17 @@ import {
   Card,
   CardAction,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import {
   Pencil,
   Search,
+  UserPlus,
   ArrowLeft,
   ArrowRight,
   ArrowLeftToLine,
   ArrowRightToLine,
-  LayoutDashboard,
-  Users,
-  UserPlus,
-  TrendingDown,
-  Bell,
-  GraduationCap,
-  FileText,
-  Settings,
-  ChevronRight,
-  TrendingUp,
-  MoreHorizontal,
-  List,
-  Edit,
-  Moon,
 } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import {
@@ -41,17 +26,19 @@ import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Spinner } from "@/components/ui/spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import UserAvatar from "../../components/user-avatar";
+import { EditStudentSheet } from "../../components/edit-student-sheet";
 
 import axiosInstance from "../../utils/axiosInstance";
+
+// Same accent cycle used on the dashboard's Recent Admissions table, so a
+// student without a photo still gets a distinct, on-brand initials avatar
+const avatarPalette = [
+  { bg: "bg-blue-100", text: "text-blue-700" },
+  { bg: "bg-amber-100", text: "text-amber-700" },
+  { bg: "bg-orange-100", text: "text-orange-700" },
+  { bg: "bg-violet-100", text: "text-violet-700" },
+];
 
 function AllStudentPage() {
   const [studentData, setStudentData] = useState([]);
@@ -69,6 +56,12 @@ function AllStudentPage() {
   function handlePageChange(newPage) {
     console.log(newPage);
     setPaginationData((prevData) => ({ ...prevData, current_page: newPage }));
+  }
+
+  const [editingAdmissionNo, setEditingAdmissionNo] = useState(null);
+
+  function refreshCurrentPage() {
+    setPaginationData((prevData) => ({ ...prevData }));
   }
 
   useEffect(() => {
@@ -99,20 +92,15 @@ function AllStudentPage() {
     fetchAllStudentData();
   }, [paginationData]);
 
-  function handleEditButtonClick() {
-    console.log("Edit Button Clicked!");
-  }
-
   return (
     <div className="flex-1 flex flex-col bg-background">
       <header className="h-16 bg-background border-b flex items-center justify-between px-8 sticky top-0 z-10">
-        <h1 className="text-xl font-semibold --foreground flex items-center gap-4">
+        <h1 className="text-xl font-semibold text-foreground flex items-center gap-4">
           <SidebarTrigger />
           All Active Students
         </h1>
-        <div className="flex items-center gap-4">
-          {/* Global Search Bar (Replaces 'Find Student' Page) */}
-          <div className="relative hidden sm:block group">
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-3">
             <Link
               to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
                 import.meta.env.VITE_FIND_STUDENT_URL
@@ -121,6 +109,16 @@ function AllStudentPage() {
               <Button variant="muted_outline">
                 <Search size={16} />
                 Search Students
+              </Button>
+            </Link>
+            <Link
+              to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
+                import.meta.env.VITE_ADD_STUDENT_URL
+              }`}
+            >
+              <Button variant="muted_outline">
+                <UserPlus size={16} />
+                Add Student
               </Button>
             </Link>
           </div>
@@ -136,61 +134,70 @@ function AllStudentPage() {
           </p>
         )}
         {error && (
-          <p className="col-span-full text-center text-red-500 py-10">
+          <p className="col-span-full text-center text-destructive py-10">
             Error: {error}
           </p>
         )}
         {!loading &&
           !error &&
-          studentData.map((data) => (
-            <Card key={data.id} className="p-3 !gap-1 transition">
-              <CardHeader className="pb-1">
-                <img
-                  className="mx-start"
-                  src={
-                    data.photo_url
-                      ? data.photo_url
-                      : data.gender === "F"
-                        ? "/f_icon.png"
-                        : "/m_icon.png"
-                  }
-                  alt={`${data.first_name} ${data.last_name} Photo`}
-                  height={90}
-                  width={90}
-                />
-                <CardAction>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="top-2 right-2 "
-                    onClick={handleEditButtonClick}
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </Button>
-                </CardAction>
-                <CardTitle className="text-base">
-                  {`${data.first_name} ${data.father_name} ${data.last_name}`}
-                </CardTitle>
-                <p className="text-base">{data.admission_no}</p>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <p className="read-the-docs text-sm">
-                  {data.gender === "M" ? "Male" : "Female"}
-                </p>
-                <p className="read-the-docs text-sm">
-                  DOB:{" "}
-                  {new Date(data.date_of_birth).toISOString().split("T")[0]}
-                </p>
-                <p className="read-the-docs text-sm">
-                  DOA:
-                  {new Date(data.date_of_admission).toISOString().split("T")[0]}
-                </p>
-                <p className="read-the-docs text-sm">
-                  Mob: {data.parent_contact_number}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+          studentData.map((data, index) => {
+            const colors = avatarPalette[index % avatarPalette.length];
+            const initials = `${data.first_name?.[0] ?? ""}${
+              data.last_name?.[0] ?? ""
+            }`.toUpperCase();
+            return (
+              <Card key={data.id} className="p-3 !gap-1 transition">
+                <CardHeader className="pb-1">
+                  <Avatar className="h-[90px] w-[90px] rounded-lg">
+                    <AvatarImage
+                      src={data.photo_url}
+                      alt={`${data.first_name} ${data.last_name} Photo`}
+                      className="rounded-lg object-cover"
+                    />
+                    <AvatarFallback
+                      className={`${colors.bg} ${colors.text} rounded-lg text-lg font-semibold`}
+                    >
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <CardAction>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="top-2 right-2 "
+                      onClick={() => setEditingAdmissionNo(data.admission_no)}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                  </CardAction>
+                  <CardTitle className="text-base">
+                    {`${data.first_name} ${data.father_name} ${data.last_name}`}
+                  </CardTitle>
+                  <p className="text-base">{data.admission_no}</p>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="read-the-docs text-sm">
+                    {data.gender === "M" ? "Male" : "Female"}
+                  </p>
+                  <p className="read-the-docs text-sm">
+                    DOB:{" "}
+                    {new Date(data.date_of_birth).toISOString().split("T")[0]}
+                  </p>
+                  <p className="read-the-docs text-sm">
+                    DOA:
+                    {
+                      new Date(data.date_of_admission)
+                        .toISOString()
+                        .split("T")[0]
+                    }
+                  </p>
+                  <p className="read-the-docs text-sm">
+                    Mob: {data.parent_contact_number}
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
       </div>
       <ButtonGroup className="px-6 pb-1">
         <ButtonGroup>
@@ -265,6 +272,12 @@ function AllStudentPage() {
           </Button>
         </ButtonGroup>
       </ButtonGroup>
+
+      <EditStudentSheet
+        admissionNo={editingAdmissionNo}
+        onOpenChange={(open) => !open && setEditingAdmissionNo(null)}
+        onSuccess={refreshCurrentPage}
+      />
     </div>
   );
 }

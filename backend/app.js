@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import authenticateToken from "./utils/authenticateToken.js";
 import userRoutes from "./routes/userRoutes.js";
 import teacherRoutes from "./routes/teacherRoutes.js";
+import eventRoutes from "./routes/eventRoutes.js";
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // only allow this origin
+    origin: ["http://localhost:5173", "http://localhost:4173"], // only allow this origin
   }),
 );
 
@@ -29,6 +30,8 @@ app.get("/favicon.ico", (req, res) => {
 });
 
 app.use("/dashboard", authenticateToken, dashboardRoutes);
+
+app.use("/calendar", authenticateToken, eventRoutes);
 
 app.use("/student", authenticateToken, studentRoutes);
 

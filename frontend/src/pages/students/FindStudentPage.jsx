@@ -2,33 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import {
-  LayoutDashboard,
-  Users,
-  UserPlus,
-  Search,
-  TrendingDown,
-  Bell,
-  GraduationCap,
-  FileText,
-  Settings,
-  ChevronRight,
-  TrendingUp,
-  MoreHorizontal,
-  Pencil,
-  List,
-  Edit,
-  Moon,
-} from "lucide-react";
+import { Search, ChevronRight, Pencil, List, UserPlus } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import {
   Card,
   CardAction,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,22 +35,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import UserAvatar from "../../components/user-avatar";
+import { EditStudentSheet } from "../../components/edit-student-sheet";
 
 import axiosInstance from "../../utils/axiosInstance";
+
+// Same accent cycle used on the dashboard table and the student directory,
+// so a result without a photo still gets a distinct, on-brand avatar.
+const avatarPalette = [
+  { bg: "bg-blue-100", text: "text-blue-700" },
+  { bg: "bg-amber-100", text: "text-amber-700" },
+  { bg: "bg-orange-100", text: "text-orange-700" },
+  { bg: "bg-violet-100", text: "text-violet-700" },
+];
 
 function FindStudentPage() {
   const [studentData, setStudentData] = useState("");
   const [studentSearchParam, setStudentSearchParam] =
     useState("Admission Number");
+  const [editingAdmissionNo, setEditingAdmissionNo] = useState(null);
+  const [lastSearchValue, setLastSearchValue] = useState(null);
   const navigateTo = useNavigate();
   const SEARCH_FIELDS = {
     "Admission Number": 0,
@@ -118,6 +104,7 @@ function FindStudentPage() {
 
   async function onSubmitHandler(value) {
     // console.log(value);
+    setLastSearchValue(value);
     const inputValue = value.searchValue;
     const apiUrl = `${import.meta.env.VITE_SEARCH_STUDENT_API}?searchParam=${SEARCH_FIELDS[studentSearchParam]}&detailKeyword=${inputValue}`;
     console.log(apiUrl);
@@ -151,6 +138,10 @@ function FindStudentPage() {
     setStudentSearchParam(value);
     form.reset({ searchValue: "" });
   };
+
+  function refreshSearchResults() {
+    if (lastSearchValue) onSubmitHandler(lastSearchValue);
+  }
   // const dataPlaceHolderText = "Hit Search!";
   // let placeHolderText = "Enter Admission Number";
   return (
@@ -161,6 +152,24 @@ function FindStudentPage() {
           Search for Student
         </h1>
         <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-3">
+            <Link to={`/${import.meta.env.VITE_ALL_STUDENT_URL}`}>
+              <Button variant="muted_outline">
+                <List size={16} />
+                All Students
+              </Button>
+            </Link>
+            <Link
+              to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
+                import.meta.env.VITE_ADD_STUDENT_URL
+              }`}
+            >
+              <Button variant="muted_outline">
+                <UserPlus size={16} />
+                Add Student
+              </Button>
+            </Link>
+          </div>
           <ModeToggle />
           <UserAvatar />
         </div>
@@ -185,7 +194,7 @@ function FindStudentPage() {
                       value={studentSearchParam}
                       onValueChange={handleSearchParamChange}
                     >
-                      <SelectTrigger className="w-full max-w-48 !text-primary-foreground">
+                      <SelectTrigger className="w-full max-w-48">
                         <SelectValue placeholder="Admission Number" />
                       </SelectTrigger>
                       <SelectContent>
@@ -243,62 +252,80 @@ function FindStudentPage() {
 
         {studentData && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
-            {studentData.map((student) => (
-              <Card
-                key={student.id}
-                className="relative w-full p-6 transition shadow-md rounded-2xl hover:shadow-lg"
-              >
-                <CardAction className="absolute top-4 right-4 z-10">
-                  <Button variant="ghost" size="icon">
-                    <Pencil className="w-4 h-4" />
-                  </Button>
-                </CardAction>
+            {studentData.map((student, index) => {
+              const colors = avatarPalette[index % avatarPalette.length];
+              const initials = `${student.first_name?.[0] ?? ""}${
+                student.last_name?.[0] ?? ""
+              }`.toUpperCase();
+              return (
+                <Card
+                  key={student.id}
+                  className="relative w-full p-6 transition shadow-md rounded-2xl hover:shadow-lg"
+                >
+                  <CardAction className="absolute top-4 right-4 z-10">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() =>
+                        setEditingAdmissionNo(student.admission_no)
+                      }
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                  </CardAction>
 
-                <CardHeader className="flex flex-col items-center text-center">
-                  <img
-                    className="object-cover w-24 h-24 mb-4 rounded-full"
-                    src={
-                      student.photo_url
-                        ? student.photo_url
-                        : student.gender === "F"
-                          ? "/f_icon.png"
-                          : "/m_icon.png"
-                    }
-                    alt={`${student.first_name} ${student.last_name}`}
-                  />
-                  <CardTitle className="text-xl">
-                    {`${student.first_name} ${student.father_name || ""} ${student.last_name}`}
-                  </CardTitle>
-                  <CardDescription>
-                    Contact: {student.parent_contact_number}
-                  </CardDescription>
-                </CardHeader>
+                  <CardHeader className="flex flex-col items-center text-center">
+                    <Avatar className="w-24 h-24 mb-4">
+                      <AvatarImage
+                        src={student.photo_url}
+                        alt={`${student.first_name} ${student.last_name}`}
+                      />
+                      <AvatarFallback
+                        className={`${colors.bg} ${colors.text} text-2xl font-semibold`}
+                      >
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <CardTitle className="text-xl">
+                      {`${student.first_name} ${student.father_name || ""} ${student.last_name}`}
+                    </CardTitle>
+                    <CardDescription>
+                      Contact: {student.parent_contact_number}
+                    </CardDescription>
+                  </CardHeader>
 
-                <CardContent className="flex flex-col items-center gap-2 text-sm text-muted-foreground">
-                  <p className="font-medium text-foreground">
-                    Admission No: {student.admission_no}
-                  </p>
-                  <p>Gender: {student.gender === "M" ? "Male" : "Female"}</p>
-                  <p>
-                    DOB:{" "}
-                    {student.date_of_birth &&
-                      new Date(student.date_of_birth)
-                        .toISOString()
-                        .split("T")[0]}
-                  </p>
-                  <p>
-                    DOA:{" "}
-                    {student.date_of_admission &&
-                      new Date(student.date_of_admission)
-                        .toISOString()
-                        .split("T")[0]}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+                  <CardContent className="flex flex-col items-center gap-2 text-sm text-muted-foreground">
+                    <p className="font-medium text-foreground">
+                      Admission No: {student.admission_no}
+                    </p>
+                    <p>Gender: {student.gender === "M" ? "Male" : "Female"}</p>
+                    <p>
+                      DOB:{" "}
+                      {student.date_of_birth &&
+                        new Date(student.date_of_birth)
+                          .toISOString()
+                          .split("T")[0]}
+                    </p>
+                    <p>
+                      DOA:{" "}
+                      {student.date_of_admission &&
+                        new Date(student.date_of_admission)
+                          .toISOString()
+                          .split("T")[0]}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
       </main>
+
+      <EditStudentSheet
+        admissionNo={editingAdmissionNo}
+        onOpenChange={(open) => !open && setEditingAdmissionNo(null)}
+        onSuccess={refreshSearchResults}
+      />
     </div>
   );
 }

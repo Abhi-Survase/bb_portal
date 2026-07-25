@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Link, useNavigate } from "react-router";
 
 import axios from "axios";
+import { useTransitionNavigate } from "@/hooks/use-transition-navigate";
 
 const signupFormSchema = z
   .object({
@@ -51,6 +52,7 @@ export function SignupForm({
     resolver: zodResolver(signupFormSchema),
   });
   let navigate = useNavigate();
+  const transitionNavigate = useTransitionNavigate();
 
   async function onSubmitForm(signupData: signupFormValues) {
     setSubmit(true);
@@ -82,7 +84,7 @@ export function SignupForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-7" onSubmit={handleSubmit(onSubmitForm)}>
+          <form className="p-6 md:p-8" onSubmit={handleSubmit(onSubmitForm)}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Welcome User</h1>
@@ -94,7 +96,7 @@ export function SignupForm({
                 <FieldLabel htmlFor="email">
                   Email
                   {errors?.email_id && (
-                    <span className="text-xs text-red-600">
+                    <span className="text-xs text-destructive">
                       {errors.email_id.message}
                     </span>
                   )}
@@ -114,7 +116,7 @@ export function SignupForm({
                   <FieldLabel htmlFor="password">
                     Password
                     {errors?.password && (
-                      <span className="text-xs text-red-600">
+                      <span className="text-xs text-destructive">
                         {errors.password.message}
                       </span>
                     )}
@@ -133,7 +135,7 @@ export function SignupForm({
                   <FieldLabel htmlFor="confirm_password">
                     Confirm Password
                     {errors?.confirm_password && (
-                      <span className="text-xs text-red-600">
+                      <span className="text-xs text-destructive">
                         {errors.confirm_password.message}
                       </span>
                     )}
@@ -155,20 +157,38 @@ export function SignupForm({
               <FieldSeparator className="mt-1"></FieldSeparator>
               <FieldDescription className="mb-1 text-center">
                 Already have an account?{" "}
-                <Link to={`/${import.meta.env.VITE_LOGIN_URL}`}>Login</Link>
+                <Link
+                  to={`/${import.meta.env.VITE_LOGIN_URL}`}
+                  onClick={(e) => {
+                    if (
+                      e.defaultPrevented ||
+                      e.button !== 0 ||
+                      e.metaKey ||
+                      e.ctrlKey ||
+                      e.shiftKey ||
+                      e.altKey
+                    ) {
+                      return;
+                    }
+                    e.preventDefault();
+                    transitionNavigate(`/${import.meta.env.VITE_LOGIN_URL}`);
+                  }}
+                >
+                  Login
+                </Link>
               </FieldDescription>
             </FieldGroup>
           </form>
           <div className="relative hidden md:block">
             <img
-              src="/signup3.webp"
+              src="/t_login.webp"
               alt="Welcome"
               className="absolute inset-0 h-full w-full object-cover"
             />
           </div>
         </CardContent>
       </Card>
-      <FieldDescription className="px-6 text-center text-foreground/85 dark:text-background/85">
+      <FieldDescription className="px-6 text-center text-foreground/85">
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
       </FieldDescription>
