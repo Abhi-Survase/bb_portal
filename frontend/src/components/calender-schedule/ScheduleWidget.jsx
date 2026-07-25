@@ -21,8 +21,19 @@ export default function ScheduleWidget() {
         const response = await axiosInstance.get(apiUrl);
         const { today, days } = response.data.data;
         setTodayString(today);
+
+        // The backend only returns dates that have events, so if today has
+        // none, it won't be in `days` at all. Insert a placeholder so it
+        // still renders (with "No Events") and can be scrolled to.
+        const hasToday = days.some((day) => day.date === today);
+        const daysWithToday = hasToday
+          ? days
+          : [...days, { date: today, events: [] }].sort((a, b) =>
+              a.date.localeCompare(b.date),
+            );
+
         setScheduleData(
-          days.map((day) => {
+          daysWithToday.map((day) => {
             const d = parseISO(day.date);
             return {
               ...day,
@@ -94,6 +105,11 @@ export default function ScheduleWidget() {
 
                       {/* Right Column: Events */}
                       <div className="flex-1 flex flex-col gap-3">
+                        {dayGroup.events.length === 0 && (
+                          <span className="text-sm text-muted-foreground italic pt-1">
+                            No Events
+                          </span>
+                        )}
                         {dayGroup.events.map((event) => (
                           <div
                             key={event.id}

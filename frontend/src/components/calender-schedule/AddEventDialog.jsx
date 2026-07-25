@@ -26,10 +26,12 @@ import axiosInstance from "../../utils/axiosInstance";
 
 const COLOR_OPTIONS = [
   { value: "bg-blue-500", label: "Blue" },
+  { value: "bg-sky-500", label: "Sky" },
   { value: "bg-purple-500", label: "Purple" },
-  { value: "bg-green-500", label: "Green" },
+  { value: "bg-emerald-500", label: "Emerald" },
   { value: "bg-yellow-500", label: "Yellow" },
   { value: "bg-red-500", label: "Red" },
+  { value: "bg-orange-500", label: "Orange" },
   { value: "bg-pink-500", label: "Pink" },
   { value: "bg-gray-400", label: "Gray" },
 ];

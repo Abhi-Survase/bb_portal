@@ -29,7 +29,7 @@ function PageNotFound() {
         <Button variant="ghost" asChild>
           <Link to="/">
             <ArrowLeftIcon className="mr-2 h-4 w-4" />
-            Back to Login
+            Go Back
           </Link>
         </Button>
 
