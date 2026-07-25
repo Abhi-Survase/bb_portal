@@ -251,7 +251,7 @@ export function StudentForm({
                           )}
                         >
                           {field.value
-                            ? field.value.toLocaleDateString()
+                            ? new Date(field.value).toLocaleDateString()
                             : "Pick a date"}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -351,7 +351,7 @@ export function StudentForm({
                           )}
                         >
                           {field.value
-                            ? field.value.toLocaleDateString()
+                            ? new Date(field.value).toLocaleDateString()
                             : "Select date"}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>

@@ -9,7 +9,7 @@ export default function authenticateToken(req, res, next) {
     logger.info("authenticateToken | Request =>> " + reqHeaderAuthParam);
 
     if (reqHeaderAuthParam && reqHeaderAuthParam === null) {
-      return res.sendStatus(403);
+      return res.sendStatus(403).json({ status: "Failed", message: "Invalid Token Provided" });
     }
     jwt.verify(
       reqHeaderAuthParam,
@@ -22,6 +22,7 @@ export default function authenticateToken(req, res, next) {
             .json({ status: "Failed", message: "Invalid Token Provided" });
         }
         logger.info(`Token verified for user: ${JSON.stringify(user_detail)}`);
+        req.user_id = user_detail.user_id;
         next();
       },
     );
@@ -29,7 +30,7 @@ export default function authenticateToken(req, res, next) {
     logger.error(
       "authenticateToken | Response =>> " +
         JSON.stringify({
-          request: authHeader,
+          request: reqHeaderAuthParam,
           message: error.message,
           path: error.stack,
         }),
