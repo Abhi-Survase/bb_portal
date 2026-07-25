@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { student_metadata_db } from "../config/db.js";
+import logger from "../utils/logger.js";
 
 const router = Router();
 
@@ -54,6 +55,9 @@ router.get("/dashboard", async (req, res) => {
       getPastEventDates(today, 2),
       getUpcomingEventDates(today, 5),
     ]);
+
+    logger.info("dashboardEvents | Past/Upcoming Dates => " + JSON.stringify(pastDates) + ", " + JSON.stringify(upcomingDates));
+
     // getPastEventDates comes back most-recent-first; flip to chronological
     pastDates.reverse();
 
@@ -66,6 +70,9 @@ router.get("/dashboard", async (req, res) => {
       ORDER BY event_date ASC, is_all_day DESC, event_time ASC`,
         [dates],
       );
+
+      logger.info("dashboardEvents | getEventsForDates => " + JSON.stringify(rows));
+
       return rows;
     }
 
@@ -90,7 +97,7 @@ router.get("/dashboard", async (req, res) => {
       data: { today, days },
     });
   } catch (error) {
-    console.error(error);
+    logger.error("dashboardEvents | " + error.stack);
     return res
       .status(500)
       .json({ success: false, message: "Failed to fetch dashboard schedule" });
@@ -103,6 +110,8 @@ router.get("/events/all", async (req, res) => {
     const month = parseInt(req.query.month, 10);
     const year = parseInt(req.query.year, 10);
 
+    logger.info("allEvents | Request =>> " + JSON.stringify(req.query));
+
     if (
       !Number.isInteger(month) ||
       month < 1 ||
@@ -110,6 +119,11 @@ router.get("/events/all", async (req, res) => {
       !Number.isInteger(year) ||
       year < 1970
     ) {
+      logger.error(
+        "allEvents | " +
+          `month: ${month}, year: ${year},` +
+          " | Exception =>> Invalid month or year in request"
+      );
       return res.status(400).json({
         success: false,
         message: "Valid 'month' (1-12) and 'year' query params are required",
@@ -122,23 +136,23 @@ router.get("/events/all", async (req, res) => {
       lastDay,
     ).padStart(2, "0")}`;
 
-    async function getEventsBetween(startDate, endDate) {
-      const [rows] = await student_metadata_db.query(
-        `SELECT id, title, description, event_date, event_time, is_all_day, color
-       FROM events
-      WHERE event_date BETWEEN ? AND ?
-      ORDER BY event_date ASC, is_all_day DESC, event_time ASC`,
-        [startDate, endDate],
-      );
-      return rows;
-    }
+    const getEventBetweenDatesQuery = `SELECT id, title, description, event_date, event_time, is_all_day, color FROM events WHERE event_date BETWEEN ? AND ? ORDER BY event_date ASC, is_all_day DESC, event_time ASC`;
 
-    const events = await getEventsBetween(startDate, endDate);
+    logger.info("allEvents | getEventBetweenDatesQuery =>> " + getEventBetweenDatesQuery);
+    logger.info("allEvents | getEventsBetweenDates | Request =>> " + JSON.stringify({startDate,endDate}));
+
+    const [getEventBetweenDatesOutput] = await student_metadata_db.query(
+            getEventBetweenDatesQuery,
+            [startDate, endDate],
+          );
+
+    logger.info("allEvents | getEventsBetweenDates | Response =>> " + JSON.stringify({getEventBetweenDatesOutput}));
 
     const eventsByDate = {};
-    for (const e of events) {
+    for (const e of getEventBetweenDatesOutput) {
       const key = formatDate(e.event_date);
       if (!eventsByDate[key]) eventsByDate[key] = [];
+      // console.log(eventsByDate);
       eventsByDate[key].push({
         id: e.id,
         title: e.title,
@@ -148,6 +162,7 @@ router.get("/events/all", async (req, res) => {
         color: e.color,
       });
     }
+    logger.info("allEvents | getEventsBetweenDates | eventsByDate => " + JSON.stringify({eventsByDate}));
 
     return res.status(200).json({
       success: true,
@@ -155,7 +170,7 @@ router.get("/events/all", async (req, res) => {
       data: { month, year, daysInMonth: lastDay, eventsByDate },
     });
   } catch (error) {
-    console.error(error);
+    logger.error("allEvents | " + error.stack);
     return res
       .status(500)
       .json({ success: false, message: "Failed to fetch month events" });
@@ -168,63 +183,48 @@ router.get("/events/all", async (req, res) => {
  */
 router.post("/events/add", async (req, res) => {
   try {
-    const { title, description, event_date, event_time, is_all_day, color } =
-      req.body;
+    const { title, description, event_date, event_time, is_all_day, color } = req.body;
+    const userId = req.user_id || null;
+    logger.info("addEvents | Request =>> " + JSON.stringify({ ...req.body, userId }));
 
     if (!title || !title.trim()) {
+      logger.error("addEvents | Empty title passed => " + title);
       return res
         .status(400)
         .json({ success: false, message: "'title' is required" });
     }
     if (!event_date || !/^\d{4}-\d{2}-\d{2}$/.test(event_date)) {
+      logger.error("addEvents | Incorrect event_date passed => " + event_date);
       return res.status(400).json({
         success: false,
         message: "'event_date' is required in YYYY-MM-DD format",
       });
     }
-    async function createEvent({
-      title,
-      description,
-      event_date,
-      event_time,
-      is_all_day,
-      color,
-      created_by,
-    }) {
-      const [result] = await student_metadata_db.query(
-        `INSERT INTO events (title, description, event_date, event_time, is_all_day, color, created_by)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [
-          title,
-          description || null,
-          event_date,
-          is_all_day ? null : event_time || null,
-          is_all_day ? 1 : 0,
-          color || "bg-blue-500",
-          created_by || null,
-        ],
-      );
-      const [rows] = await student_metadata_db.query(
-        `SELECT * FROM events WHERE id = ?`,
-        [result.insertId],
-      );
-      return rows[0];
-    }
-    const event = await createEvent({
-      title: title.trim(),
-      description,
-      event_date,
-      event_time,
-      is_all_day: !!is_all_day,
-      color,
-      created_by: req.user?.id, // present if you wire up your auth middleware
-    });
+
+    const insertEventQuery = `INSERT INTO events (title, description, event_date, event_time, is_all_day, color, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+    logger.info("addEvents | insertEventQuery => " + insertEventQuery);
+
+    const [insertEventResult] = await student_metadata_db.query(
+      insertEventQuery,
+      [
+        title.trim(),
+        description || null,
+        event_date,
+        is_all_day ? null : event_time || null,
+        is_all_day ? 1 : 0,
+        color || "bg-blue-500",
+        userId,
+      ],
+    );
+
+    logger.info("addEvents | insertEventResult | Response =>> " + JSON.stringify(insertEventResult));
 
     return res
       .status(201)
-      .json({ success: true, message: "Event created", data: event });
+      .json({ success: true, message: "Event created" });
   } catch (error) {
-    console.error(error);
+    logger.error("addEvents | " + error.stack);
     return res
       .status(500)
       .json({ success: false, message: "Failed to create event" });
