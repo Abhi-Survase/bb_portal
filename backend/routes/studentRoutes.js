@@ -155,8 +155,9 @@ router.get("/search-student", async (req, res) => {
       "searchStudent | Request Details => " +
         JSON.stringify({ fieldName, finalDetailKeyword }),
     );
-    const q = `SELECT s.id, s.admission_no, sd.first_name, sci.father_name, sd.last_name, s.date_of_admission, sd.date_of_birth, sd.gender, sd.photo_url, sci.parent_contact_number FROM school_metadata.students s INNER JOIN school_metadata.student_details sd ON s.id = sd.student_id INNER JOIN school_metadata.student_contact_info sci ON sd.id = sci.student_detail_id WHERE ${fieldName} like ? ORDER BY ${fieldName} ASC LIMIT 40`;
-    const [output] = await student_metadata_db.query(q, [finalDetailKeyword]);
+    let q = `SELECT s.id, s.admission_no, sd.first_name, sci.father_name, sd.last_name, s.date_of_admission, sd.date_of_birth, sd.gender, sd.photo_url, sci.parent_contact_number FROM school_metadata.students s INNER JOIN school_metadata.student_details sd ON s.id = sd.student_id INNER JOIN school_metadata.student_contact_info sci ON sd.id = sci.student_detail_id WHERE ${fieldName} like ? ORDER BY ${fieldName} ASC LIMIT 40`;
+    fieldName ==='contact_number'? q = `SELECT s.id, s.admission_no, sd.first_name, sci.father_name, sd.last_name, s.date_of_admission, sd.date_of_birth, sd.gender, sd.photo_url, sci.parent_contact_number FROM school_metadata.students s INNER JOIN school_metadata.student_details sd ON s.id = sd.student_id INNER JOIN school_metadata.student_contact_info sci ON sd.id = sci.student_detail_id WHERE parent_contact_number like ? OR guardian_contact_number like ?  ORDER BY s.id ASC LIMIT 40` : console.log("non-contact-number-search")
+    const [output] = await student_metadata_db.query(q, [finalDetailKeyword,finalDetailKeyword]);
     logger.info("searchStudent | Response =>> " + JSON.stringify(output));
     if (output.length === 0) {
       logger.warn(
