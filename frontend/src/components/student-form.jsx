@@ -64,7 +64,7 @@ function SectionHeader({ step, title, description }) {
   );
 }
 
-export const studentFormSchema = z.object({
+const studentFormSchema = z.object({
   admission_no: z.string().regex(/^\d{6,}$/, {
     message: "Must be at least 6 digits and contain only numbers.",
   }),

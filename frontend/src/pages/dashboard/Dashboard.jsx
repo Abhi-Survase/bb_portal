@@ -175,7 +175,7 @@ function Dashboard() {
                 >
                   <Badge
                     variant="secondary"
-                    className="bg-blue-50 text-blue-700 hover:bg-blue-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
+                    className="bg-blue-50 dark:bg-blue-700/10 dark:text-blue-300 text-blue-700 hover:bg-blue-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
                   >
                     View Student
                   </Badge>
@@ -194,7 +194,7 @@ function Dashboard() {
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {dashboardSummary.newAdmissionCount[0].new_admissions_count ===
                 -1 ? (
-                  <Spinner className="!mt-3 size-5" />
+                  <Spinner className="mt-3! size-5" />
                 ) : (
                   dashboardSummary.newAdmissionCount[0].new_admissions_count
                 )}
@@ -207,7 +207,7 @@ function Dashboard() {
                 >
                   <Badge
                     variant="secondary"
-                    className="bg-amber-50 text-amber-800 hover:bg-amber-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
+                    className="bg-amber-50 text-amber-800 dark:bg-amber-700/10 dark:text-amber-100 hover:bg-amber-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
                   >
                     Add Students
                   </Badge>
@@ -240,7 +240,7 @@ function Dashboard() {
                 >
                   <Badge
                     variant="secondary"
-                    className="bg-orange-50 text-orange-800 hover:bg-orange-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
+                    className="bg-orange-50 text-orange-800 dark:bg-orange-700/10 dark:text-orange-100 hover:bg-orange-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
                   >
                     View Teacher
                   </Badge>
@@ -271,7 +271,7 @@ function Dashboard() {
                 >
                   <Badge
                     variant="secondary"
-                    className="bg-violet-50 text-violet-800 hover:bg-violet-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
+                    className="bg-violet-50 text-violet-800 dark:bg-violet-700/10 dark:text-violet-100 hover:bg-violet-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
                   >
                     View Users
                   </Badge>

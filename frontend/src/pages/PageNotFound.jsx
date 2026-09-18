@@ -25,7 +25,7 @@ function PageNotFound() {
           <ModeToggle />
         </div>
       </header>
-      <div className="h-screen flex flex-col gap-1 justify-center items-center">
+      <div className="h-screen flex flex-col gap-1 justify-center items-center -translate-y-16">
         <Button variant="ghost" asChild>
           <Link to="/">
             <ArrowLeftIcon className="mr-2 h-4 w-4" />
@@ -38,6 +38,7 @@ function PageNotFound() {
             404 Page Not Found
           </h2>
         </div>
+        <pre>You are not supposed to be here!</pre>
       </div>
     </div>
   );
