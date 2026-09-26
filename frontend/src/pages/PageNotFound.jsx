@@ -29,15 +29,14 @@ function PageNotFound() {
         <Button variant="ghost" asChild>
           <Link to="/">
             <ArrowLeftIcon className="mr-2 h-4 w-4" />
-            Go Back
+            Return Home
           </Link>
         </Button>
 
-        <div className="space-y-6">
+          <h1 className="text-7xl font-extrabold tracking-tight">404</h1>
           <h2 className="text-3xl font-bold tracking-tight">
-            404 Page Not Found
+            Page Not Found
           </h2>
-        </div>
         <pre>You are not supposed to be here!</pre>
       </div>
     </div>
