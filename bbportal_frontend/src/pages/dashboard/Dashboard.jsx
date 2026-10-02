@@ -154,7 +154,7 @@ function Dashboard() {
         </div>
       </header>
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-        <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+        <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
           <Card className="@container/card">
             <CardHeader>
               <CardDescription>
@@ -273,13 +273,13 @@ function Dashboard() {
                     variant="secondary"
                     className="bg-violet-50 text-violet-800 dark:bg-violet-700/10 dark:text-violet-100 hover:bg-violet-100 border-none px-3 py-1 rounded-full font-semibold cursor-pointer"
                   >
-                    View Users
+                    View Staff
                   </Badge>
                 </Link>
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="text-muted-foreground">Application Users</div>
+              <div className="text-muted-foreground">Support Staff</div>
             </CardFooter>
           </Card>
         </div>

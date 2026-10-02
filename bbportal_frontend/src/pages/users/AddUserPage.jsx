@@ -19,7 +19,7 @@ import UserAvatar from "../../components/user-avatar";
 
 function AddUserPage() {
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-h-svh">
       <header className="h-16 bg-background border-b flex items-center justify-between px-8 sticky top-0 z-10">
         <h1 className="text-xl font-semibold text-foreground flex items-center gap-4">
           <SidebarTrigger />
@@ -43,7 +43,7 @@ function AddUserPage() {
           <UserAvatar />
         </div>
       </header>
-      <div className="h-screen flex items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <h2>Add User Page</h2>
       </div>
     </div>

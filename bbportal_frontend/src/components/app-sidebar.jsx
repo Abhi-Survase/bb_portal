@@ -61,14 +61,20 @@ const sidebar_menu_items = [
     matchPrefix: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_TEACHERS_URL}`,
   },
   {
+    title: "Support Staff",
+    icon: BriefcaseBusiness,
+    url: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_SUPPORTSTAFF_URL}`,
+    matchPrefix: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_SUPPORTSTAFF_URL}`,
+  },
+];
+
+const sidebar_footer_items = [
+  {
     title: "Users",
     icon: Users,
     url: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_USERS_URL}`,
     matchPrefix: `/${import.meta.env.VITE_ADMIN_URL}/${import.meta.env.VITE_USERS_URL}`,
   },
-];
-
-const sidebar_footer_items = [
   {
     title: "Calendar",
     icon: Calendar,
