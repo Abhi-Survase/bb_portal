@@ -68,6 +68,21 @@ const sidebar_menu_items = [
   },
 ];
 
+const sidebar_footer_items = [
+  {
+    title: "Calendar",
+    icon: Calendar,
+    url: `/school/calendar`,
+    matchPrefix: `/school/calendar`,
+  },
+  {
+    title: "Settings",
+    icon: Settings,
+    url: `/school/settings`,
+    matchPrefix: `/school/settings`,
+  },
+];
+
 // True if the current path is this item's own route, or a nested route
 // underneath it (e.g. "/students" matches "/students/add/step-2").
 function isSectionActive(pathname, prefix) {
@@ -106,19 +121,15 @@ export function AppSidebar() {
                   key={item.title}
                 >
                   <SidebarMenuButton
-                    asChild
                     className="w-full"
                     isActive={isSectionActive(
                       location.pathname,
                       item.matchPrefix,
                     )}
+                    render={<Link to={item.url} />}
                   >
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>
-                        <p className="text-[0.9rem]">{item.title}</p>
-                      </span>
-                    </Link>
+                    <item.icon />
+                    <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -128,28 +139,18 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu className="pl-2 pb-1">
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="gap-3 px-4 py-5 w-full"
-              isActive={isSectionActive(location.pathname, "/school/calendar")}
-            >
-              <Link to="/school/calendar">
-                <Calendar />
-                <span>Calendar</span>
-              </Link>
-            </SidebarMenuButton>
-            <SidebarMenuButton
-              asChild
-              className="gap-3 px-4 py-5 w-full"
-              isActive={location.pathname === "settings"}
-            >
-              <Link to="settings">
-                <Settings />
-                <span>Settings</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {sidebar_footer_items.map((footer_item) => (
+            <SidebarMenuItem key={footer_item.title}>
+              <SidebarMenuButton
+                className="gap-3 px-4 py-5 w-full"
+                isActive={isSectionActive(location.pathname, footer_item.url)}
+                render={<Link to={footer_item.url} />}
+              >
+                <footer_item.icon />
+                <span>{footer_item.title}</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
