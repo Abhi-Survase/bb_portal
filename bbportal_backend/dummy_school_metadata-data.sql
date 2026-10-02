@@ -219,6 +219,71 @@ INSERT INTO `students` VALUES (1,'xxx','2025-07-21',0,'2025-07-23 21:33:24','202
 UNLOCK TABLES;
 
 --
+-- Table structure for table `support_staff`
+--
+
+DROP TABLE IF EXISTS `support_staff`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `support_staff` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `employee_no` varchar(20) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `father_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `gender` enum('M','F','O') NOT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `photo_url` varchar(255) DEFAULT NULL,
+  `date_of_joining` date NOT NULL,
+  `date_of_leaving` date DEFAULT NULL,
+  `status` enum('ACTIVE','LEFT') NOT NULL DEFAULT 'ACTIVE',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `employee_no` (`employee_no`),
+  KEY `idx_support_staff_status` (`employee_no`,`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `support_staff`
+--
+
+LOCK TABLES `support_staff` WRITE;
+/*!40000 ALTER TABLE `support_staff` DISABLE KEYS */;
+/*!40000 ALTER TABLE `support_staff` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `support_staff_contact_info`
+--
+
+DROP TABLE IF EXISTS `support_staff_contact_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `support_staff_contact_info` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `support_staff_id` int NOT NULL,
+  `contact_number` char(10) NOT NULL,
+  `alternate_contact` char(10) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `support_staff_id` (`support_staff_id`),
+  KEY `idx_support_staff_contact` (`contact_number`),
+  CONSTRAINT `support_staff_contact_info_ibfk_1` FOREIGN KEY (`support_staff_id`) REFERENCES `support_staff` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `support_staff_contact_info`
+--
+
+LOCK TABLES `support_staff_contact_info` WRITE;
+/*!40000 ALTER TABLE `support_staff_contact_info` DISABLE KEYS */;
+/*!40000 ALTER TABLE `support_staff_contact_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `teacher_contact_info`
 --
 
@@ -376,4 +441,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-25  2:51:55
+-- Dump completed on 2026-10-03  2:43:37

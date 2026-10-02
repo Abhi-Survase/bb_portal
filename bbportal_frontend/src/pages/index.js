@@ -9,3 +9,5 @@ export { default as AddTeacherPage } from "./teachers/AddTeacherPage.jsx";
 export { default as PageNotFound } from "./PageNotFound.jsx";
 export { default as SchoolCalendar } from "./calendar/SchoolCalendar.jsx";
 export { default as Login_Signup_Page } from "./homepage-nologin/Login_Signup_Page.jsx";
+export { default as ShowSSPage } from "./support-staff/ShowSSPage.jsx";
+export { default as AddSSPage } from "./support-staff/AddSSPage.jsx";

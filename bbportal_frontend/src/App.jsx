@@ -11,6 +11,8 @@ import {
   PageNotFound,
   SchoolCalendar,
   Login_Signup_Page,
+  ShowSSPage,
+  AddSSPage,
 } from "./pages";
 import { LoginForm } from "./components/login-form.js";
 import { SignupForm } from "./components/signup-form.js";
@@ -77,6 +79,13 @@ function App() {
                 <Route
                   path={import.meta.env.VITE_ADDUSER_URL}
                   element={<AddUserPage />}
+                />
+              </Route>
+              <Route path={import.meta.env.VITE_SUPPORTSTAFF_URL}>
+                <Route index element={<ShowSSPage />} />
+                <Route
+                  path={`${import.meta.env.VITE_ADDSUPPORTSTAFF_URL}`}
+                  element={<AddSSPage />}
                 />
               </Route>
             </Route>
