@@ -176,14 +176,14 @@ function AllStudentPage() {
                   <p className="text-base">{data.admission_no}</p>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <p className="read-the-docs text-sm">
+                  <p className="text-read-the-docs text-sm">
                     {data.gender === "M" ? "Male" : "Female"}
                   </p>
-                  <p className="read-the-docs text-sm">
+                  <p className="text-read-the-docs text-sm">
                     DOB:{" "}
                     {new Date(data.date_of_birth).toISOString().split("T")[0]}
                   </p>
-                  <p className="read-the-docs text-sm">
+                  <p className="text-read-the-docs text-sm">
                     DOA:
                     {
                       new Date(data.date_of_admission)
@@ -191,7 +191,7 @@ function AllStudentPage() {
                         .split("T")[0]
                     }
                   </p>
-                  <p className="read-the-docs text-sm">
+                  <p className="text-read-the-docs text-sm">
                     Mob: {data.parent_contact_number}
                   </p>
                 </CardContent>
