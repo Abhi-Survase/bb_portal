@@ -1,4 +1,3 @@
-import "./App.css";
 import { Navigate, BrowserRouter, Routes, Route } from "react-router";
 import {
   AllStudentPage,
