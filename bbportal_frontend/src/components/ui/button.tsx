@@ -20,6 +20,11 @@ const buttonVariants = cva(
         badge_ghost: "hover:bg-emerald-50/80 dark:hover:bg-emerald-50/50",
         muted_outline:
           "border bg-background text-muted-foreground shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+        teacher:
+          "bg-orange-50 text-orange-800 dark:bg-orange-700/10 dark:text-orange-100 hover:bg-orange-100",
+        user: "bg-violet-50 text-violet-800 dark:bg-violet-700/10 dark:text-violet-100 hover:bg-violet-100",
+        student:
+          "bg-blue-50 dark:bg-blue-700/10 dark:text-blue-300 text-blue-700 hover:bg-blue-100",
       },
       size: {
         default:

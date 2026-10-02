@@ -5,8 +5,8 @@
 
 @custom-variant dark (&:is(.dark *));
 :root {
-  --background: oklch(0.985 0.005 85);
-  --foreground: oklch(0.2046 0 0);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
   --card: oklch(0.9911 0 0);
   --card-foreground: oklch(0.2046 0 0);
   --popover: oklch(0.9911 0 0);
@@ -23,7 +23,7 @@
   --destructive: oklch(0.5523 0.1927 32.7272);
   --destructive-foreground: oklch(0.9934 0.0032 17.2118);
   --border: oklch(0.9037 0 0);
-  --input: oklch(0.9731 0 0);
+  --input: oklch(0.87 0 0);
   --ring: oklch(0.596 0.145 163.225);
 
   --read-the-docs: #888;
@@ -198,13 +198,6 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-}
-
-html {
-  /* Always reserve the scrollbar gutter so it never pops in/out and
-       shifts layout width when a route (e.g. signup) grows taller than
-       the viewport. Falls back silently in browsers that don't support it. */
-  scrollbar-gutter: stable;
 }
 
 body {

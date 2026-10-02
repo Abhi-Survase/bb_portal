@@ -47,19 +47,10 @@ function ShowTeachersPage() {
           Teachers
         </h1>
         <div className="flex items-center gap-4">
-          {/* Global Search Bar (Replaces 'Find Student' Page) */}
-          <div className="relative hidden sm:block group">
-            <Link
-              to={`/${import.meta.env.VITE_ALL_STUDENT_URL}/${
-                import.meta.env.VITE_FIND_STUDENT_URL
-              }`}
-            >
-              <Button variant="muted_outline">
-                <Search size={16} />
-                Search Teachers
-              </Button>
-            </Link>
-          </div>
+          <Button className="px-3" variant="teacher">
+            <UserPlus size={16} />
+            Add Teacher
+          </Button>
           <ModeToggle />
           <UserAvatar />
         </div>

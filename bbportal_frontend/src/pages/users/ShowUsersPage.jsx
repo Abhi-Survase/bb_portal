@@ -58,32 +58,10 @@ function ShowUsersPage() {
           User
         </h1>
         <div className="flex items-center gap-4">
-          <Button className="px-1" variant="secondary">
+          <Button className="px-3" variant="user">
             <UserPlus size={16} />
             Add User
           </Button>
-          <div className="relative hidden sm:block group w-full max-w-sm">
-            <Input
-              type="text"
-              placeholder="Search User"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="pr-10"
-            />
-            <Button
-              type="button"
-              variant="muted_outline"
-              size="icon"
-              onClick={handleSearchClick}
-              className="absolute right-0 top-0 h-full w-10 rounded-l-none"
-            >
-              <Search
-                size={16}
-                className="text-muted-foreground group-hover:text-foreground transition-colors"
-              />
-            </Button>
-          </div>
           <ModeToggle />
           <UserAvatar />
         </div>

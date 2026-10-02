@@ -164,7 +164,7 @@ function FindStudentPage() {
                 import.meta.env.VITE_ADD_STUDENT_URL
               }`}
             >
-              <Button variant="muted_outline">
+              <Button variant="student">
                 <UserPlus size={16} />
                 Add Student
               </Button>
