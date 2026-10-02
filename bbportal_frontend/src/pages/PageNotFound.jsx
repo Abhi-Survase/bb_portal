@@ -26,17 +26,13 @@ function PageNotFound() {
         </div>
       </header>
       <div className="h-screen flex flex-col gap-1 justify-center items-center -translate-y-16">
-        <Button variant="ghost" asChild>
-          <Link to="/">
-            <ArrowLeftIcon className="mr-2 h-4 w-4" />
-            Return Home
-          </Link>
+        <Button variant="ghost" render={<Link to="/" />}>
+          <ArrowLeftIcon className="mr-2 h-4 w-4" />
+          Return Home
         </Button>
 
-          <h1 className="text-7xl font-extrabold tracking-tight">404</h1>
-          <h2 className="text-3xl font-bold tracking-tight">
-            Page Not Found
-          </h2>
+        <h1 className="text-7xl font-extrabold tracking-tight">404</h1>
+        <h2 className="text-3xl font-bold tracking-tight">Page Not Found</h2>
         <pre>You are not supposed to be here!</pre>
       </div>
     </div>

@@ -240,11 +240,16 @@ function FindStudentPage() {
               <Button type="submit" className="flex-1">
                 Search
               </Button>
-              <Button variant="outline" asChild className="flex-1">
-                <Link to={`/${import.meta.env.VITE_ALL_STUDENT_URL}`}>
-                  All Students
-                  <ChevronRight className="w-4 h-4 ml-2" />
-                </Link>
+              <Button
+                variant="outline"
+                className="flex-1"
+                nativeButton={false}
+                render={
+                  <Link to={`/${import.meta.env.VITE_ALL_STUDENT_URL}`} />
+                }
+              >
+                All Students
+                <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </form>

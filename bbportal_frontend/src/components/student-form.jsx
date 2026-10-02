@@ -241,20 +241,26 @@ export function StudentForm({
                       Date of Admission
                     </FieldLabel>
                     <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          id={`${formId}-date_of_admission`}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
-                          )}
-                        >
-                          {field.value
-                            ? new Date(field.value).toLocaleDateString()
-                            : "Pick a date"}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
+                      <PopoverTrigger
+                        render={
+                          <Button
+                            variant="outline"
+                            id={`${formId}-date_of_admission`}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground",
+                            )}
+                          />
+                        }
+                      >
+                        {field.value
+                          ? new Intl.DateTimeFormat("en-GB", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                            }).format(new Date(field.value))
+                          : "Select date"}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </PopoverTrigger>
                       <PopoverContent
                         className="w-auto overflow-hidden p-0"
@@ -341,20 +347,26 @@ export function StudentForm({
                       Date of Birth
                     </FieldLabel>
                     <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          id={`${formId}-date_of_birth`}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
-                          )}
-                        >
-                          {field.value
-                            ? new Date(field.value).toLocaleDateString()
-                            : "Select date"}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
+                      <PopoverTrigger
+                        render={
+                          <Button
+                            variant="outline"
+                            id={`${formId}-date_of_birth`}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground",
+                            )}
+                          />
+                        }
+                      >
+                        {field.value
+                          ? new Intl.DateTimeFormat("en-GB", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                            }).format(new Date(field.value))
+                          : "Select date"}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </PopoverTrigger>
                       <PopoverContent
                         className="w-auto overflow-hidden p-0"

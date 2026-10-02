@@ -19,14 +19,14 @@ function UserAvatar() {
   }
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Avatar>
-            <AvatarFallback className="bg-rose-100  text-rose-700 ">
-              BP
-            </AvatarFallback>
-          </Avatar>
-        </Button>
+      <DropdownMenuTrigger
+        render={<Button variant="ghost" size="icon" className="rounded-full" />}
+      >
+        <Avatar>
+          <AvatarFallback className="bg-rose-100  text-rose-700 ">
+            BP
+          </AvatarFallback>
+        </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-32">
         <DropdownMenuGroup>

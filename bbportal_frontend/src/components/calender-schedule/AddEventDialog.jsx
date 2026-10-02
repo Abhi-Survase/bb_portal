@@ -105,11 +105,9 @@ export default function AddEventDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button className="gap-2">
-          <Plus size={16} />
-          Add Event
-        </Button>
+      <DialogTrigger render={<Button className="gap-2" />}>
+        <Plus size={16} />
+        Add Event
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
